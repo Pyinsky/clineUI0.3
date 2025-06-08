@@ -1,0 +1,481 @@
+/* iPhone-Optimized Mobile Styles for StockArt */
+
+/* iPhone Safe Area Support */
+:root {
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+}
+
+/* iPhone Device Breakpoints */
+/* iPhone SE: 375px */
+/* iPhone 12/13/14: 390px */
+/* iPhone 14 Pro Max: 430px */
+
+/* Mobile-First Base Styles */
+@media (max-width: 430px) {
+    /* Enhanced Touch Targets - Apple's 44px minimum */
+    .sidebar-toggle,
+    .nav-item,
+    .new-thread-btn,
+    .search-option,
+    .tool-btn,
+    .theme-option,
+    .sign-in-btn,
+    .cta-button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Improved touch spacing */
+    .nav-item,
+    .watchlist-item {
+        margin-bottom: 8px;
+        padding: 12px 16px;
+    }
+    
+    /* iPhone-specific sidebar behavior */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2000;
+        padding-top: max(var(--safe-area-top), 20px);
+        padding-bottom: max(var(--safe-area-bottom), 20px);
+        padding-left: max(var(--safe-area-left), 16px);
+        padding-right: 16px;
+    }
+    
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Mobile overlay */
+    .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 1500;
+        backdrop-filter: blur(4px);
+    }
+    
+    .mobile-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    /* Main content adjustments */
+    .main-content {
+        margin-left: 0;
+        padding: max(var(--safe-area-top), 20px) max(var(--safe-area-right), 16px) max(var(--safe-area-bottom), 20px) max(var(--safe-area-left), 16px);
+        min-height: 100vh;
+        width: 100%;
+    }
+    
+    /* Mobile header with hamburger */
+    .mobile-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: calc(60px + var(--safe-area-top));
+        background: var(--secondary-dark);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--safe-area-top) max(var(--safe-area-right), 16px) 0 max(var(--safe-area-left), 16px);
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+    
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        transition: all var(--transition-base);
+    }
+    
+    .mobile-menu-btn:hover {
+        background: var(--hover-bg);
+    }
+    
+    .mobile-logo {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .mobile-logo .logo {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mobile-logo .logo-text {
+        font-size: var(--font-size-base);
+        font-weight: 600;
+    }
+    
+    /* Adjust main content for mobile header */
+    .content-container {
+        margin-top: calc(60px + var(--safe-area-top));
+        padding-top: var(--spacing-xl);
+    }
+    
+    /* Enhanced mobile search */
+    .search-container {
+        width: 100%;
+        max-width: none;
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .search-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 16px 20px;
+        padding-right: 60px;
+        border-radius: var(--radius-xl);
+        width: 100%;
+    }
+    
+    .search-input:focus {
+        transform: none; /* Disable transform to prevent layout issues */
+    }
+    
+    .voice-btn {
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Mobile search options */
+    .search-options {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        justify-content: center;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .search-option {
+        min-height: 44px;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: var(--font-size-sm);
+        flex: 1;
+        min-width: 120px;
+        max-width: 150px;
+    }
+    
+    /* Mobile search tools */
+    .search-tools {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        justify-content: center;
+    }
+    
+    .tool-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: var(--radius-lg);
+    }
+    
+    /* Mobile brand adjustments */
+    .brand-title {
+        font-size: 2.5rem;
+        line-height: 1.1;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .brand-subtitle {
+        font-size: var(--font-size-base);
+        line-height: 1.4;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .brand-logo svg {
+        width: 60px;
+        height: 60px;
+    }
+    
+    /* Mobile CTA */
+    .cta-button {
+        width: 100%;
+        max-width: 280px;
+        padding: 16px var(--spacing-xl);
+        font-size: var(--font-size-base);
+        min-height: 50px;
+    }
+    
+    /* Mobile watchlist */
+    .watchlist-item {
+        padding: 16px;
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .stock-info {
+        flex: 1;
+    }
+    
+    .stock-symbol {
+        font-size: var(--font-size-base);
+        margin-bottom: 2px;
+    }
+    
+    .stock-name {
+        font-size: var(--font-size-sm);
+    }
+    
+    .stock-price {
+        align-items: flex-end;
+        text-align: right;
+    }
+    
+    .price {
+        font-size: var(--font-size-base);
+        margin-bottom: 2px;
+    }
+    
+    .change {
+        font-size: var(--font-size-sm);
+        padding: 4px 8px;
+    }
+}
+
+/* iPhone SE specific adjustments (375px) */
+@media (max-width: 375px) {
+    .brand-title {
+        font-size: 2.2rem;
+    }
+    
+    .search-input {
+        padding: 14px 18px;
+        padding-right: 55px;
+    }
+    
+    .search-option {
+        min-width: 100px;
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: var(--font-size-xs);
+    }
+    
+    .tool-btn {
+        width: 46px;
+        height: 46px;
+    }
+    
+    .mobile-logo .logo-text {
+        font-size: var(--font-size-sm);
+    }
+    
+    .theme-option {
+        min-width: 40px;
+        padding: 6px 8px;
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 430px) and (orientation: landscape) {
+    .brand-title {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .brand-logo {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .brand-logo svg {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .content-container {
+        padding-top: var(--spacing-md);
+    }
+    
+    .search-container {
+        margin-bottom: var(--spacing-lg);
+    }
+}
+
+/* Touch-specific interactions */
+@media (hover: none) and (pointer: coarse) {
+    /* Remove hover effects on touch devices */
+    .nav-item:hover,
+    .search-option:hover,
+    .tool-btn:hover,
+    .theme-option:hover {
+        transform: none;
+    }
+    
+    /* Enhanced active states for touch */
+    .nav-item:active,
+    .search-option:active,
+    .tool-btn:active,
+    .theme-option:active,
+    .mobile-menu-btn:active {
+        background: var(--active-bg);
+        transform: scale(0.96);
+    }
+    
+    /* Better touch feedback */
+    .cta-button:active {
+        transform: scale(0.98);
+    }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* Fix for iOS Safari viewport units */
+    .main-content {
+        min-height: -webkit-fill-available;
+    }
+    
+    /* Disable iOS Safari zoom on form inputs */
+    .search-input {
+        font-size: 16px;
+    }
+    
+    /* Fix for iOS Safari scrolling */
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Disable iOS Safari rubber band effect */
+    .sidebar {
+        overscroll-behavior: contain;
+    }
+}
+
+/* High pixel density displays (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Crisper borders and shadows on Retina displays */
+    .theme-toggle,
+    .search-input,
+    .search-option,
+    .tool-btn {
+        border-width: 0.5px;
+    }
+}
+
+/* Dark mode media query for mobile */
+@media (max-width: 430px) and (prefers-color-scheme: dark) {
+    .mobile-header {
+        background: var(--secondary-dark);
+        border-bottom-color: var(--border-color);
+    }
+}
+
+/* Accessibility improvements for mobile */
+@media (max-width: 430px) {
+    /* Larger focus indicators on mobile */
+    button:focus-visible,
+    input:focus-visible {
+        outline: 3px solid var(--accent-blue);
+        outline-offset: 2px;
+    }
+    
+    /* Better contrast for touch targets */
+    .nav-item,
+    .search-option,
+    .tool-btn {
+        border: 1px solid transparent;
+    }
+    
+    .nav-item:focus,
+    .search-option:focus,
+    .tool-btn:focus {
+        border-color: var(--accent-blue);
+    }
+}
+
+/* Animation performance optimizations for mobile */
+@media (max-width: 430px) {
+    /* Use transform3d for hardware acceleration */
+    .sidebar {
+        transform: translate3d(-100%, 0, 0);
+        will-change: transform;
+    }
+    
+    .sidebar.mobile-open {
+        transform: translate3d(0, 0, 0);
+    }
+    
+    /* Optimize animations for mobile performance */
+    .mobile-overlay {
+        will-change: opacity;
+    }
+    
+    /* Reduce motion for better performance on older devices */
+    @media (prefers-reduced-motion: reduce) {
+        .sidebar,
+        .mobile-overlay,
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+    }
+}
+
+/* Progressive enhancement for newer iPhones */
+@media (max-width: 430px) and (min-height: 800px) {
+    /* Take advantage of taller screens */
+    .content-container {
+        padding-top: var(--spacing-2xl);
+    }
+    
+    .brand-title {
+        font-size: 2.8rem;
+    }
+    
+    .search-container {
+        margin-bottom: var(--spacing-2xl);
+    }
+}
+
+/* Handle notch/Dynamic Island for different iPhone models */
+@supports (padding: max(0px)) {
+    @media (max-width: 430px) {
+        .mobile-header {
+            padding-top: max(env(safe-area-inset-top), 10px);
+        }
+        
+        .sidebar {
+            padding-top: max(env(safe-area-inset-top), 20px);
+        }
+        
+        .main-content {
+            padding-top: max(env(safe-area-inset-top), 20px);
+        }
+        
+        .theme-toggle-container {
+            top: max(env(safe-area-inset-top), 15px);
+            right: max(env(safe-area-inset-right), 10px);
+        }
+    }
+}

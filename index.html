@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>StockArt - AI-Powered Stock Analysis</title>
+    <meta name="description" content="Discover market insights with AI-powered stock analysis and research tools">
+    
+    <!-- Mobile Optimization -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StockArt">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://accounts.google.com">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="styles/mobile.css">
+    <link rel="stylesheet" href="styles/signin-modal.css">
+    <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="logo-container">
+                    <svg class="logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 32L16 20L24 26L32 8" stroke="url(#gradient1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="8" cy="32" r="2" fill="url(#gradient1)"/>
+                        <circle cx="16" cy="20" r="2" fill="url(#gradient1)"/>
+                        <circle cx="24" cy="26" r="2" fill="url(#gradient1)"/>
+                        <circle cx="32" cy="8" r="2" fill="url(#gradient1)"/>
+                        <rect x="4" y="4" width="32" height="32" rx="6" stroke="url(#gradient2)" stroke-width="1.5" fill="none"/>
+                        <defs>
+                            <linearGradient id="gradient1" x1="8" y1="32" x2="32" y2="8" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#4a9eff"/>
+                                <stop offset="100%" stop-color="#00d4aa"/>
+                            </linearGradient>
+                            <linearGradient id="gradient2" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#4a9eff" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#00d4aa" stop-opacity="0.3"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">StockArt</span>
+                </div>
+            </div>
+
+            <div class="new-thread-section">
+                <button class="new-thread-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    <span>New Analysis</span>
+                    <div class="shortcut-badge">
+                        <span>⌘</span>
+                        <span>K</span>
+                    </div>
+                </button>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-item active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    <span>Discover</span>
+                </div>
+                <div class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>Spaces</span>
+                </div>
+            </div>
+
+            <div class="watchlist-section">
+                <div class="watchlist-header">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
+                    </svg>
+                    <span>Watchlist</span>
+                </div>
+                <div class="watchlist-items">
+                    <div class="watchlist-item">
+                        <div class="stock-info">
+                            <span class="stock-symbol">AAPL</span>
+                            <span class="stock-name">Apple Inc.</span>
+                        </div>
+                        <div class="stock-price">
+                            <span class="price">$175.84</span>
+                            <span class="change positive">+2.4%</span>
+                        </div>
+                    </div>
+                    <div class="watchlist-item">
+                        <div class="stock-info">
+                            <span class="stock-symbol">MSFT</span>
+                            <span class="stock-name">Microsoft</span>
+                        </div>
+                        <div class="stock-price">
+                            <span class="price">$420.67</span>
+                            <span class="change positive">+1.8%</span>
+                        </div>
+                    </div>
+                    <div class="watchlist-item">
+                        <div class="stock-info">
+                            <span class="stock-symbol">TSLA</span>
+                            <span class="stock-name">Tesla Inc.</span>
+                        </div>
+                        <div class="stock-price">
+                            <span class="price">$248.92</span>
+                            <span class="change negative">-0.9%</span>
+                        </div>
+                    </div>
+                    <div class="watchlist-item">
+                        <div class="stock-info">
+                            <span class="stock-symbol">GOOGL</span>
+                            <span class="stock-name">Alphabet</span>
+                        </div>
+                        <div class="stock-price">
+                            <span class="price">$178.35</span>
+                            <span class="change positive">+3.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-section">
+                <button class="sign-in-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Sign in</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="content-container">
+                <div class="center-content">
+                    <div class="main-brand-heading">
+                        <h1 class="brand-title">StockArt</h1>
+                        <p class="brand-subtitle">AI-Powered Stock Analysis Platform</p>
+                    </div>
+                    <div class="brand-logo">
+                        <svg width="80" height="80" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 32L16 20L24 26L32 8" stroke="url(#mainGradient1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="32" r="2" fill="url(#mainGradient1)"/>
+                            <circle cx="16" cy="20" r="2" fill="url(#mainGradient1)"/>
+                            <circle cx="24" cy="26" r="2" fill="url(#mainGradient1)"/>
+                            <circle cx="32" cy="8" r="2" fill="url(#mainGradient1)"/>
+                            <rect x="4" y="4" width="32" height="32" rx="6" stroke="url(#mainGradient2)" stroke-width="1.5" fill="none"/>
+                            <defs>
+                                <linearGradient id="mainGradient1" x1="8" y1="32" x2="32" y2="8" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#4a9eff"/>
+                                    <stop offset="100%" stop-color="#00d4aa"/>
+                                </linearGradient>
+                                <linearGradient id="mainGradient2" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#4a9eff" stop-opacity="0.2"/>
+                                    <stop offset="100%" stop-color="#00d4aa" stop-opacity="0.2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+
+                    <div class="search-container">
+                        <div class="search-input-wrapper">
+                            <input 
+                                type="text" 
+                                class="search-input" 
+                                placeholder="Ask any company..."
+                                id="mainSearchInput"
+                            >
+                            <button class="voice-btn" aria-label="Voice search">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"/>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                    <line x1="12" y1="19" x2="12" y2="22"/>
+                                    <line x1="8" y1="22" x2="16" y2="22"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="search-options">
+                            <button class="search-option pro-option">
+                                <span class="pro-badge">PRO</span>
+                            </button>
+                            <button class="search-option deep-research-option">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                                <span>Deep Research</span>
+                            </button>
+                        </div>
+
+                        <div class="search-tools">
+                            <button class="tool-btn" title="Attach file">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                                </svg>
+                            </button>
+                            <button class="tool-btn" title="Focus mode">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                                </svg>
+                            </button>
+                            <button class="tool-btn" title="Collections">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cta-section">
+                        <button class="cta-button">
+                            <span>Sign in</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript files in load order -->
+    <script src="scripts/themes.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/signin-modal.js"></script>
+    <script src="scripts/mobile.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

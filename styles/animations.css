@@ -1,0 +1,471 @@
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(74, 158, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(74, 158, 255, 0.6);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Page Load Animations */
+.app-container {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.sidebar {
+    animation: fadeInLeft 0.6s ease-out 0.1s both;
+}
+
+.main-content {
+    animation: fadeInRight 0.6s ease-out 0.2s both;
+}
+
+.brand-logo {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.search-container {
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.cta-section {
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+/* Navigation Item Staggered Animation */
+.nav-item:nth-child(1) {
+    animation: slideIn 0.6s ease-out 0.3s both;
+}
+
+.nav-item:nth-child(2) {
+    animation: slideIn 0.6s ease-out 0.4s both;
+}
+
+.nav-item:nth-child(3) {
+    animation: slideIn 0.6s ease-out 0.5s both;
+}
+
+/* Logo Animations */
+.logo-container:hover .logo {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.brand-logo:hover svg {
+    animation: float 2s ease-in-out infinite;
+}
+
+/* Search Input Animations */
+.search-input:focus {
+    animation: glow 2s ease-in-out infinite;
+}
+
+.search-input-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(74, 158, 255, 0.1),
+        transparent
+    );
+    background-size: 200% 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+}
+
+.search-input:focus + .voice-btn + .search-input-wrapper::after,
+.search-input-wrapper:hover::after {
+    opacity: 1;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Button Hover Animations */
+.new-thread-btn:hover {
+    animation: bounce 0.6s ease;
+}
+
+.cta-button:hover {
+    animation: pulse 0.6s ease;
+}
+
+.tool-btn:hover {
+    animation: bounce 0.4s ease;
+}
+
+/* Interactive Hover Effects */
+.nav-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: left var(--transition-base);
+}
+
+.nav-item:hover::after {
+    left: 100%;
+}
+
+/* Search Option Animations */
+.search-option {
+    position: relative;
+    overflow: hidden;
+}
+
+.search-option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    z-index: -1;
+}
+
+.search-option:hover::before {
+    opacity: 0.1;
+}
+
+/* Advanced Button Effects */
+.cta-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left var(--transition-slow);
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+/* Loading States */
+.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Icon Animations */
+.nav-item svg {
+    transition: transform var(--transition-base);
+}
+
+.nav-item:hover svg {
+    transform: scale(1.1);
+}
+
+.tool-btn svg {
+    transition: transform var(--transition-base);
+}
+
+.tool-btn:hover svg {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.voice-btn svg {
+    transition: transform var(--transition-base);
+}
+
+.voice-btn:hover svg {
+    transform: scale(1.2);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Gradient Animation */
+.logo-text {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Typing Effect */
+.search-input::placeholder {
+    opacity: 0;
+    animation: typeIn 0.5s ease-out 0.8s forwards;
+}
+
+@keyframes typeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Focus Ring Animation */
+.search-input:focus {
+    position: relative;
+}
+
+.search-input:focus::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: var(--radius-xl);
+    background: var(--gradient-primary);
+    z-index: -1;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Stagger Animation for Tools */
+.search-tools .tool-btn:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.search-tools .tool-btn:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.search-tools .tool-btn:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* Background Particle Effect */
+.main-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(74, 158, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(74, 158, 255, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite alternate;
+}
+
+/* Micro-interactions */
+.shortcut-badge span {
+    transition: all var(--transition-fast);
+}
+
+.new-thread-btn:hover .shortcut-badge span {
+    background: var(--accent-blue);
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+/* Progressive Enhancement */
+@media (prefers-reduced-motion: no-preference) {
+    .sidebar {
+        animation-duration: 0.8s;
+    }
+    
+    .main-content {
+        animation-duration: 0.8s;
+    }
+    
+    .brand-logo:hover {
+        animation: float 3s ease-in-out infinite;
+    }
+}
+
+/* High Performance Mode */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+    
+    .search-input::placeholder {
+        opacity: 1;
+        animation: none;
+    }
+}
+
+/* Dark Mode Specific Animations */
+@media (prefers-color-scheme: dark) {
+    .glow {
+        box-shadow: 
+            0 0 20px rgba(74, 158, 255, 0.4),
+            0 0 40px rgba(74, 158, 255, 0.2);
+    }
+}
+
+/* Interactive States */
+.interactive:hover {
+    transform: translateY(-2px);
+    transition: transform var(--transition-base);
+}
+
+.interactive:active {
+    transform: translateY(0);
+    transition: transform var(--transition-fast);
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Easing Functions */
+.ease-bounce {
+    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.ease-elastic {
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ease-back {
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
