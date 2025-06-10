@@ -1070,6 +1070,7 @@ const dynamicStyles = `
 document.head.insertAdjacentHTML('beforeend', dynamicStyles);
 
 // Main JavaScript for StockArt AI Chat
+// Main JavaScript for StockArt AI Chat
 class StockArtMain {
     constructor() {
         this.init();
@@ -1079,7 +1080,7 @@ class StockArtMain {
         this.setupGlobalEventListeners();
         this.setupThemeSystem();
         this.setupAccessibility();
-        this.setupChatInputHandlers(); // New method for chat input
+        this.setupChatInputHandlers(); // <--- ADD THIS LINE HERE
         this.logStartup();
     }
 
@@ -1105,7 +1106,7 @@ class StockArtMain {
         // Detect system theme preference
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem('stockart-theme');
-
+        
         // Apply theme
         const theme = savedTheme || (prefersDark ? 'dark' : 'light');
         this.setTheme(theme);
@@ -1209,7 +1210,7 @@ class StockArtMain {
             theme: document.documentElement.getAttribute('data-theme'),
             version: '1.0.0'
         };
-
+        
         localStorage.setItem('stockart-state', JSON.stringify(state));
     }
 
@@ -1219,7 +1220,7 @@ class StockArtMain {
         console.log('🎯 API Endpoint:', window.STOCKART_CONFIG?.API?.N8N_WEBHOOK_URL);
     }
 
-    // NEW: Setup chat input handlers
+    // Setup chat input handlers - this section was correct, but not called
     setupChatInputHandlers() {
         const welcomeChatForm = document.getElementById('chatForm');
         const chatInterfaceForm = document.getElementById('chatInputForm');
@@ -1233,7 +1234,7 @@ class StockArtMain {
         }
     }
 
-    // NEW: Handle chat form submission and send webhook
+    // Handle chat form submission and send webhook
     async handleChatSubmit(event) {
         event.preventDefault(); // Prevent default form submission
 
@@ -1258,7 +1259,7 @@ class StockArtMain {
         }
     }
 
-    // NEW: Function to send webhook
+    // Function to send webhook
     async sendWebhook(promptText) {
         const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook-test/stockartaipromptboxhandler';
         const payload = {
@@ -1275,14 +1276,14 @@ class StockArtMain {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`Webhook HTTP error! Status: ${response.status}, Message: ${errorText}`);
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const responseData = await response.json();
             console.log('Webhook response:', responseData);
 
-            // Display AI response in chat interface
-            // Assuming the webhook response contains a 'reply' field for the AI's answer
             const aiReply = responseData.reply || 'No direct reply received from AI.';
             this.displayMessage(aiReply, 'ai');
 
@@ -1292,17 +1293,81 @@ class StockArtMain {
         }
     }
 
-    // NEW: Function to display messages in the chat interface
+    // Function to display messages in the chat interface
     displayMessage(message, sender) {
         const chatMessages = document.getElementById('chatMessages');
         const messageElement = document.createElement('div');
         messageElement.classList.add('chat-message', sender);
-        messageElement.innerHTML = `<div class="message-bubble">${StockArtUtils.escapeHTML(message)}</div>`; // Use utility to escape HTML
+        messageElement.innerHTML = `<div class="message-bubble">${StockArtUtils.escapeHTML(message)}</div>`;
 
         chatMessages.appendChild(messageElement);
         chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
     }
 }
+
+// Utility functions (remain unchanged)
+const StockArtUtils = {
+    formatNumber(num) {
+        return new Intl.NumberFormat().format(num);
+    },
+    formatCurrency(amount, currency = 'USD') {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: currency
+        }).format(amount);
+    },
+    formatPercentage(value, decimals = 2) {
+        return `${(value * 100).toFixed(decimals)}%`;
+    },
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+    throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    },
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    },
+    async copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            return false;
+        }
+    },
+    escapeHTML(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+};
+
+// Make utilities globally available
+window.StockArtUtils = StockArtUtils;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.stockArtMain = new StockArtMain();
+});
 
 // Utility functions
 const StockArtUtils = {
