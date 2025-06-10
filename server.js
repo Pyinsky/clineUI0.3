@@ -169,18 +169,3 @@ app.listen(PORT, () => {
 
 module.exports = app;
 
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            // Add 'https://accounts.google.com' and 'https://apis.google.com' to scriptSrc
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com", "https://apis.google.com"],
-            imgSrc: ["'self'", "data:", "https:"],
-            // Add your webhook URL's origin to connectSrc if it's different from 'self'
-            // Ensure https://primary-production-b1c8.up.railway.app is allowed
-            connectSrc: ["'self'", "https://stockart-n8n.railway.app", "https://api.openrouter.ai", "https://primary-production-b1c8.up.railway.app"]
-        }
-    }
-}));
