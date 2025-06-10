@@ -14,9 +14,11 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+      // Modify this line
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://accounts.google.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"]
+      // Also, update connectSrc to ensure webhook calls are allowed
+      connectSrc: ["'self'", "https://primary-production-b1c8.up.railway.app"]
     }
   }
 }));
