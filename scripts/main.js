@@ -142,38 +142,43 @@ class StockArtApp {
         console.log('[StockArtApp] Webhook URL:', webhookUrl);
         console.log('[StockArtApp] Payload:', JSON.stringify(payload, null, 2));
 
-        const response = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            let errorText = 'Could not retrieve error details.';
-            try {
-                errorText = await response.text();
-            } catch (e) {
-                console.error('[StockArtApp] Failed to get error text from response:', e);
-            }
-            console.error(`[StockArtApp] Webhook HTTP error! Status: ${response.status}, Response Text: ${errorText}`);
-            throw new Error(`API Error: ${response.status} - ${errorText}`);
-        }
-
-        let responseData = null;
         try {
-            responseData = await response.json();
-            console.log('[StockArtApp] Webhook response JSON:', responseData);
-        } catch (e) {
-            console.error('[StockArtApp] Failed to parse webhook response as JSON:', e);
-            const rawResponseText = await response.text(); // Try to get raw text if JSON fails
-            console.log('[StockArtApp] Webhook raw response text:', rawResponseText);
-            throw new Error('Failed to parse AI response. Raw response: ' + rawResponseText);
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                let errorText = 'Could not retrieve error details.';
+                try {
+                    errorText = await response.text();
+                } catch (e) {
+                    console.error('[StockArtApp] Failed to get error text from response:', e);
+                }
+                console.error(`[StockArtApp] Webhook HTTP error! Status: ${response.status}, Response Text: ${errorText}`);
+                throw new Error(`API Error: ${response.status} - ${errorText}`);
+            }
+
+            let responseData = null;
+            try {
+                responseData = await response.json();
+                console.log('[StockArtApp] Webhook response JSON:', responseData);
+            } catch (e) {
+                console.error('[StockArtApp] Failed to parse webhook response as JSON:', e);
+                const rawResponseText = await response.text(); // Try to get raw text if JSON fails
+                console.log('[StockArtApp] Webhook raw response text:', rawResponseText);
+                throw new Error('Failed to parse AI response. Raw response: ' + rawResponseText);
+            }
+            
+            // Adjust based on the actual structure of responseData
+            return responseData.reply || responseData.message || "AI response received, but no 'reply' or 'message' field found."; 
+        } catch (error) {
+            console.error('[StockArtApp] Webhook request failed:', error);
+            throw error;
         }
-        
-        // Adjust based on the actual structure of responseData
-        return responseData.reply || responseData.message || "AI response received, but no 'reply' or 'message' field found."; 
     }
 
     addMessageToChat(text, type) {
