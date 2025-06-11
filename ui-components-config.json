@@ -1,0 +1,526 @@
+{
+  "components": {
+    "sidebar": {
+      "id": "main-sidebar",
+      "className": "sidebar",
+      "structure": {
+        "header": {
+          "logo": {
+            "type": "icon",
+            "icon": "stockart-icon",
+            "size": "32px"
+          }
+        },
+        "navigation": {
+          "items": [
+            {
+              "id": "home",
+              "icon": "home-outline",
+              "label": "Home",
+              "href": "/",
+              "active": true
+            },
+            {
+              "id": "discover",
+              "icon": "globe-outline",
+              "label": "Discover",
+              "href": "/discover"
+            },
+            {
+              "id": "spaces",
+              "icon": "grid-outline",
+              "label": "Spaces",
+              "href": "/spaces"
+            },
+            {
+              "id": "library",
+              "icon": "bookmark-outline",
+              "label": "Library",
+              "href": "/library"
+            }
+          ]
+        },
+        "footer": {
+          "signInButton": {
+            "id": "sidebar-signin",
+            "label": "Sign In",
+            "icon": "user-outline",
+            "action": "openSignInModal"
+          }
+        }
+      },
+      "behavior": {
+        "defaultState": "collapsed",
+        "expandTrigger": "hover",
+        "expandDelay": "200ms",
+        "collapseTrigger": "mouseleave",
+        "collapseDelay": "300ms"
+      },
+      "styling": {
+        "collapsed": {
+          "width": "60px",
+          "padding": "1rem 0.5rem"
+        },
+        "expanded": {
+          "width": "240px",
+          "padding": "1rem 1.5rem"
+        },
+        "background": "var(--secondary-dark)",
+        "borderRight": "1px solid var(--border-color)",
+        "zIndex": 100
+      }
+    },
+    "mainLogo": {
+      "id": "stockart-logo",
+      "type": "text-only",
+      "content": {
+        "primary": "StockArt",
+        "secondary": "AI-Powered Stock Analysis Platform"
+      },
+      "styling": {
+        "primary": {
+          "fontSize": "3rem",
+          "fontWeight": "600",
+          "color": "#ffffff",
+          "letterSpacing": "-0.02em",
+          "marginBottom": "0.5rem"
+        },
+        "secondary": {
+          "fontSize": "1.125rem",
+          "color": "var(--text-secondary)",
+          "fontWeight": "400",
+          "marginBottom": "2rem"
+        }
+      },
+      "states": {
+        "initial": {
+          "position": "center",
+          "visible": true
+        },
+        "afterSearch": {
+          "position": "top-bar",
+          "visible": false
+        }
+      }
+    },
+    "searchBox": {
+      "id": "main-search",
+      "type": "input-with-actions",
+      "structure": {
+        "input": {
+          "type": "text",
+          "placeholder": "Ask anything about stocks...",
+          "attributes": {
+            "autocomplete": "off",
+            "spellcheck": "false",
+            "role": "searchbox",
+            "aria-label": "Stock analysis search"
+          }
+        },
+        "actions": {
+          "left": [
+            {
+              "id": "search-icon",
+              "icon": "search",
+              "type": "visual"
+            },
+            {
+              "id": "focus-mode",
+              "icon": "target",
+              "type": "toggle",
+              "tooltip": "Focus mode"
+            },
+            {
+              "id": "location",
+              "icon": "map-pin",
+              "type": "button",
+              "tooltip": "Use location"
+            }
+          ],
+          "right": [
+            {
+              "id": "attach-file",
+              "icon": "paperclip",
+              "type": "file-upload",
+              "tooltip": "Attach file"
+            },
+            {
+              "id": "voice-input",
+              "icon": "microphone",
+              "type": "voice-recorder",
+              "tooltip": "Voice input"
+            },
+            {
+              "id": "submit",
+              "icon": "arrow-right",
+              "type": "submit",
+              "tooltip": "Submit query"
+            }
+          ]
+        }
+      },
+      "behavior": {
+        "onSubmit": "transformToTop",
+        "onFocus": "highlightBorder",
+        "onBlur": "resetBorder"
+      },
+      "styling": {
+        "container": {
+          "width": "100%",
+          "maxWidth": "600px",
+          "position": "relative"
+        },
+        "input": {
+          "height": "60px",
+          "padding": "0 60px 0 50px",
+          "borderRadius": "30px",
+          "border": "1px solid rgba(255, 255, 255, 0.2)",
+          "background": "rgba(255, 255, 255, 0.1)",
+          "backdropFilter": "blur(10px)",
+          "color": "var(--text-primary)",
+          "fontSize": "1rem",
+          "outline": "none"
+        },
+        "focused": {
+          "borderColor": "var(--accent-color)",
+          "boxShadow": "0 0 0 3px rgba(79, 156, 249, 0.1)"
+        }
+      },
+      "states": {
+        "initial": {
+          "position": "center-page",
+          "marginTop": "2rem"
+        },
+        "afterSearch": {
+          "position": "bottom-fixed",
+          "marginBottom": "2rem"
+        }
+      }
+    },
+    "quickActions": {
+      "id": "quick-actions",
+      "type": "action-grid",
+      "items": [
+        {
+          "id": "market-analysis",
+          "icon": "trending-up",
+          "label": "Market Analysis",
+          "description": "Analyze current market trends",
+          "action": "search",
+          "query": "What are the current market trends and key indicators?"
+        },
+        {
+          "id": "stock-research",
+          "icon": "chart-bar",
+          "label": "Stock Research",
+          "description": "Research specific stocks",
+          "action": "search",
+          "query": "Help me research and analyze stock performance"
+        },
+        {
+          "id": "investment-ideas",
+          "icon": "lightbulb",
+          "label": "Investment Ideas",
+          "description": "Discover opportunities",
+          "action": "search",
+          "query": "Show me promising investment opportunities"
+        },
+        {
+          "id": "risk-assessment",
+          "icon": "shield-check",
+          "label": "Risk Assessment",
+          "description": "Evaluate portfolio risk",
+          "action": "search",
+          "query": "Analyze my portfolio risk and suggest improvements"
+        }
+      ],
+      "styling": {
+        "container": {
+          "display": "grid",
+          "gridTemplateColumns": "repeat(auto-fit, minmax(200px, 1fr))",
+          "gap": "1rem",
+          "marginTop": "2rem",
+          "maxWidth": "800px"
+        },
+        "item": {
+          "padding": "1.5rem",
+          "borderRadius": "12px",
+          "border": "1px solid var(--border-color)",
+          "background": "rgba(255, 255, 255, 0.05)",
+          "cursor": "pointer",
+          "transition": "all 0.2s ease"
+        },
+        "itemHover": {
+          "background": "rgba(255, 255, 255, 0.1)",
+          "borderColor": "var(--accent-color)",
+          "transform": "translateY(-2px)"
+        }
+      },
+      "states": {
+        "initial": {
+          "visible": true
+        },
+        "afterSearch": {
+          "visible": false
+        }
+      }
+    },
+    "signInModal": {
+      "id": "signin-modal",
+      "type": "floating-modal",
+      "trigger": {
+        "id": "signin-trigger",
+        "type": "button",
+        "label": "Sign in or create an account",
+        "position": "top-right"
+      },
+      "modal": {
+        "position": "right-side",
+        "width": "400px",
+        "backdrop": true,
+        "closeOnBackdrop": true,
+        "closeOnEscape": true
+      },
+      "content": {
+        "header": {
+          "title": "Sign in or create an account",
+          "subtitle": "Unlock Pro Search and History",
+          "closeButton": true
+        },
+        "body": {
+          "socialAuth": [
+            {
+              "provider": "google",
+              "label": "Continue with Google",
+              "icon": "google-logo",
+              "color": "#4285f4"
+            },
+            {
+              "provider": "apple",
+              "label": "Continue with Apple",
+              "icon": "apple-logo",
+              "color": "#000000"
+            }
+          ],
+          "emailAuth": {
+            "enabled": true,
+            "placeholder": "Enter your email",
+            "submitLabel": "Continue with email"
+          }
+        },
+        "footer": {
+          "text": "Single sign-on (SSO)",
+          "links": [
+            {
+              "text": "Terms of Service",
+              "href": "/terms"
+            },
+            {
+              "text": "Privacy Policy",
+              "href": "/privacy"
+            }
+          ]
+        }
+      },
+      "styling": {
+        "modal": {
+          "background": "var(--tertiary-dark)",
+          "borderRadius": "12px",
+          "border": "1px solid var(--border-color)",
+          "boxShadow": "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+          "padding": "2rem"
+        },
+        "backdrop": {
+          "background": "rgba(0, 0, 0, 0.6)",
+          "backdropFilter": "blur(8px)"
+        }
+      },
+      "animations": {
+        "enter": "slide-from-right",
+        "exit": "slide-to-right",
+        "duration": "300ms"
+      }
+    },
+    "topBar": {
+      "id": "top-bar",
+      "type": "header-bar",
+      "content": {
+        "left": {
+          "logo": {
+            "text": "StockArt",
+            "size": "1.5rem",
+            "color": "var(--text-primary)"
+          }
+        },
+        "center": {
+          "userQuery": {
+            "display": true,
+            "maxLength": 60,
+            "truncate": true
+          }
+        },
+        "right": {
+          "actions": [
+            {
+              "id": "share-button",
+              "icon": "share",
+              "label": "Share",
+              "type": "button"
+            },
+            {
+              "id": "more-options",
+              "icon": "more-horizontal",
+              "label": "More options",
+              "type": "dropdown"
+            }
+          ]
+        }
+      },
+      "styling": {
+        "height": "60px",
+        "padding": "0 2rem",
+        "borderBottom": "1px solid var(--border-color)",
+        "background": "var(--primary-dark)",
+        "position": "sticky",
+        "top": 0,
+        "zIndex": 50
+      },
+      "states": {
+        "initial": {
+          "visible": false
+        },
+        "afterSearch": {
+          "visible": true
+        }
+      }
+    },
+    "searchResults": {
+      "id": "search-results",
+      "type": "results-container",
+      "structure": {
+        "header": {
+          "sourceInfo": true,
+          "timestamp": true,
+          "confidence": true
+        },
+        "content": {
+          "mainResponse": true,
+          "sources": true,
+          "relatedQuestions": true
+        },
+        "footer": {
+          "feedback": true,
+          "shareOptions": true
+        }
+      },
+      "styling": {
+        "container": {
+          "maxWidth": "800px",
+          "margin": "0 auto",
+          "padding": "2rem"
+        },
+        "response": {
+          "background": "var(--card-background)",
+          "borderRadius": "12px",
+          "padding": "2rem",
+          "border": "1px solid var(--border-color)"
+        }
+      },
+      "states": {
+        "initial": {
+          "visible": false
+        },
+        "afterSearch": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "responsive": {
+    "mobile": {
+      "sidebar": {
+        "behavior": "overlay",
+        "trigger": "hamburger-menu",
+        "width": "280px"
+      },
+      "searchBox": {
+        "styling": {
+          "input": {
+            "height": "50px",
+            "padding": "0 50px 0 40px"
+          }
+        }
+      },
+      "signInModal": {
+        "modal": {
+          "position": "center",
+          "width": "calc(100% - 2rem)",
+          "maxWidth": "350px"
+        }
+      },
+      "quickActions": {
+        "styling": {
+          "container": {
+            "gridTemplateColumns": "repeat(2, 1fr)",
+            "gap": "0.75rem"
+          },
+          "item": {
+            "padding": "1rem"
+          }
+        }
+      }
+    },
+    "tablet": {
+      "sidebar": {
+        "behavior": "hover-expand"
+      },
+      "searchBox": {
+        "styling": {
+          "container": {
+            "maxWidth": "500px"
+          }
+        }
+      }
+    }
+  },
+  "interactions": {
+    "hover": {
+      "sidebar": {
+        "expandDelay": "200ms",
+        "collapseDelay": "300ms"
+      },
+      "quickActions": {
+        "transform": "translateY(-2px)",
+        "duration": "200ms"
+      }
+    },
+    "focus": {
+      "searchBox": {
+        "borderColor": "var(--accent-color)",
+        "boxShadow": "0 0 0 3px rgba(79, 156, 249, 0.1)"
+      }
+    },
+    "click": {
+      "quickActions": {
+        "ripple": true,
+        "feedback": "haptic"
+      }
+    }
+  },
+  "accessibility": {
+    "keyboardNavigation": {
+      "enabled": true,
+      "focusVisible": true,
+      "tabOrder": ["sidebar", "searchBox", "quickActions", "signInTrigger"]
+    },
+    "screenReader": {
+      "announcements": true,
+      "landmarks": true,
+      "descriptions": true
+    },
+    "colorContrast": {
+      "level": "WCAG-AA",
+      "minimumRatio": 4.5
+    }
+  }
+}

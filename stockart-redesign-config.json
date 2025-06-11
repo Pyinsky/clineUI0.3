@@ -1,0 +1,326 @@
+{
+  "project": {
+    "name": "StockArt.ai Redesign",
+    "version": "1.0.0",
+    "description": "Perplexity-inspired redesign for StockArt.ai landing page",
+    "baseModel": "Perplexity Landing Page",
+    "requirements": [
+      "White logo text, no center image",
+      "Floating sign-in modal (right-side)",
+      "No model selection toggle",
+      "Collapsible sidebar on hover",
+      "Mobile responsive",
+      "Input moves to top after submission"
+    ]
+  },
+  "layout": {
+    "structure": "sidebar-main-content",
+    "sidebar": {
+      "position": "left",
+      "width": {
+        "collapsed": "60px",
+        "expanded": "240px"
+      },
+      "behavior": "hover-expand",
+      "items": [
+        {
+          "id": "home",
+          "icon": "home",
+          "label": "Home",
+          "active": true
+        },
+        {
+          "id": "discover",
+          "icon": "globe",
+          "label": "Discover"
+        },
+        {
+          "id": "spaces",
+          "icon": "grid",
+          "label": "Spaces"
+        },
+        {
+          "id": "library",
+          "icon": "bookmark",
+          "label": "Library"
+        }
+      ],
+      "footer": {
+        "signInButton": true,
+        "userProfile": false
+      }
+    },
+    "mainContent": {
+      "states": {
+        "initial": {
+          "layout": "centered",
+          "components": ["logo", "searchBox", "quickActions"]
+        },
+        "afterSearch": {
+          "layout": "top-down",
+          "components": ["topBar", "searchResults", "bottomSearchBox"]
+        }
+      }
+    },
+    "header": {
+      "visible": false,
+      "modelSelector": false
+    }
+  },
+  "components": {
+    "logo": {
+      "type": "text",
+      "text": "StockArt",
+      "subtitle": "AI-Powered Stock Analysis Platform",
+      "position": "center",
+      "styling": {
+        "color": "#ffffff",
+        "fontSize": "3rem",
+        "fontWeight": "600",
+        "textAlign": "center",
+        "marginBottom": "1rem"
+      },
+      "image": false
+    },
+    "searchBox": {
+      "placeholder": "Ask anything about stocks...",
+      "position": {
+        "initial": "center",
+        "afterSearch": "bottom-fixed"
+      },
+      "features": [
+        "voice-input",
+        "file-upload",
+        "focus-mode"
+      ],
+      "styling": {
+        "width": "100%",
+        "maxWidth": "600px",
+        "height": "60px",
+        "borderRadius": "30px",
+        "background": "rgba(255, 255, 255, 0.1)",
+        "border": "1px solid rgba(255, 255, 255, 0.2)",
+        "backdropFilter": "blur(10px)"
+      }
+    },
+    "signInModal": {
+      "type": "floating",
+      "position": "right-side",
+      "trigger": "button",
+      "styling": {
+        "width": "400px",
+        "background": "var(--tertiary-dark)",
+        "borderRadius": "12px",
+        "border": "1px solid var(--border-color)",
+        "boxShadow": "var(--shadow-xl)"
+      },
+      "content": {
+        "title": "Sign in or create an account",
+        "subtitle": "Unlock Pro Search and History",
+        "methods": [
+          {
+            "type": "google",
+            "label": "Continue with Google",
+            "icon": "google"
+          },
+          {
+            "type": "apple",
+            "label": "Continue with Apple",
+            "icon": "apple"
+          },
+          {
+            "type": "email",
+            "label": "Continue with email",
+            "placeholder": "Enter your email"
+          }
+        ],
+        "footer": "Single sign-on (SSO)"
+      }
+    },
+    "quickActions": {
+      "visible": true,
+      "items": [
+        {
+          "icon": "trending-up",
+          "label": "Market Analysis",
+          "action": "search",
+          "query": "current market trends"
+        },
+        {
+          "icon": "chart-bar",
+          "label": "Stock Research",
+          "action": "search",
+          "query": "analyze stock performance"
+        },
+        {
+          "icon": "lightbulb",
+          "label": "Investment Ideas",
+          "action": "search",
+          "query": "investment opportunities"
+        },
+        {
+          "icon": "shield-check",
+          "label": "Risk Assessment",
+          "action": "search",
+          "query": "portfolio risk analysis"
+        }
+      ]
+    },
+    "topBar": {
+      "visible": false,
+      "initialState": false,
+      "afterSearchState": true,
+      "content": {
+        "logo": {
+          "type": "text",
+          "text": "StockArt",
+          "size": "small"
+        },
+        "userQuery": true,
+        "shareButton": true
+      }
+    }
+  },
+  "theme": {
+    "mode": "dark",
+    "colors": {
+      "primary": "#1a1a1a",
+      "secondary": "#2a2a2a",
+      "tertiary": "#3a3a3a",
+      "accent": "#4f9cf9",
+      "text": {
+        "primary": "#ffffff",
+        "secondary": "#a0a0a0",
+        "muted": "#666666"
+      },
+      "border": "rgba(255, 255, 255, 0.1)",
+      "background": {
+        "main": "#0f0f0f",
+        "card": "rgba(255, 255, 255, 0.05)",
+        "modal": "rgba(26, 26, 26, 0.95)"
+      }
+    },
+    "typography": {
+      "fontFamily": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+      "sizes": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem"
+      }
+    },
+    "spacing": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "1rem",
+      "lg": "1.5rem",
+      "xl": "2rem",
+      "2xl": "3rem"
+    },
+    "borderRadius": {
+      "sm": "0.25rem",
+      "md": "0.5rem",
+      "lg": "0.75rem",
+      "xl": "1rem",
+      "full": "9999px"
+    }
+  },
+  "responsive": {
+    "breakpoints": {
+      "mobile": "768px",
+      "tablet": "1024px",
+      "desktop": "1280px"
+    },
+    "adaptations": {
+      "mobile": {
+        "sidebar": {
+          "behavior": "overlay",
+          "trigger": "hamburger-menu"
+        },
+        "searchBox": {
+          "width": "calc(100% - 2rem)",
+          "margin": "0 1rem"
+        },
+        "signInModal": {
+          "position": "center",
+          "width": "calc(100% - 2rem)",
+          "maxWidth": "350px"
+        },
+        "quickActions": {
+          "layout": "grid",
+          "columns": 2
+        }
+      },
+      "tablet": {
+        "sidebar": {
+          "behavior": "hover-expand"
+        },
+        "searchBox": {
+          "maxWidth": "500px"
+        }
+      }
+    }
+  },
+  "interactions": {
+    "sidebar": {
+      "hoverExpand": {
+        "delay": "200ms",
+        "duration": "300ms",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)"
+      }
+    },
+    "searchBox": {
+      "focus": {
+        "borderColor": "#4f9cf9",
+        "boxShadow": "0 0 0 3px rgba(79, 156, 249, 0.1)"
+      },
+      "submission": {
+        "animation": "slide-to-top",
+        "duration": "500ms"
+      }
+    },
+    "signInModal": {
+      "entrance": "slide-from-right",
+      "exit": "slide-to-right",
+      "backdrop": "blur-fade"
+    }
+  },
+  "functionality": {
+    "defaultModel": "system-preference",
+    "modelSelection": false,
+    "searchBehavior": {
+      "onSubmit": "moveToTop",
+      "persistentInput": true,
+      "bottomFixed": true
+    },
+    "authentication": {
+      "modal": true,
+      "providers": ["google", "apple", "email"],
+      "persistence": "localStorage"
+    },
+    "accessibility": {
+      "keyboardNavigation": true,
+      "screenReader": true,
+      "focusManagement": true,
+      "colorContrast": "WCAG-AA"
+    }
+  },
+  "animations": {
+    "pageTransitions": {
+      "initial-to-search": {
+        "logo": "fade-scale-up",
+        "searchBox": "slide-to-top",
+        "quickActions": "fade-out"
+      }
+    },
+    "componentAnimations": {
+      "sidebar-expand": "width-transition",
+      "modal-enter": "slide-fade",
+      "search-submit": "transform-position"
+    }
+  }
+}

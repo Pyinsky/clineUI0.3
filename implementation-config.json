@@ -1,0 +1,268 @@
+{
+  "implementation": {
+    "framework": "Vanilla JavaScript + CSS",
+    "architecture": "Component-based",
+    "buildTool": "None (Direct HTML/CSS/JS)",
+    "deployment": "Static hosting ready"
+  },
+  "fileStructure": {
+    "root": "/",
+    "assets": {
+      "html": ["index.html"],
+      "css": [
+        "styles/main.css",
+        "styles/components.css",
+        "styles/responsive.css",
+        "styles/animations.css"
+      ],
+      "javascript": [
+        "scripts/main.js",
+        "scripts/sidebar.js",
+        "scripts/search.js",
+        "scripts/signin-modal.js",
+        "scripts/responsive.js"
+      ],
+      "icons": [
+        "assets/icons/stockart-logo.svg",
+        "assets/icons/feather-icons.svg"
+      ]
+    }
+  },
+  "cssVariables": {
+    ":root": {
+      "--primary-dark": "#0f0f0f",
+      "--secondary-dark": "#1a1a1a",
+      "--tertiary-dark": "#2a2a2a",
+      "--accent-color": "#4f9cf9",
+      "--accent-hover": "#3b82f6",
+      "--text-primary": "#ffffff",
+      "--text-secondary": "#a0a0a0",
+      "--text-muted": "#666666",
+      "--border-color": "rgba(255, 255, 255, 0.1)",
+      "--border-hover": "rgba(255, 255, 255, 0.2)",
+      "--card-background": "rgba(255, 255, 255, 0.05)",
+      "--modal-background": "rgba(26, 26, 26, 0.95)",
+      "--shadow-sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "--shadow-md": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+      "--shadow-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+      "--shadow-xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+      "--blur-sm": "blur(4px)",
+      "--blur-md": "blur(8px)",
+      "--blur-lg": "blur(16px)",
+      "--transition-fast": "150ms ease",
+      "--transition-normal": "300ms ease",
+      "--transition-slow": "500ms ease",
+      "--sidebar-width-collapsed": "60px",
+      "--sidebar-width-expanded": "240px",
+      "--search-height": "60px",
+      "--search-height-mobile": "50px",
+      "--header-height": "60px",
+      "--z-sidebar": "100",
+      "--z-modal": "200",
+      "--z-tooltip": "300"
+    }
+  },
+  "htmlStructure": {
+    "doctype": "html5",
+    "lang": "en",
+    "head": {
+      "meta": [
+        {"charset": "UTF-8"},
+        {"name": "viewport", "content": "width=device-width, initial-scale=1.0"},
+        {"name": "description", "content": "StockArt.ai - AI-Powered Stock Analysis Platform"},
+        {"name": "theme-color", "content": "#0f0f0f"}
+      ],
+      "title": "StockArt.ai - AI-Powered Stock Analysis",
+      "links": [
+        {"rel": "preconnect", "href": "https://fonts.googleapis.com"},
+        {"rel": "preconnect", "href": "https://fonts.gstatic.com", "crossorigin": true},
+        {"rel": "stylesheet", "href": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"}
+      ]
+    },
+    "body": {
+      "class": "dark-theme",
+      "structure": [
+        {
+          "element": "div",
+          "id": "app",
+          "children": [
+            {
+              "element": "aside",
+              "id": "sidebar",
+              "class": "sidebar collapsed"
+            },
+            {
+              "element": "main",
+              "id": "main-content",
+              "class": "main-content"
+            },
+            {
+              "element": "div",
+              "id": "signin-modal",
+              "class": "signin-modal hidden"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "componentImplementation": {
+    "sidebar": {
+      "html": "<aside id=\"sidebar\" class=\"sidebar collapsed\"><div class=\"sidebar-header\"><div class=\"logo-icon\"><svg><!-- StockArt icon --></svg></div></div><nav class=\"sidebar-nav\"><a href=\"/\" class=\"nav-item active\"><svg class=\"icon\"><!-- home icon --></svg><span class=\"label\">Home</span></a><a href=\"/discover\" class=\"nav-item\"><svg class=\"icon\"><!-- globe icon --></svg><span class=\"label\">Discover</span></a><a href=\"/spaces\" class=\"nav-item\"><svg class=\"icon\"><!-- grid icon --></svg><span class=\"label\">Spaces</span></a><a href=\"/library\" class=\"nav-item\"><svg class=\"icon\"><!-- bookmark icon --></svg><span class=\"label\">Library</span></a></nav><div class=\"sidebar-footer\"><button class=\"sign-in-btn\" id=\"sidebarSignIn\"><svg class=\"icon\"><!-- user icon --></svg><span class=\"label\">Sign In</span></button></div></aside>",
+      "css": ".sidebar { position: fixed; left: 0; top: 0; height: 100vh; background: var(--secondary-dark); border-right: 1px solid var(--border-color); transition: width var(--transition-normal); z-index: var(--z-sidebar); } .sidebar.collapsed { width: var(--sidebar-width-collapsed); } .sidebar.expanded { width: var(--sidebar-width-expanded); }",
+      "js": "function initSidebar() { const sidebar = document.getElementById('sidebar'); sidebar.addEventListener('mouseenter', () => sidebar.classList.add('expanded')); sidebar.addEventListener('mouseleave', () => sidebar.classList.remove('expanded')); }"
+    },
+    "searchBox": {
+      "html": "<div class=\"search-container\"><div class=\"search-box\"><div class=\"search-actions-left\"><svg class=\"search-icon\"><!-- search icon --></svg><button class=\"action-btn\" title=\"Focus mode\"><svg><!-- target icon --></svg></button><button class=\"action-btn\" title=\"Location\"><svg><!-- map-pin icon --></svg></button></div><input type=\"text\" placeholder=\"Ask anything about stocks...\" class=\"search-input\" id=\"searchInput\"><div class=\"search-actions-right\"><button class=\"action-btn\" title=\"Attach file\"><svg><!-- paperclip icon --></svg></button><button class=\"action-btn\" title=\"Voice input\"><svg><!-- microphone icon --></svg></button><button class=\"submit-btn\" id=\"submitBtn\"><svg><!-- arrow-right icon --></svg></button></div></div></div>",
+      "css": ".search-container { width: 100%; max-width: 600px; position: relative; } .search-box { position: relative; } .search-input { width: 100%; height: var(--search-height); padding: 0 60px 0 50px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); backdrop-filter: var(--blur-md); color: var(--text-primary); font-size: 1rem; outline: none; transition: var(--transition-fast); }",
+      "js": "function initSearchBox() { const searchInput = document.getElementById('searchInput'); const submitBtn = document.getElementById('submitBtn'); searchInput.addEventListener('focus', () => searchInput.style.borderColor = 'var(--accent-color)'); submitBtn.addEventListener('click', handleSearchSubmit); }"
+    },
+    "signInModal": {
+      "html": "<div id=\"signinModal\" class=\"signin-modal\" style=\"display: none;\"><div id=\"signinBackdrop\" class=\"signin-backdrop\"></div><div class=\"signin-content\"><button id=\"closeSigninBtn\" class=\"close-btn\"><svg><!-- x icon --></svg></button><div class=\"signin-header\"><h2>Sign in or create an account</h2><p>Unlock Pro Search and History</p></div><div class=\"signin-body\"><button id=\"googleSigninBtn\" class=\"google-btn\"><svg><!-- google icon --></svg>Continue with Google</button><button id=\"appleSigninBtn\" class=\"apple-btn\"><svg><!-- apple icon --></svg>Continue with Apple</button><form id=\"emailForm\" class=\"email-form\"><input type=\"email\" id=\"emailInput\" placeholder=\"Enter your email\"><button type=\"submit\" class=\"email-btn\">Continue with email</button></form></div><div class=\"signin-footer\"><p>Single sign-on (SSO)</p></div></div></div>",
+      "css": ".signin-modal { position: fixed; inset: 0; z-index: var(--z-modal); display: flex; align-items: center; justify-content: flex-end; padding-right: 2rem; } .signin-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: var(--blur-md); } .signin-content { position: relative; width: 400px; background: var(--tertiary-dark); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-xl); padding: 2rem; transform: translateY(-50%); margin-top: 50vh; }",
+      "js": "// Implemented in scripts/signin-modal.js"
+    },
+    "quickActions": {
+      "html": "<div class=\"quick-actions\"><div class=\"action-card\" data-query=\"What are the current market trends?\"><svg class=\"action-icon\"><!-- trending-up icon --></svg><h3>Market Analysis</h3><p>Analyze current market trends</p></div><div class=\"action-card\" data-query=\"Help me research stocks\"><svg class=\"action-icon\"><!-- chart-bar icon --></svg><h3>Stock Research</h3><p>Research specific stocks</p></div><div class=\"action-card\" data-query=\"Show investment opportunities\"><svg class=\"action-icon\"><!-- lightbulb icon --></svg><h3>Investment Ideas</h3><p>Discover opportunities</p></div><div class=\"action-card\" data-query=\"Analyze portfolio risk\"><svg class=\"action-icon\"><!-- shield-check icon --></svg><h3>Risk Assessment</h3><p>Evaluate portfolio risk</p></div></div>",
+      "css": ".quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; max-width: 800px; } .action-card { padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); background: var(--card-background); cursor: pointer; transition: var(--transition-fast); } .action-card:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-color); transform: translateY(-2px); }",
+      "js": "function initQuickActions() { document.querySelectorAll('.action-card').forEach(card => { card.addEventListener('click', () => { const query = card.dataset.query; document.getElementById('searchInput').value = query; handleSearchSubmit(); }); }); }"
+    }
+  },
+  "stateManagement": {
+    "initialState": {
+      "sidebar": "collapsed",
+      "searchBox": "center-positioned",
+      "logo": "visible-large",
+      "quickActions": "visible",
+      "topBar": "hidden",
+      "searchResults": "hidden"
+    },
+    "afterSearchState": {
+      "sidebar": "collapsed",
+      "searchBox": "bottom-fixed",
+      "logo": "hidden",
+      "quickActions": "hidden",
+      "topBar": "visible",
+      "searchResults": "visible"
+    },
+    "transitions": {
+      "search-submit": {
+        "duration": "500ms",
+        "steps": [
+          {"element": "logo", "action": "fadeOut", "delay": "0ms"},
+          {"element": "quickActions", "action": "fadeOut", "delay": "100ms"},
+          {"element": "searchBox", "action": "slideToBottom", "delay": "200ms"},
+          {"element": "topBar", "action": "slideDown", "delay": "300ms"},
+          {"element": "searchResults", "action": "fadeIn", "delay": "400ms"}
+        ]
+      }
+    }
+  },
+  "responsiveBreakpoints": {
+    "mobile": {
+      "maxWidth": "768px",
+      "changes": {
+        "sidebar": {
+          "behavior": "overlay",
+          "width": "280px",
+          "trigger": "hamburger-menu"
+        },
+        "searchBox": {
+          "height": "var(--search-height-mobile)",
+          "padding": "0 50px 0 40px"
+        },
+        "signInModal": {
+          "position": "center",
+          "width": "calc(100% - 2rem)",
+          "maxWidth": "350px"
+        },
+        "quickActions": {
+          "gridTemplateColumns": "repeat(2, 1fr)",
+          "gap": "0.75rem"
+        }
+      }
+    },
+    "tablet": {
+      "minWidth": "769px",
+      "maxWidth": "1024px",
+      "changes": {
+        "searchBox": {
+          "maxWidth": "500px"
+        }
+      }
+    }
+  },
+  "animations": {
+    "keyframes": {
+      "fadeIn": "0% { opacity: 0; } 100% { opacity: 1; }",
+      "fadeOut": "0% { opacity: 1; } 100% { opacity: 0; }",
+      "slideToBottom": "0% { transform: translateY(0); } 100% { transform: translateY(calc(100vh - 120px)); }",
+      "slideDown": "0% { transform: translateY(-100%); } 100% { transform: translateY(0); }",
+      "slideFromRight": "0% { transform: translateX(100%); opacity: 0; } 100% { transform: translateX(0); opacity: 1; }",
+      "slideToRight": "0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(100%); opacity: 0; }",
+      "spin": "0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }"
+    },
+    "classes": {
+      ".fade-in": "animation: fadeIn var(--transition-normal) ease-out;",
+      ".fade-out": "animation: fadeOut var(--transition-normal) ease-in;",
+      ".slide-to-bottom": "animation: slideToBottom var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);",
+      ".slide-down": "animation: slideDown var(--transition-normal) ease-out;",
+      ".slide-from-right": "animation: slideFromRight var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);",
+      ".slide-to-right": "animation: slideToRight var(--transition-normal) ease-in;",
+      ".animate-spin": "animation: spin 1s linear infinite;"
+    }
+  },
+  "accessibility": {
+    "ariaLabels": {
+      "sidebar": "Main navigation",
+      "searchBox": "Stock analysis search",
+      "signInModal": "Sign in dialog",
+      "quickActions": "Quick action suggestions"
+    },
+    "keyboardShortcuts": {
+      "Escape": "Close modal",
+      "Tab": "Navigate between elements",
+      "Enter": "Submit search or activate button",
+      "Space": "Activate button"
+    },
+    "focusManagement": {
+      "modalOpen": "Focus first interactive element",
+      "modalClose": "Return focus to trigger",
+      "searchSubmit": "Focus search results"
+    }
+  },
+  "performance": {
+    "lazyLoading": {
+      "images": true,
+      "components": false
+    },
+    "caching": {
+      "staticAssets": true,
+      "apiResponses": false
+    },
+    "optimization": {
+      "cssMinification": true,
+      "jsMinification": true,
+      "imageOptimization": true
+    }
+  },
+  "seo": {
+    "meta": {
+      "title": "StockArt.ai - AI-Powered Stock Analysis Platform",
+      "description": "Advanced AI-powered stock analysis and market research platform. Get real-time insights, portfolio analysis, and investment recommendations.",
+      "keywords": "stock analysis, AI trading, market research, investment platform, portfolio management",
+      "ogTitle": "StockArt.ai - AI-Powered Stock Analysis",
+      "ogDescription": "Advanced AI-powered stock analysis and market research platform",
+      "ogImage": "/assets/og-image.jpg",
+      "twitterCard": "summary_large_image"
+    },
+    "structuredData": {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "StockArt.ai",
+      "description": "AI-Powered Stock Analysis Platform",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser"
+    }
+  }
+}
