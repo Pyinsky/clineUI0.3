@@ -350,14 +350,18 @@
     font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--text-primary);
+    margin-right: var(--spacing-md); /* Add some space */
 }
 .user-query-display {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
+    color: var(--text-primary); /* Make it primary text color like Perplexity */
+    font-size: var(--font-size-base); /* Slightly larger for better readability */
+    font-weight: 500; /* Medium weight */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 50%; /* Adjust as needed */
+    flex-grow: 1; /* Allow it to take available space */
+    text-align: left; /* Explicitly align left */
+    margin: 0 var(--spacing-md); /* Space around it */
 }
 .share-results-btn {
     display: inline-flex;
@@ -391,10 +395,12 @@
     line-height: 1.5;
 }
 .chat-message.user {
-    background-color: var(--accent-color);
+    background-color: var(--tertiary-dark); /* More subtle background for user message */
     color: var(--text-primary);
     align-self: flex-end;
     border-bottom-right-radius: var(--radius-sm); /* Bubble tail */
+    /* Add a subtle border to distinguish from AI if needed */
+    /* border: 1px solid rgba(255, 255, 255, 0.05); */
 }
 .chat-message.ai {
     background-color: var(--tertiary-dark);

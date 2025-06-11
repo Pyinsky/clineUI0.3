@@ -3,8 +3,11 @@
 class SearchController {
     constructor(searchInput, searchContainer, onSubmitCallback) {
         this.searchInput = searchInput;
-        this.searchContainer = searchContainer; // The .search-box-container div
+        this.searchContainer = searchContainer; // The #search-box-container div
         this.onSubmitCallback = onSubmitCallback; // Callback to main.js to handle submission
+
+        this.initialParent = this.searchContainer.parentElement; // Store its original parent
+        this.bottomPlaceholder = document.getElementById('bottom-search-box-placeholder');
 
         this.elements = {
             attachFileBtn: document.getElementById('attachFileBtn'),
@@ -14,8 +17,8 @@ class SearchController {
     }
 
     init() {
-        if (!this.searchInput || !this.searchContainer) {
-            console.error('Search input or container not found for initialization.');
+        if (!this.searchInput || !this.searchContainer || !this.initialParent || !this.bottomPlaceholder) {
+            console.error('Search input, container, initial parent, or bottom placeholder not found for initialization.');
             return;
         }
         this.addEventListeners();
@@ -108,21 +111,25 @@ class SearchController {
     }
 
     moveToBottom() {
+        if (!this.bottomPlaceholder) return;
         // This function will be called by main.js when search is active
+        this.bottomPlaceholder.appendChild(this.searchContainer); // Move the element
         this.searchContainer.classList.remove('initial-pos');
         this.searchContainer.classList.add('bottom-pos');
         // Add animation class if defined
-        this.searchContainer.classList.remove('slide-to-bottom-anim'); // remove if coming from center
-        this.searchContainer.classList.add('slide-up-from-bottom-anim'); // Animate appearance at bottom
+        this.searchContainer.classList.remove('slide-to-bottom-anim'); 
+        this.searchContainer.classList.add('slide-up-from-bottom-anim'); 
+        this.searchInput.focus(); // Keep focus or re-focus
     }
 
     moveToCenter() {
+        if (!this.initialParent) return;
         // This function will be called by main.js for initial view
+        this.initialParent.appendChild(this.searchContainer); // Move back to original parent
         this.searchContainer.classList.remove('bottom-pos');
         this.searchContainer.classList.add('initial-pos');
         // Add animation class if defined
         this.searchContainer.classList.remove('slide-up-from-bottom-anim');
-        // Potentially add an animation for returning to center if needed
     }
 
     clearInput() {

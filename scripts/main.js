@@ -120,34 +120,45 @@ class StockArtApp {
         // Simulate AI response for now
         this.addMessageToChat('Thinking...', 'ai thinking'); 
         
-        // Simulate API call
+        // Actual API call
         try {
-            // const aiResponse = await this.fetchAIResponse(this.state.currentQuery);
-            // Replace with actual API call in the future
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
-            const aiResponse = `This is a simulated AI response for your query: "${this.state.currentQuery}". The actual stock analysis would appear here.`;
-            
+            const aiResponse = await this.fetchAIResponse(this.state.currentQuery);
             this.removeThinkingMessage();
             this.addMessageToChat(aiResponse, 'ai');
         } catch (error) {
             console.error("Error fetching AI response:", error);
             this.removeThinkingMessage();
-            this.addMessageToChat(`Sorry, I couldn't process that. Error: ${error.message}`, 'ai error');
+            this.addMessageToChat(`Sorry, I couldn't process your request. Error: ${error.message}`, 'ai error');
         }
     }
 
-    // async fetchAIResponse(query) {
-    //     // Placeholder for actual API call to backend/n8n
-    //     // const response = await fetch('/api/analyze', {
-    //     //     method: 'POST',
-    //     //     headers: { 'Content-Type': 'application/json' },
-    //     //     body: JSON.stringify({ query })
-    //     // });
-    //     // if (!response.ok) throw new Error(`API Error: ${response.status}`);
-    //     // const data = await response.json();
-    //     // return data.reply || "No specific reply found.";
-    //     return new Promise(resolve => setTimeout(() => resolve(`Mock response for: ${query}`), 1000));
-    // }
+    async fetchAIResponse(query) {
+        const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook-test/stockartaipromptboxhandler';
+        const payload = {
+            text: query // Ensure the payload structure matches what the webhook expects
+        };
+
+        console.log('Sending to webhook:', webhookUrl, 'with payload:', payload);
+
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Webhook HTTP error! Status: ${response.status}, Message: ${errorText}`);
+            throw new Error(`API Error: ${response.status} - ${errorText}`);
+        }
+
+        const responseData = await response.json();
+        console.log('Webhook response:', responseData);
+        // Adjust based on the actual structure of responseData
+        return responseData.reply || responseData.message || "AI response received."; 
+    }
 
     addMessageToChat(text, type) {
         if (!this.elements.chatMessagesContainer) return;
