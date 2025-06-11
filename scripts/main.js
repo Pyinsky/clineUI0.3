@@ -1120,6 +1120,189 @@ const dynamicStyles = `
         transform: translateY(-20px); 
     }
 }
+
+/* --- Add these new styles to your CSS block in main.js --- */
+
+.analysis-summary {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--primary-dark);
+    border-radius: var(--radius-md);
+}
+
+.articles-container {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.news-article-card {
+    background: var(--primary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-base);
+}
+
+.news-article-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.article-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.source-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.source-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--hover-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.sentiment-tag {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.sentiment-tag.bullish {
+    background-color: #28a745; /* Green */
+}
+
+.sentiment-tag.bearish {
+    background-color: #dc3545; /* Red */
+}
+
+.sentiment-tag.neutral {
+    background-color: #6c757d; /* Grey */
+    color: #fff;
+}
+
+.article-title {
+    font-size: 1.1rem;
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.article-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+.article-title a:hover {
+    color: var(--accent-blue);
+}
+
+.article-reasoning {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Add these menu styles to your CSS block in main.js --- */
+
+.results-header {
+    align-items: flex-start;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: right;
+}
+
+.header-controls p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.model-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-toggle-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.menu-toggle-btn:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.menu-dropdown {
+    display: none; /* Hidden by default */
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: var(--spacing-sm);
+    background-color: var(--primary-dark);
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+    z-index: 1;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) 0;
+    overflow: hidden;
+}
+
+/* Show the dropdown on hover */
+.model-menu:hover .menu-dropdown {
+    display: block;
+}
+
+.menu-item {
+    color: var(--text-primary);
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: var(--hover-bg);
+}
+
+.menu-item.active {
+    font-weight: bold;
+    color: var(--accent-blue);
+}
 </style>
 `;
 
@@ -1441,186 +1624,3 @@ window.StockArtUtils = StockArtUtils;
 document.addEventListener('DOMContentLoaded', () => {
     window.stockArtMain = new StockArtMain();
 });
-
-/* --- Add these new styles to your CSS block in main.js --- */
-
-.analysis-summary {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-lg);
-    background: var(--primary-dark);
-    border-radius: var(--radius-md);
-}
-
-.articles-container {
-    display: grid;
-    gap: var(--spacing-lg);
-}
-
-.news-article-card {
-    background: var(--primary-dark);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-    transition: all var(--transition-base);
-}
-
-.news-article-card:hover {
-    border-color: var(--accent-blue);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.article-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-}
-
-.source-info {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-.source-logo {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--hover-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: var(--text-primary);
-}
-
-.sentiment-tag {
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #fff;
-    text-transform: uppercase;
-    line-height: 1;
-}
-
-.sentiment-tag.bullish {
-    background-color: #28a745; /* Green */
-}
-
-.sentiment-tag.bearish {
-    background-color: #dc3545; /* Red */
-}
-
-.sentiment-tag.neutral {
-    background-color: #6c757d; /* Grey */
-    color: #fff;
-}
-
-.article-title {
-    font-size: 1.1rem;
-    margin: 0 0 var(--spacing-sm) 0;
-}
-
-.article-title a {
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: color var(--transition-base);
-}
-
-.article-title a:hover {
-    color: var(--accent-blue);
-}
-
-.article-reasoning {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    margin: 0;
-}
-
-/* --- Add these menu styles to your CSS block in main.js --- */
-
-.results-header {
-    align-items: flex-start;
-}
-
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    text-align: right;
-}
-
-.header-controls p {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    white-space: nowrap;
-}
-
-.model-menu {
-    position: relative;
-    display: inline-block;
-}
-
-.menu-toggle-btn {
-    background: none;
-    border: 1px solid transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-base);
-}
-
-.menu-toggle-btn:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-.menu-dropdown {
-    display: none; /* Hidden by default */
-    position: absolute;
-    right: 0;
-    top: 100%;
-    margin-top: var(--spacing-sm);
-    background-color: var(--primary-dark);
-    min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
-    z-index: 1;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-    padding: var(--spacing-sm) 0;
-    overflow: hidden;
-}
-
-/* Show the dropdown on hover */
-.model-menu:hover .menu-dropdown {
-    display: block;
-}
-
-.menu-item {
-    color: var(--text-primary);
-    padding: 10px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.875rem;
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-}
-
-.menu-item:hover {
-    background-color: var(--hover-bg);
-}
-
-.menu-item.active {
-    font-weight: bold;
-    color: var(--accent-blue);
-}
