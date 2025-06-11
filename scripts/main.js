@@ -118,7 +118,7 @@ class StockArtApp {
         this.addMessageToChat(this.state.currentQuery, 'user');
 
         // Simulate AI response for now
-        this.addMessageToChat('Thinking...', 'ai thinking'); 
+        this.addMessageToChat('Thinking...', 'ai', 'thinking'); 
         
         // Actual API call
         try {
@@ -128,7 +128,7 @@ class StockArtApp {
         } catch (error) {
             console.error("Error fetching AI response:", error);
             this.removeThinkingMessage();
-            this.addMessageToChat(`Sorry, I couldn't process your request. Error: ${error.message}`, 'ai error');
+            this.addMessageToChat(`Sorry, I couldn't process your request. Error: ${error.message}`, 'ai', 'error');
         }
     }
 
@@ -181,11 +181,16 @@ class StockArtApp {
         }
     }
 
-    addMessageToChat(text, type) {
+    addMessageToChat(text, type, additionalClass = null) {
         if (!this.elements.chatMessagesContainer) return;
 
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('chat-message', type);
+        
+        // Add additional class if provided
+        if (additionalClass) {
+            messageDiv.classList.add(additionalClass);
+        }
         
         const bubbleDiv = document.createElement('div');
         bubbleDiv.classList.add('message-bubble');

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Test</title>
+</head>
+<body>
+    <h1>StockArt Webhook Test</h1>
+    <input type="text" id="testInput" placeholder="Enter test query" value="aapl stock latest">
+    <button onclick="testWebhook()">Test Webhook</button>
+    <div id="result"></div>
+
+    <script>
+        async function testWebhook() {
+            const query = document.getElementById('testInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = 'Testing webhook...';
+            
+            const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook-test/stockartaipromptboxhandler';
+            const payload = {
+                text: query
+            };
+
+            console.log('Testing webhook with:', payload);
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    resultDiv.innerHTML = `Error: ${response.status} - ${errorText}`;
+                    return;
+                }
+
+                const responseData = await response.json();
+                console.log('Response data:', responseData);
+                
+                resultDiv.innerHTML = `
+                    <h3>Success!</h3>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Response:</strong> ${JSON.stringify(responseData, null, 2)}</p>
+                `;
+            } catch (error) {
+                console.error('Webhook test failed:', error);
+                resultDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
