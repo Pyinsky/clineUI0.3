@@ -1361,7 +1361,69 @@ class StockArtMain {
     }
 }
 
+// Utility functions (remain unchanged)
+const StockArtUtils = {
+    formatNumber(num) {
+        return new Intl.NumberFormat().format(num);
+    },
+    formatCurrency(amount, currency = 'USD') {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: currency
+        }).format(amount);
+    },
+    formatPercentage(value, decimals = 2) {
+        return `${(value * 100).toFixed(decimals)}%`;
+    },
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+    throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    },
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    },
+    async copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            return false;
+        }
+    },
+    escapeHTML(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+};
 
+// Make utilities globally available
+window.StockArtUtils = StockArtUtils;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.stockArtMain = new StockArtMain();
+});
 
 // Utility functions
 const StockArtUtils = {
