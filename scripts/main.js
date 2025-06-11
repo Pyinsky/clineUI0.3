@@ -411,17 +411,21 @@ function showAnalysisResults(data, query) {
     if (typeof data === 'string') {
         content = data;
     } else if (data && typeof data === 'object') {
-        if (data.analysis) {
+        // FIX: Check for the specific array structure from n8n
+        if (Array.isArray(data) && data.length > 0 && data[0].output) {
+            content = data[0].output;
+        } else if (data.analysis) {
             content = data.analysis;
         } else if (data.result) {
             content = data.result;
         } else if (data.response) {
             content = data.response;
         } else {
-            content = JSON.stringify(data, null, 2);
+            // Fallback for unexpected structures
+            content = `Could not find a valid 'output' in the response. Full response: ${JSON.stringify(data, null, 2)}`;
         }
     } else {
-        content = 'Analysis completed successfully.';
+        content = 'Analysis response was empty or in an unexpected format.';
     }
 
     resultsContainer.innerHTML = `
@@ -548,36 +552,41 @@ function showErrorResults(error, query) {
 }
 
 function formatAnalysisContent(content) {
-    // Clean up the initial string, remove the "output:" wrapper if it exists
-    content = content.replace(/"output":\s*"/, '').replace(/\\n/g, '\n').replace(/"$/, '');
+    // FIX: More robust parsing for the actual webhook response format.
+    // Clean up the string just in case
+    content = content.replace(/^"|"$/g, '').replace(/\\n/g, '\n').replace(/\\"/g, '"');
 
-    const mainSummaryMatch = content.match(/##\s*News Sentiment Summary for .*\n([\s\S]*?)\n\nKey Articles:/);
+    const summaryRegex = /\*\*News Sentiment Summary for .*?\*\*([\s\S]*?)(?=\n\n\*\*Most Relevant Articles:\*\*)/;
+    const articlesRegex = /\*\*Most Relevant Articles:\*\*\n\n([\s\S]*)/;
+
+    const mainSummaryMatch = content.match(summaryRegex);
+    const articlesMatch = content.match(articlesRegex);
+
     const mainSummary = mainSummaryMatch ? mainSummaryMatch[1].trim() : 'Summary not available.';
+    const articlesText = articlesMatch ? articlesMatch[1] : null;
 
-    const articlesText = content.split('Key Articles:')[1];
     if (!articlesText) {
         return `<p>${mainSummary}</p><p>No articles found in the response.</p>`;
     }
-
-    const articles = articlesText.trim().split(/\n\s*\n/);
+    
+    const articles = articlesText.trim().split(/\n\n(?=\*\s+)/);
     
     let articlesHtml = articles.map(article => {
-        const titleMatch = article.match(/^(.*?)\s-\s(.*?)\s\(/);
-        const sentimentMatch = article.match(/Sentiment: (Bullish|Bearish|Neutral)/i);
-        const reasoningMatch = article.match(/Reasoning: (.*?)(?=\nLink:|$)/);
-        const linkMatch = article.match(/Link: (https?:\/\/[^\s]+)/);
+        const titleSourceMatch = article.match(/\*\s+\*\*(.*?)\*\*\s+-\s+(.*?)\s+\(/);
+        const linkMatch = article.match(/\*Link:\*\s+(https?:\/\/[^\s]+)/);
+        const sentimentMatch = article.match(/\*Sentiment:\*\s+\*\*(.*?)\*\*\s+-\s+(.*)/);
 
-        if (!titleMatch || !sentimentMatch || !reasoningMatch || !linkMatch) {
+        if (!titleSourceMatch || !sentimentMatch || !linkMatch) {
+            console.warn("Could not parse article:", article);
             return ''; // Skip malformed article entries
         }
 
-        const title = titleMatch[1].replace(/^\W+/, ''); // Remove leading characters like '*'
-        const source = titleMatch[2];
-        const sentiment = sentimentMatch[1].toLowerCase();
-        const reasoning = reasoningMatch[1];
-        const link = linkMatch[1];
-
-        // Placeholder for a logo - you could map source names to image URLs here
+        const title = titleSourceMatch[1].trim();
+        const source = titleSourceMatch[2].trim();
+        const sentiment = sentimentMatch[1].trim().toLowerCase();
+        const reasoning = sentimentMatch[2].trim();
+        const link = linkMatch[1].trim();
+        
         const logoPlaceholder = `<div class="source-logo">${source.charAt(0)}</div>`;
 
         return `
@@ -602,7 +611,7 @@ function formatAnalysisContent(content) {
              <p>${mainSummary}</p>
         </div>
         <div class="articles-container">
-            ${articlesHtml}
+            ${articlesHtml || '<p>Could not parse articles from the response.</p>'}
         </div>
     `;
 }
@@ -1120,6 +1129,189 @@ const dynamicStyles = `
         transform: translateY(-20px); 
     }
 }
+
+/* --- Add these new styles to your CSS block in main.js --- */
+
+.analysis-summary {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--primary-dark);
+    border-radius: var(--radius-md);
+}
+
+.articles-container {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.news-article-card {
+    background: var(--primary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-base);
+}
+
+.news-article-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.article-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.source-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.source-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--hover-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.sentiment-tag {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.sentiment-tag.bullish {
+    background-color: #28a745; /* Green */
+}
+
+.sentiment-tag.bearish {
+    background-color: #dc3545; /* Red */
+}
+
+.sentiment-tag.neutral {
+    background-color: #6c757d; /* Grey */
+    color: #fff;
+}
+
+.article-title {
+    font-size: 1.1rem;
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.article-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+.article-title a:hover {
+    color: var(--accent-blue);
+}
+
+.article-reasoning {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Add these menu styles to your CSS block in main.js --- */
+
+.results-header {
+    align-items: flex-start;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: right;
+}
+
+.header-controls p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.model-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-toggle-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.menu-toggle-btn:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.menu-dropdown {
+    display: none; /* Hidden by default */
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: var(--spacing-sm);
+    background-color: var(--primary-dark);
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+    z-index: 1;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) 0;
+    overflow: hidden;
+}
+
+/* Show the dropdown on hover */
+.model-menu:hover .menu-dropdown {
+    display: block;
+}
+
+.menu-item {
+    color: var(--text-primary);
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: var(--hover-bg);
+}
+
+.menu-item.active {
+    font-weight: bold;
+    color: var(--accent-blue);
+}
 </style>
 `;
 
@@ -1503,186 +1695,3 @@ window.StockArtUtils = StockArtUtils;
 document.addEventListener('DOMContentLoaded', () => {
     window.stockArtMain = new StockArtMain();
 });
-
-/* --- Add these new styles to your CSS block in main.js --- */
-
-.analysis-summary {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-lg);
-    background: var(--primary-dark);
-    border-radius: var(--radius-md);
-}
-
-.articles-container {
-    display: grid;
-    gap: var(--spacing-lg);
-}
-
-.news-article-card {
-    background: var(--primary-dark);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
-    transition: all var(--transition-base);
-}
-
-.news-article-card:hover {
-    border-color: var(--accent-blue);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.article-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-}
-
-.source-info {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-.source-logo {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--hover-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: var(--text-primary);
-}
-
-.sentiment-tag {
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #fff;
-    text-transform: uppercase;
-    line-height: 1;
-}
-
-.sentiment-tag.bullish {
-    background-color: #28a745; /* Green */
-}
-
-.sentiment-tag.bearish {
-    background-color: #dc3545; /* Red */
-}
-
-.sentiment-tag.neutral {
-    background-color: #6c757d; /* Grey */
-    color: #fff;
-}
-
-.article-title {
-    font-size: 1.1rem;
-    margin: 0 0 var(--spacing-sm) 0;
-}
-
-.article-title a {
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: color var(--transition-base);
-}
-
-.article-title a:hover {
-    color: var(--accent-blue);
-}
-
-.article-reasoning {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    margin: 0;
-}
-
-/* --- Add these menu styles to your CSS block in main.js --- */
-
-.results-header {
-    align-items: flex-start;
-}
-
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    text-align: right;
-}
-
-.header-controls p {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    white-space: nowrap;
-}
-
-.model-menu {
-    position: relative;
-    display: inline-block;
-}
-
-.menu-toggle-btn {
-    background: none;
-    border: 1px solid transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-md);
-    transition: all var(--transition-base);
-}
-
-.menu-toggle-btn:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-.menu-dropdown {
-    display: none; /* Hidden by default */
-    position: absolute;
-    right: 0;
-    top: 100%;
-    margin-top: var(--spacing-sm);
-    background-color: var(--primary-dark);
-    min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
-    z-index: 1;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-    padding: var(--spacing-sm) 0;
-    overflow: hidden;
-}
-
-/* Show the dropdown on hover */
-.model-menu:hover .menu-dropdown {
-    display: block;
-}
-
-.menu-item {
-    color: var(--text-primary);
-    padding: 10px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.875rem;
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-}
-
-.menu-item:hover {
-    background-color: var(--hover-bg);
-}
-
-.menu-item.active {
-    font-weight: bold;
-    color: var(--accent-blue);
-}
