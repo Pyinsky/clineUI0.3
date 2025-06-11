@@ -411,17 +411,21 @@ function showAnalysisResults(data, query) {
     if (typeof data === 'string') {
         content = data;
     } else if (data && typeof data === 'object') {
-        if (data.analysis) {
+        // FIX: Check for the specific array structure from n8n
+        if (Array.isArray(data) && data.length > 0 && data[0].output) {
+            content = data[0].output;
+        } else if (data.analysis) {
             content = data.analysis;
         } else if (data.result) {
             content = data.result;
         } else if (data.response) {
             content = data.response;
         } else {
-            content = JSON.stringify(data, null, 2);
+            // Fallback for unexpected structures
+            content = `Could not find a valid 'output' in the response. Full response: ${JSON.stringify(data, null, 2)}`;
         }
     } else {
-        content = 'Analysis completed successfully.';
+        content = 'Analysis response was empty or in an unexpected format.';
     }
 
     resultsContainer.innerHTML = `
@@ -548,36 +552,41 @@ function showErrorResults(error, query) {
 }
 
 function formatAnalysisContent(content) {
-    // Clean up the initial string, remove the "output:" wrapper if it exists
-    content = content.replace(/"output":\s*"/, '').replace(/\\n/g, '\n').replace(/"$/, '');
+    // FIX: More robust parsing for the actual webhook response format.
+    // Clean up the string just in case
+    content = content.replace(/^"|"$/g, '').replace(/\\n/g, '\n').replace(/\\"/g, '"');
 
-    const mainSummaryMatch = content.match(/##\s*News Sentiment Summary for .*\n([\s\S]*?)\n\nKey Articles:/);
+    const summaryRegex = /\*\*News Sentiment Summary for .*?\*\*([\s\S]*?)(?=\n\n\*\*Most Relevant Articles:\*\*)/;
+    const articlesRegex = /\*\*Most Relevant Articles:\*\*\n\n([\s\S]*)/;
+
+    const mainSummaryMatch = content.match(summaryRegex);
+    const articlesMatch = content.match(articlesRegex);
+
     const mainSummary = mainSummaryMatch ? mainSummaryMatch[1].trim() : 'Summary not available.';
+    const articlesText = articlesMatch ? articlesMatch[1] : null;
 
-    const articlesText = content.split('Key Articles:')[1];
     if (!articlesText) {
         return `<p>${mainSummary}</p><p>No articles found in the response.</p>`;
     }
-
-    const articles = articlesText.trim().split(/\n\s*\n/);
+    
+    const articles = articlesText.trim().split(/\n\n(?=\*\s+)/);
     
     let articlesHtml = articles.map(article => {
-        const titleMatch = article.match(/^(.*?)\s-\s(.*?)\s\(/);
-        const sentimentMatch = article.match(/Sentiment: (Bullish|Bearish|Neutral)/i);
-        const reasoningMatch = article.match(/Reasoning: (.*?)(?=\nLink:|$)/);
-        const linkMatch = article.match(/Link: (https?:\/\/[^\s]+)/);
+        const titleSourceMatch = article.match(/\*\s+\*\*(.*?)\*\*\s+-\s+(.*?)\s+\(/);
+        const linkMatch = article.match(/\*Link:\*\s+(https?:\/\/[^\s]+)/);
+        const sentimentMatch = article.match(/\*Sentiment:\*\s+\*\*(.*?)\*\*\s+-\s+(.*)/);
 
-        if (!titleMatch || !sentimentMatch || !reasoningMatch || !linkMatch) {
+        if (!titleSourceMatch || !sentimentMatch || !linkMatch) {
+            console.warn("Could not parse article:", article);
             return ''; // Skip malformed article entries
         }
 
-        const title = titleMatch[1].replace(/^\W+/, ''); // Remove leading characters like '*'
-        const source = titleMatch[2];
-        const sentiment = sentimentMatch[1].toLowerCase();
-        const reasoning = reasoningMatch[1];
-        const link = linkMatch[1];
-
-        // Placeholder for a logo - you could map source names to image URLs here
+        const title = titleSourceMatch[1].trim();
+        const source = titleSourceMatch[2].trim();
+        const sentiment = sentimentMatch[1].trim().toLowerCase();
+        const reasoning = sentimentMatch[2].trim();
+        const link = linkMatch[1].trim();
+        
         const logoPlaceholder = `<div class="source-logo">${source.charAt(0)}</div>`;
 
         return `
@@ -602,7 +611,7 @@ function formatAnalysisContent(content) {
              <p>${mainSummary}</p>
         </div>
         <div class="articles-container">
-            ${articlesHtml}
+            ${articlesHtml || '<p>Could not parse articles from the response.</p>'}
         </div>
     `;
 }
