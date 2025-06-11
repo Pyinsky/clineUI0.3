@@ -1,0 +1,119 @@
+{
+  "layout": {
+    "name": "StockArt Perplexity-Style Layout",
+    "version": "1.0.0",
+    "description": "Complete layout configuration based on Perplexity's design",
+    "structure": {
+      "sidebar": {
+        "type": "left-sidebar",
+        "width": {
+          "desktop": "280px",
+          "collapsed": "60px",
+          "mobile": "100vw"
+        },
+        "position": "fixed",
+        "zIndex": 100,
+        "sections": [
+          {
+            "name": "header",
+            "components": ["sidebar-toggle", "logo-container"]
+          },
+          {
+            "name": "new-thread",
+            "components": ["new-analysis-button"]
+          },
+          {
+            "name": "navigation",
+            "components": ["nav-items"]
+          },
+          {
+            "name": "watchlist",
+            "components": ["stock-watchlist"]
+          }
+        ],
+        "behavior": {
+          "autoCollapse": false,
+          "hoverExpand": false,
+          "mobileHidden": true
+        }
+      },
+      "rightSidebar": {
+        "type": "right-sidebar",
+        "width": {
+          "expanded": "320px",
+          "collapsed": "60px"
+        },
+        "position": "fixed",
+        "zIndex": 90,
+        "sections": [
+          {
+            "name": "settings",
+            "components": ["theme-toggle", "preferences"]
+          },
+          {
+            "name": "profile",
+            "components": ["user-profile", "sign-out"]
+          },
+          {
+            "name": "help",
+            "components": ["help-links", "support"]
+          }
+        ],
+        "behavior": {
+          "defaultState": "collapsed",
+          "hoverExpand": true,
+          "expandDelay": 300,
+          "collapseDelay": 500,
+          "mobileHidden": true
+        }
+      },
+      "mainContent": {
+        "type": "main-content",
+        "states": {
+          "welcome": {
+            "display": "centered",
+            "components": ["brand-heading", "search-container", "floating-signin"]
+          },
+          "chat": {
+            "display": "full-height",
+            "components": ["top-query", "conversation", "bottom-input"]
+          }
+        },
+        "margins": {
+          "left": "280px",
+          "right": "60px",
+          "leftCollapsed": "60px",
+          "mobile": "0px"
+        }
+      },
+      "floatingSignIn": {
+        "type": "modal",
+        "position": "right",
+        "width": "400px",
+        "height": "auto",
+        "backdrop": true,
+        "animation": "slide-in-right",
+        "components": ["sign-in-form", "social-auth", "email-auth"]
+      }
+    },
+    "breakpoints": {
+      "mobile": "768px",
+      "tablet": "1024px",
+      "desktop": "1200px"
+    },
+    "animations": {
+      "sidebarToggle": {
+        "duration": "300ms",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)"
+      },
+      "rightSidebarHover": {
+        "duration": "250ms",
+        "easing": "ease-out"
+      },
+      "modalAppear": {
+        "duration": "200ms",
+        "easing": "ease-out"
+      }
+    }
+  }
+}

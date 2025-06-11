@@ -1,0 +1,239 @@
+/* styles/responsive.css */
+
+/* Tablet and larger (default styles in components.css are often desktop-first) */
+
+/* Tablet specific adjustments (e.g., 769px to 1024px) */
+@media (max-width: 1024px) {
+    .main-content {
+        /* Adjust padding if sidebar behavior changes for tablet */
+    }
+
+    .search-box-container.initial-pos {
+        max-width: 600px; /* Slightly smaller search on tablet */
+    }
+    .search-box-container.bottom-pos {
+        max-width: calc(100% - var(--sidebar-width-collapsed) - var(--spacing-lg) * 2);
+    }
+    .sidebar.expanded ~ .main-content .search-box-container.bottom-pos {
+        max-width: calc(100% - var(--sidebar-width-expanded) - var(--spacing-lg) * 2);
+    }
+
+
+    .quick-actions-container {
+        gap: var(--spacing-sm);
+        padding: 0 var(--spacing-md);
+    }
+    .quick-action-chip {
+        font-size: calc(var(--font-size-sm) * 0.95); /* Slightly smaller text */
+        padding: calc(var(--spacing-sm) * 0.8) var(--spacing-md);
+    }
+    .quick-action-chip svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .main-logo-text {
+        font-size: var(--font-size-3xl);
+    }
+    .main-logo-subtitle {
+        font-size: var(--font-size-base);
+    }
+}
+
+
+/* Mobile specific adjustments (e.g., up to 768px) */
+@media (max-width: 768px) {
+    /* Sidebar becomes an overlay on mobile */
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed; /* Ensure it's fixed for overlay behavior */
+        height: 100vh;
+        z-index: var(--z-sidebar) + 10; /* Higher z-index for overlay */
+        box-shadow: var(--shadow-xl);
+        /* Always expanded width when open on mobile */
+        width: var(--sidebar-width-expanded); 
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .sidebar.collapsed { /* Collapsed state not used when overlayed, it's either open or closed */
+        transform: translateX(-100%);
+    }
+    .sidebar.expanded { /* Ensure expanded styles apply when mobile-open */
+         width: var(--sidebar-width-expanded);
+         padding: var(--spacing-md) var(--spacing-sm);
+    }
+    .sidebar.expanded .nav-item .label,
+    .sidebar.expanded .sidebar-signin-btn .label {
+        opacity: 1;
+        visibility: visible;
+    }
+     .sidebar.expanded .nav-item svg,
+    .sidebar.expanded .sidebar-signin-btn svg {
+        margin-right: var(--spacing-md);
+    }
+    .sidebar.expanded .sidebar-header {
+        justify-content: flex-start;
+    }
+
+
+    /* Hamburger menu toggle for mobile sidebar */
+    /* This button would be in index.html, typically in a mobile-only header or corner */
+    .mobile-sidebar-toggle {
+        display: inline-flex; /* Show on mobile */
+        position: fixed;
+        top: var(--spacing-md);
+        left: var(--spacing-md);
+        z-index: var(--z-sidebar) + 20;
+        padding: var(--spacing-sm);
+        background-color: var(--secondary-dark);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+    }
+    .mobile-sidebar-toggle svg {
+        width: 24px;
+        height: 24px;
+        color: var(--text-primary);
+    }
+
+
+    .main-content {
+        padding-left: 0; /* No fixed sidebar padding on mobile */
+        padding-top: var(--spacing-lg); /* Space for potential mobile header */
+    }
+    .sidebar.expanded + .main-content { /* No change in padding-left when sidebar is overlay */
+        padding-left: 0;
+    }
+
+
+    .initial-view {
+        padding: var(--spacing-lg);
+    }
+    .main-logo-text {
+        font-size: var(--font-size-2xl);
+    }
+    .main-logo-subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .search-box-container {
+        max-width: calc(100% - var(--spacing-lg) * 2); /* Full width with padding */
+    }
+    .search-box-container.bottom-pos {
+        width: calc(100% - var(--spacing-lg) * 2); /* Full width with padding */
+        padding-left: 0; /* No sidebar adjustment */
+        bottom: var(--spacing-md);
+        left: var(--spacing-lg);
+        transform: translateX(0);
+    }
+    .sidebar.expanded ~ .main-content .search-box-container.bottom-pos {
+        padding-left: 0;
+         width: calc(100% - var(--spacing-lg) * 2);
+    }
+
+
+    .main-search-input {
+        height: var(--search-height-mobile);
+        font-size: var(--font-size-sm);
+    }
+    .search-icon-prefix {
+        margin: 0 var(--spacing-sm);
+    }
+    .search-actions-suffix {
+        padding-right: var(--spacing-xs);
+    }
+    .search-action-btn {
+        width: 32px;
+        height: 32px;
+    }
+    .search-action-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .quick-actions-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+    }
+    .quick-action-chip {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    .quick-action-chip svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .top-bar {
+        height: calc(var(--header-height) * 0.9);
+        padding: 0 var(--spacing-md);
+    }
+    .top-bar-logo {
+        font-size: var(--font-size-base);
+    }
+    .user-query-display {
+        font-size: var(--font-size-xs);
+    }
+    .share-results-btn {
+        width: 32px;
+        height: 32px;
+    }
+    .share-results-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .chat-messages-container {
+        padding: var(--spacing-md);
+        padding-bottom: calc(var(--search-height-mobile) + var(--spacing-md) * 2);
+    }
+    .chat-message {
+        max-width: 85%; /* Slightly wider messages on mobile */
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    /* Sign-in Modal on Mobile (from implementation-config) */
+    .signin-modal { /* Assuming .signin-modal is the main wrapper */
+        justify-content: center;
+        align-items: center; /* Center vertically too */
+        padding: var(--spacing-md);
+    }
+    .signin-content { /* Assuming .signin-content is the modal box */
+        width: 100%;
+        max-width: 350px;
+        margin-top: 0; /* Reset perplexity style margin */
+        transform: none; /* Reset perplexity style transform */
+        animation: fadeInModalMobile 0.3s ease-out; /* Mobile specific animation */
+    }
+
+    @keyframes fadeInModalMobile {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .signin-modal.fade-out .signin-content {
+        animation: fadeOutModalMobile 0.3s ease-in;
+    }
+    @keyframes fadeOutModalMobile {
+        from { opacity: 1; transform: scale(1); }
+        to { opacity: 0; transform: scale(0.95); }
+    }
+}
+
+/* Very small screens (e.g., up to 360px) */
+@media (max-width: 360px) {
+    .main-logo-text {
+        font-size: var(--font-size-xl);
+    }
+    .main-logo-subtitle {
+        font-size: var(--font-size-xs);
+    }
+
+    .quick-actions-container {
+        grid-template-columns: 1fr; /* Single column for very small screens */
+    }
+    .quick-action-chip {
+        justify-content: center;
+    }
+}

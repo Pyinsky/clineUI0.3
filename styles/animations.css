@@ -1,471 +1,166 @@
-/* Animation Keyframes */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
+/* styles/animations.css */
+
+/* Keyframe Definitions from implementation-config.json */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* For search box transition to bottom and results appearing */
+@keyframes slideToBottom { /* This might need adjustment based on actual layout */
+    0% { 
+        transform: translateY(0) scale(1);
         opacity: 1;
-        transform: translateY(0);
+    }
+    100% { 
+        /* This target state needs to be dynamic or very carefully calculated.
+           JS will likely handle the final positioning, CSS handles the animation 'feel'.
+           For now, a conceptual downward movement.
+        */
+        transform: translateY(20vh) scale(0.95); /* Example: moves down and slightly shrinks */
+        opacity: 0.8;
     }
 }
 
-@keyframes fadeInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-}
-
-@keyframes glow {
-    0%, 100% {
-        box-shadow: 0 0 5px rgba(74, 158, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 20px rgba(74, 158, 255, 0.6);
-    }
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-@keyframes shimmer {
+@keyframes slideUpFromBottom { /* For search box appearing at bottom */
     0% {
-        background-position: -200% 0;
+        transform: translateY(100px);
+        opacity: 0;
     }
     100% {
-        background-position: 200% 0;
-    }
-}
-
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
-}
-
-/* Page Load Animations */
-.app-container {
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.sidebar {
-    animation: fadeInLeft 0.6s ease-out 0.1s both;
-}
-
-.main-content {
-    animation: fadeInRight 0.6s ease-out 0.2s both;
-}
-
-.brand-logo {
-    animation: fadeInUp 0.8s ease-out 0.4s both;
-}
-
-.search-container {
-    animation: fadeInUp 0.8s ease-out 0.5s both;
-}
-
-.cta-section {
-    animation: fadeInUp 0.8s ease-out 0.6s both;
-}
-
-/* Navigation Item Staggered Animation */
-.nav-item:nth-child(1) {
-    animation: slideIn 0.6s ease-out 0.3s both;
-}
-
-.nav-item:nth-child(2) {
-    animation: slideIn 0.6s ease-out 0.4s both;
-}
-
-.nav-item:nth-child(3) {
-    animation: slideIn 0.6s ease-out 0.5s both;
-}
-
-/* Logo Animations */
-.logo-container:hover .logo {
-    animation: pulse 1s ease-in-out infinite;
-}
-
-.brand-logo:hover svg {
-    animation: float 2s ease-in-out infinite;
-}
-
-/* Search Input Animations */
-.search-input:focus {
-    animation: glow 2s ease-in-out infinite;
-}
-
-.search-input-wrapper::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: var(--radius-xl);
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(74, 158, 255, 0.1),
-        transparent
-    );
-    background-size: 200% 100%;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition-base);
-}
-
-.search-input:focus + .voice-btn + .search-input-wrapper::after,
-.search-input-wrapper:hover::after {
-    opacity: 1;
-    animation: shimmer 2s ease-in-out infinite;
-}
-
-/* Button Hover Animations */
-.new-thread-btn:hover {
-    animation: bounce 0.6s ease;
-}
-
-.cta-button:hover {
-    animation: pulse 0.6s ease;
-}
-
-.tool-btn:hover {
-    animation: bounce 0.4s ease;
-}
-
-/* Interactive Hover Effects */
-.nav-item {
-    position: relative;
-    overflow: hidden;
-}
-
-.nav-item::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    transition: left var(--transition-base);
-}
-
-.nav-item:hover::after {
-    left: 100%;
-}
-
-/* Search Option Animations */
-.search-option {
-    position: relative;
-    overflow: hidden;
-}
-
-.search-option::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--gradient-primary);
-    opacity: 0;
-    transition: opacity var(--transition-base);
-    z-index: -1;
-}
-
-.search-option:hover::before {
-    opacity: 0.1;
-}
-
-/* Advanced Button Effects */
-.cta-button {
-    position: relative;
-    overflow: hidden;
-}
-
-.cta-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    transition: left var(--transition-slow);
-}
-
-.cta-button:hover::before {
-    left: 100%;
-}
-
-/* Loading States */
-.loading {
-    position: relative;
-    overflow: hidden;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
-}
-
-/* Icon Animations */
-.nav-item svg {
-    transition: transform var(--transition-base);
-}
-
-.nav-item:hover svg {
-    transform: scale(1.1);
-}
-
-.tool-btn svg {
-    transition: transform var(--transition-base);
-}
-
-.tool-btn:hover svg {
-    transform: rotate(5deg) scale(1.1);
-}
-
-.voice-btn svg {
-    transition: transform var(--transition-base);
-}
-
-.voice-btn:hover svg {
-    transform: scale(1.2);
-    animation: pulse 1s ease-in-out infinite;
-}
-
-/* Gradient Animation */
-.logo-text {
-    background-size: 200% 200%;
-    animation: gradientShift 3s ease infinite;
-}
-
-@keyframes gradientShift {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-}
-
-/* Typing Effect */
-.search-input::placeholder {
-    opacity: 0;
-    animation: typeIn 0.5s ease-out 0.8s forwards;
-}
-
-@keyframes typeIn {
-    from {
-        opacity: 0;
-    }
-    to {
         opacity: 1;
     }
 }
 
-/* Focus Ring Animation */
-.search-input:focus {
-    position: relative;
+
+@keyframes slideDown { /* For top bar appearing */
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 
-.search-input:focus::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: var(--radius-xl);
-    background: var(--gradient-primary);
-    z-index: -1;
-    animation: pulse 2s ease-in-out infinite;
+@keyframes slideUp { /* For top bar disappearing */
+    0% { transform: translateY(0); opacity: 1;}
+    100% { transform: translateY(-100%); opacity: 0; }
 }
 
-/* Stagger Animation for Tools */
-.search-tools .tool-btn:nth-child(1) {
-    animation-delay: 0.1s;
+
+@keyframes slideFromRight { /* For modals or side elements */
+    0% { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
 }
 
-.search-tools .tool-btn:nth-child(2) {
-    animation-delay: 0.2s;
+@keyframes slideToRight { /* For modals or side elements */
+    0% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
 }
 
-.search-tools .tool-btn:nth-child(3) {
-    animation-delay: 0.3s;
+@keyframes spin { /* For loading indicators */
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Background Particle Effect */
-.main-content::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(74, 158, 255, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 90% 80%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(74, 158, 255, 0.03) 0%, transparent 70%);
-    pointer-events: none;
-    animation: float 6s ease-in-out infinite alternate;
+@keyframes pulse { /* Simple pulse effect for interactions */
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
-/* Micro-interactions */
-.shortcut-badge span {
-    transition: all var(--transition-fast);
+@keyframes shimmer { /* For loading placeholders */
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
 }
 
-.new-thread-btn:hover .shortcut-badge span {
-    background: var(--accent-blue);
-    color: var(--text-primary);
-    transform: scale(1.1);
+
+/* Animation Utility Classes */
+.fade-in {
+    animation: fadeIn var(--transition-normal) ease-out forwards;
 }
 
-/* Progressive Enhancement */
-@media (prefers-reduced-motion: no-preference) {
-    .sidebar {
-        animation-duration: 0.8s;
-    }
-    
-    .main-content {
-        animation-duration: 0.8s;
-    }
-    
-    .brand-logo:hover {
-        animation: float 3s ease-in-out infinite;
-    }
+.fade-out {
+    animation: fadeOut var(--transition-normal) ease-in forwards;
 }
 
-/* High Performance Mode */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-    }
-    
-    .search-input::placeholder {
-        opacity: 1;
-        animation: none;
-    }
+.slide-to-bottom-anim { /* Applied during search box transition */
+    animation: slideToBottom var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Dark Mode Specific Animations */
-@media (prefers-color-scheme: dark) {
-    .glow {
-        box-shadow: 
-            0 0 20px rgba(74, 158, 255, 0.4),
-            0 0 40px rgba(74, 158, 255, 0.2);
-    }
+.slide-up-from-bottom-anim { /* For search box appearing at bottom */
+     animation: slideUpFromBottom var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Interactive States */
-.interactive:hover {
-    transform: translateY(-2px);
-    transition: transform var(--transition-base);
+.slide-down-anim { /* For top bar appearing */
+    animation: slideDown var(--transition-normal) ease-out forwards;
 }
 
-.interactive:active {
-    transform: translateY(0);
-    transition: transform var(--transition-fast);
+.slide-up-anim { /* For top bar disappearing */
+    animation: slideUp var(--transition-normal) ease-in forwards;
 }
 
-/* Smooth Scrolling */
-html {
-    scroll-behavior: smooth;
+.slide-from-right-anim {
+    animation: slideFromRight var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Custom Easing Functions */
-.ease-bounce {
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+.slide-to-right-anim {
+    animation: slideToRight var(--transition-normal) ease-in forwards;
 }
 
-.ease-elastic {
-    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.animate-spin {
+    animation: spin 1s linear infinite;
 }
 
-.ease-back {
-    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.animate-pulse {
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Shimmer effect for loading content */
+.shimmer-bg {
+    background-image: linear-gradient(to right, 
+        var(--tertiary-dark) 0%, 
+        rgba(255,255,255,0.05) 20%, /* Lighter part of shimmer */
+        var(--tertiary-dark) 40%, 
+        var(--tertiary-dark) 100%);
+    background-repeat: no-repeat;
+    background-size: 1000px 100%; /* Adjust size for desired shimmer width */
+    animation: shimmer 1.5s linear infinite;
+    color: transparent; /* Hide text while shimmering */
+}
+.shimmer-bg > * {
+    visibility: hidden; /* Hide children content */
+}
+
+
+/* Page Transition Specific Animations (Conceptual) */
+/* These classes would be added/removed by JavaScript during state changes */
+
+/* Initial view elements fading out */
+.initial-view-logo-fade-out {
+    animation: fadeOut 0.3s ease-out forwards, scaleDown 0.3s ease-out forwards;
+}
+.initial-view-quickactions-fade-out {
+    animation: fadeOut 0.3s ease-out 0.1s forwards; /* Slight delay */
+}
+
+@keyframes scaleDown {
+    from { transform: scale(1); }
+    to { transform: scale(0.9); }
+}
+
+/* Search results view elements fading in */
+.search-results-view-fade-in {
+    animation: fadeIn 0.4s ease-in 0.2s forwards; /* Delay after other elements move */
+}
+
+/* Specific component animations if needed beyond generic ones */
+/* Example: Sidebar expand/collapse if not purely handled by width transition */
+.sidebar-animate-expand {
+    /* Custom animation if width transition isn't enough */
+}
+.sidebar-animate-collapse {
+    /* Custom animation */
 }

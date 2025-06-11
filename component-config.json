@@ -1,0 +1,330 @@
+{
+  "components": {
+    "name": "StockArt Component Configuration",
+    "version": "1.0.0",
+    "description": "Component specifications for Perplexity-style StockArt interface",
+    "brandHeading": {
+      "title": {
+        "text": "StockArt",
+        "color": "#ffffff",
+        "fontSize": {
+          "desktop": "3.5rem",
+          "mobile": "2.5rem"
+        },
+        "fontWeight": 700,
+        "gradient": false,
+        "textAlign": "center"
+      },
+      "subtitle": {
+        "text": "AI-Powered Stock Analysis Platform",
+        "color": "#a0a0a0",
+        "fontSize": {
+          "desktop": "1.125rem",
+          "mobile": "1rem"
+        },
+        "fontWeight": 400
+      },
+      "logo": {
+        "display": false,
+        "removeFromCenter": true
+      }
+    },
+    "searchContainer": {
+      "input": {
+        "placeholder": "Ask about any stock...",
+        "width": "100%",
+        "maxWidth": "600px",
+        "padding": "1.5rem 2rem",
+        "borderRadius": "1rem",
+        "fontSize": "1.125rem",
+        "backgroundColor": "#2a2a2a",
+        "borderColor": "rgba(255, 255, 255, 0.1)",
+        "focusBorderColor": "#4a9eff"
+      },
+      "voiceButton": {
+        "position": "absolute",
+        "right": "1.5rem",
+        "icon": "microphone",
+        "color": "#666666",
+        "hoverColor": "#4a9eff"
+      },
+      "options": [
+        {
+          "name": "pro",
+          "label": "PRO",
+          "badge": true,
+          "gradient": "linear-gradient(135deg, #4a9eff, #00d4aa)"
+        },
+        {
+          "name": "deepResearch",
+          "label": "Deep Research",
+          "icon": "search",
+          "backgroundColor": "#2a2a2a"
+        }
+      ],
+      "tools": [
+        {
+          "name": "attach",
+          "icon": "paperclip",
+          "tooltip": "Attach file"
+        },
+        {
+          "name": "focus",
+          "icon": "crosshair",
+          "tooltip": "Focus mode"
+        },
+        {
+          "name": "collections",
+          "icon": "folder",
+          "tooltip": "Collections"
+        }
+      ]
+    },
+    "floatingSignIn": {
+      "trigger": {
+        "text": "Sign in with Google",
+        "backgroundColor": "linear-gradient(135deg, #4a9eff, #00d4aa)",
+        "textColor": "#ffffff",
+        "borderRadius": "1rem",
+        "padding": "1rem 2rem",
+        "fontSize": "1rem",
+        "fontWeight": 600
+      },
+      "modal": {
+        "width": "400px",
+        "position": "fixed",
+        "right": "2rem",
+        "top": "50%",
+        "transform": "translateY(-50%)",
+        "backgroundColor": "#1a1a1a",
+        "borderRadius": "1rem",
+        "padding": "2rem",
+        "border": "1px solid rgba(255, 255, 255, 0.1)",
+        "backdropBlur": true,
+        "animation": "slideInRight"
+      },
+      "header": {
+        "logo": {
+          "icon": "stockart-logo",
+          "size": "40px",
+          "color": "#4a9eff"
+        },
+        "title": "Sign in or create an account",
+        "subtitle": "Unlock Pro Search and History"
+      },
+      "socialAuth": [
+        {
+          "provider": "google",
+          "text": "Continue with Google",
+          "icon": "google",
+          "backgroundColor": "#4a9eff",
+          "textColor": "#ffffff"
+        },
+        {
+          "provider": "apple",
+          "text": "Continue with Apple",
+          "icon": "apple",
+          "backgroundColor": "#333333",
+          "textColor": "#ffffff"
+        }
+      ],
+      "emailAuth": {
+        "placeholder": "Enter your email",
+        "buttonText": "Continue with email",
+        "backgroundColor": "transparent",
+        "borderColor": "rgba(255, 255, 255, 0.2)"
+      },
+      "footer": {
+        "ssoText": "Single sign-on (SSO)",
+        "closeButton": true
+      }
+    },
+    "sidebar": {
+      "logo": {
+        "text": "StockArt",
+        "color": "#ffffff",
+        "fontSize": "1.125rem",
+        "fontWeight": 600,
+        "svgDisplay": true,
+        "svgSize": "32px"
+      },
+      "navigation": [
+        {
+          "name": "home",
+          "label": "Home",
+          "icon": "home",
+          "active": true
+        },
+        {
+          "name": "discover",
+          "label": "Discover",
+          "icon": "search"
+        },
+        {
+          "name": "spaces",
+          "label": "Spaces",
+          "icon": "folder"
+        }
+      ],
+      "watchlist": {
+        "title": "Watchlist",
+        "icon": "heart",
+        "stocks": [
+          {
+            "symbol": "AAPL",
+            "name": "Apple Inc.",
+            "price": "$175.84",
+            "change": "+2.4%",
+            "changeType": "positive"
+          },
+          {
+            "symbol": "MSFT",
+            "name": "Microsoft",
+            "price": "$420.67",
+            "change": "+1.8%",
+            "changeType": "positive"
+          },
+          {
+            "symbol": "TSLA",
+            "name": "Tesla Inc.",
+            "price": "$248.92",
+            "change": "-0.9%",
+            "changeType": "negative"
+          },
+          {
+            "symbol": "GOOGL",
+            "name": "Alphabet",
+            "price": "$178.35",
+            "change": "+3.2%",
+            "changeType": "positive"
+          }
+        ]
+      }
+    },
+    "rightSidebar": {
+      "defaultState": "collapsed",
+      "hoverBehavior": {
+        "expandOnHover": true,
+        "expandDelay": "300ms",
+        "collapseDelay": "500ms"
+      },
+      "sections": [
+        {
+          "name": "settings",
+          "icon": "settings",
+          "label": "Settings",
+          "items": [
+            {
+              "name": "notifications",
+              "label": "Notifications",
+              "type": "toggle"
+            },
+            {
+              "name": "language",
+              "label": "Language",
+              "type": "select",
+              "options": ["English", "Spanish", "French"]
+            }
+          ]
+        },
+        {
+          "name": "profile",
+          "icon": "user",
+          "label": "Profile",
+          "items": [
+            {
+              "name": "account",
+              "label": "Account Settings",
+              "type": "link"
+            },
+            {
+              "name": "billing",
+              "label": "Billing",
+              "type": "link"
+            }
+          ]
+        },
+        {
+          "name": "help",
+          "icon": "help-circle",
+          "label": "Help",
+          "items": [
+            {
+              "name": "documentation",
+              "label": "Documentation",
+              "type": "link"
+            },
+            {
+              "name": "support",
+              "label": "Support",
+              "type": "link"
+            }
+          ]
+        }
+      ]
+    },
+    "chatInterface": {
+      "states": {
+        "welcome": {
+          "display": true,
+          "components": ["brand-heading", "search-container", "floating-signin"]
+        },
+        "conversation": {
+          "layout": "vertical",
+          "components": [
+            {
+              "name": "topQuery",
+              "position": "fixed-top",
+              "display": "user-query",
+              "backgroundColor": "#2a2a2a",
+              "padding": "1rem 2rem",
+              "borderBottom": "1px solid rgba(255, 255, 255, 0.1)"
+            },
+            {
+              "name": "conversationArea",
+              "position": "scroll",
+              "flex": 1,
+              "padding": "2rem",
+              "messages": {
+                "user": {
+                  "backgroundColor": "transparent",
+                  "textColor": "#ffffff",
+                  "alignment": "right"
+                },
+                "assistant": {
+                  "backgroundColor": "#2a2a2a",
+                  "textColor": "#ffffff",
+                  "alignment": "left"
+                }
+              }
+            },
+            {
+              "name": "bottomInput",
+              "position": "fixed-bottom",
+              "backgroundColor": "#1a1a1a",
+              "borderTop": "1px solid rgba(255, 255, 255, 0.1)",
+              "padding": "1rem 2rem",
+              "input": {
+                "placeholder": "Ask a follow-up question...",
+                "backgroundColor": "#2a2a2a",
+                "borderRadius": "0.75rem",
+                "padding": "1rem 1.5rem"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "modelSelection": {
+      "display": false,
+      "defaultModel": "system-preference",
+      "autoDetect": true
+    },
+    "themeSystem": {
+      "default": "auto",
+      "options": ["light", "dark", "auto"],
+      "systemPreference": true,
+      "persistUserChoice": true
+    }
+  }
+}

@@ -1,0 +1,414 @@
+/* styles/components.css */
+
+/* --- Sidebar --- */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    background: var(--secondary-dark);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    z-index: var(--z-sidebar);
+    transition: width var(--transition-normal), padding var(--transition-normal);
+    overflow-x: hidden; /* Prevent horizontal scroll during transition */
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-width-collapsed);
+    padding: var(--spacing-md) 0; /* Centered icons */
+}
+
+.sidebar.expanded {
+    width: var(--sidebar-width-expanded);
+    padding: var(--spacing-md) var(--spacing-sm);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center logo when collapsed */
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.sidebar.expanded .sidebar-header {
+    justify-content: flex-start; /* Align left when expanded */
+}
+
+.sidebar-logo-link {
+    display: inline-flex;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast);
+}
+.sidebar-logo-link:hover {
+    background-color: var(--hover-bg);
+}
+
+.logo-icon {
+    color: var(--text-primary);
+    /* Styles for the SVG icon itself if needed */
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    flex-grow: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    margin: 0 var(--spacing-sm);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    white-space: nowrap; /* Prevent label wrapping */
+    overflow: hidden; /* Hide label when collapsed */
+}
+
+.sidebar.collapsed .nav-item {
+    justify-content: center; /* Center icon */
+    margin: 0 auto; /* Center icon block */
+    width: calc(var(--sidebar-width-collapsed) - var(--spacing-sm) * 2);
+}
+
+.sidebar.expanded .nav-item svg {
+    margin-right: var(--spacing-md);
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+}
+.nav-item.active:hover {
+    background-color: var(--accent-hover);
+}
+
+
+.nav-item .label {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast) 50ms, visibility var(--transition-fast) 50ms;
+}
+
+.sidebar.expanded .nav-item .label {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar-footer {
+    padding: var(--spacing-md) var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+    margin-top: auto; /* Pushes footer to bottom */
+}
+
+.sidebar-signin-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar.collapsed .sidebar-signin-btn {
+    justify-content: center;
+}
+.sidebar.expanded .sidebar-signin-btn svg {
+    margin-right: var(--spacing-md);
+}
+
+.sidebar-signin-btn:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.sidebar-signin-btn .label {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast) 50ms, visibility var(--transition-fast) 50ms;
+}
+.sidebar.expanded .sidebar-signin-btn .label {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Tooltip for collapsed sidebar items */
+[data-tooltip] {
+    position: relative;
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--tertiary-dark);
+    color: var(--text-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    pointer-events: none;
+    z-index: var(--z-tooltip);
+    box-shadow: var(--shadow-md);
+}
+.sidebar.collapsed .nav-item:hover::after,
+.sidebar.collapsed .sidebar-signin-btn:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 300ms; /* Show tooltip after a slight delay */
+}
+
+
+/* --- Main Content Area & Views --- */
+.initial-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-grow: 1;
+    padding: var(--spacing-xl);
+    animation: fadeIn var(--transition-normal);
+}
+
+.search-results-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Take full height of main-content */
+    animation: fadeIn var(--transition-normal);
+}
+.search-results-view.hidden {
+    display: none;
+}
+
+
+/* --- Main Logo (Initial View) --- */
+.main-logo-container {
+    margin-bottom: var(--spacing-2xl);
+}
+.main-logo-text {
+    font-size: var(--font-size-4xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--spacing-sm);
+}
+.main-logo-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+}
+
+/* --- Search Box (Shared Styling) --- */
+.search-box-container {
+    width: 100%;
+    max-width: 700px; /* Perplexity-like width */
+    margin: 0 auto;
+    position: relative; /* For transitions */
+    transition: all var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
+}
+.search-box-container.initial-pos {
+    margin-bottom: var(--spacing-xl);
+}
+.search-box-container.bottom-pos {
+    position: fixed;
+    bottom: var(--spacing-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    padding-left: var(--sidebar-width-collapsed); /* Adjust for sidebar */
+    z-index: var(--z-topbar) - 1; /* Below top bar */
+    width: calc(100% - var(--sidebar-width-collapsed) - var(--spacing-xl) * 2); /* Full width minus sidebar and padding */
+}
+.sidebar.expanded ~ .main-content .search-box-container.bottom-pos {
+    padding-left: var(--sidebar-width-expanded);
+    width: calc(100% - var(--sidebar-width-expanded) - var(--spacing-xl) * 2);
+}
+
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--secondary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full); /* More rounded like Perplexity */
+    padding: 0 var(--spacing-sm);
+    box-shadow: var(--shadow-md);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-input-wrapper:hover {
+    border-color: var(--border-hover);
+}
+.search-input-wrapper:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(79, 156, 249, 0.2), var(--shadow-lg);
+}
+
+.search-icon-prefix {
+    margin: 0 var(--spacing-md);
+    color: var(--text-muted);
+}
+
+.main-search-input {
+    flex-grow: 1;
+    height: var(--search-height);
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+    padding: 0 var(--spacing-sm);
+}
+.main-search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-actions-suffix {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding-right: var(--spacing-sm);
+}
+.search-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: var(--text-muted);
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.search-action-btn:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+
+/* --- Quick Actions (Initial View) --- */
+.quick-actions-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+.quick-action-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--tertiary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+.quick-action-chip:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+}
+.quick-action-chip svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* --- Top Bar (After Search View) --- */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-height);
+    padding: 0 var(--spacing-lg);
+    background: var(--primary-dark); /* Slightly different from main bg for depth */
+    border-bottom: 1px solid var(--border-color);
+    position: sticky; /* Or fixed, depending on scroll behavior */
+    top: 0;
+    z-index: var(--z-topbar);
+}
+.top-bar-logo {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.user-query-display {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 50%; /* Adjust as needed */
+}
+.share-results-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: var(--text-muted);
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.share-results-btn:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+/* --- Chat Messages Container (After Search View) --- */
+.chat-messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: var(--spacing-lg);
+    padding-bottom: calc(var(--search-height) + var(--spacing-xl) * 2); /* Space for fixed search box */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+.chat-message {
+    max-width: 75%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    line-height: 1.5;
+}
+.chat-message.user {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    align-self: flex-end;
+    border-bottom-right-radius: var(--radius-sm); /* Bubble tail */
+}
+.chat-message.ai {
+    background-color: var(--tertiary-dark);
+    color: var(--text-primary);
+    align-self: flex-start;
+    border-bottom-left-radius: var(--radius-sm); /* Bubble tail */
+}
+.chat-message.ai.error {
+    background-color: rgba(239, 68, 68, 0.2); /* Reddish for error */
+    border: 1px solid rgba(239, 68, 68, 0.5);
+}
+.message-bubble { /* If needed for more complex content */
+    word-wrap: break-word;
+}
+
+/* Sign-in Modal styles are in styles/signin-modal.css */
+/* This file focuses on layout and core components */
