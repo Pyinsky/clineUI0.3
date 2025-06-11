@@ -65,8 +65,8 @@ function showSignInModal() {
     if (signInModalElement) {
         signInModalElement.style.display = 'flex'; // Or 'block' depending on CSS
         // Add animation classes if they exist in animations.css
-        signInModalElement.classList.remove('fade-out', 'slide-to-right-anim');
-        signInModalElement.classList.add('fade-in', 'slide-from-right-anim');
+        signInModalElement.classList.remove('fade-out', 'slide-to-left-anim');
+        signInModalElement.classList.add('fade-in', 'slide-from-left-anim');
         
         document.body.style.overflow = 'hidden'; // Prevent background scroll
 
@@ -86,8 +86,8 @@ function showSignInModal() {
 function hideSignInModal() {
     const signInModalElement = document.getElementById('signinModal');
     if (signInModalElement) {
-        signInModalElement.classList.remove('fade-in', 'slide-from-right-anim');
-        signInModalElement.classList.add('fade-out', 'slide-to-right-anim');
+        signInModalElement.classList.remove('fade-in', 'slide-from-left-anim');
+        signInModalElement.classList.add('fade-out', 'slide-to-left-anim');
         
         // Wait for animation to complete before hiding
         setTimeout(() => {

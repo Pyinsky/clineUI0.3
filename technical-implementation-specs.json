@@ -1,0 +1,272 @@
+{
+  "technicalSpecs": {
+    "project": "StockArt Perplexity-Style Redesign",
+    "version": "1.0.0",
+    "framework": "Vanilla HTML/CSS/JavaScript",
+    "designSystem": "Perplexity.ai inspired",
+    
+    "cssArchitecture": {
+      "methodology": "Component-based CSS with CSS Custom Properties",
+      "files": {
+        "main.css": "Base styles, CSS variables, typography, layout fundamentals",
+        "components.css": "Component-specific styles (sidebar, search, modals, buttons)",
+        "responsive.css": "Media queries and responsive behavior",
+        "animations.css": "Transitions, animations, and motion design",
+        "signin-modal.css": "Dedicated modal styling"
+      },
+      "cssVariables": {
+        "colors": {
+          "--primary-dark": "#0f0f0f",
+          "--secondary-dark": "#1a1a1a",
+          "--tertiary-dark": "#2a2a2a",
+          "--accent-color": "#4f9cf9",
+          "--accent-hover": "#3b82f6",
+          "--text-primary": "#ffffff",
+          "--text-secondary": "#a0a0a0",
+          "--text-muted": "#666666",
+          "--border-color": "rgba(255, 255, 255, 0.1)",
+          "--border-hover": "rgba(255, 255, 255, 0.2)"
+        },
+        "layout": {
+          "--sidebar-width-collapsed": "60px",
+          "--sidebar-width-expanded": "240px",
+          "--search-height": "60px",
+          "--search-height-mobile": "50px",
+          "--header-height": "60px"
+        },
+        "transitions": {
+          "--transition-fast": "150ms ease",
+          "--transition-normal": "300ms ease",
+          "--transition-slow": "500ms ease"
+        }
+      }
+    },
+
+    "htmlStructure": {
+      "mainContainer": "#app",
+      "sidebar": "#sidebar.sidebar.collapsed",
+      "mainContent": "#main-content.main-content",
+      "initialView": "#initial-view.initial-view",
+      "searchResultsView": "#search-results-view.search-results-view.hidden",
+      "signinModal": "#signinModal.signin-modal"
+    },
+
+    "javascriptModules": {
+      "main.js": {
+        "purpose": "Application initialization and coordination",
+        "exports": "StockArtApp class",
+        "dependencies": ["sidebar.js", "search.js", "signin-modal.js", "responsive.js"]
+      },
+      "sidebar.js": {
+        "purpose": "Sidebar navigation and hover behavior",
+        "exports": "SidebarController class",
+        "features": ["hover expansion", "navigation highlighting", "sign-in trigger"]
+      },
+      "search.js": {
+        "purpose": "Search functionality and layout transitions",
+        "exports": "SearchController class", 
+        "features": ["layout switching", "query handling", "quick actions"]
+      },
+      "signin-modal.js": {
+        "purpose": "Sign-in modal management",
+        "exports": "SignInModalController class",
+        "features": ["modal show/hide", "backdrop click", "form handling"]
+      },
+      "responsive.js": {
+        "purpose": "Responsive behavior and mobile optimizations",
+        "exports": "ResponsiveController class",
+        "features": ["breakpoint detection", "mobile adaptations", "touch handling"]
+      }
+    },
+
+    "componentSpecs": {
+      "sidebar": {
+        "defaultState": "collapsed (60px width)",
+        "hoverState": "expanded (240px width)",
+        "transition": "300ms ease",
+        "navigation": [
+          {"id": "home", "icon": "home-svg", "label": "Home", "active": true},
+          {"id": "discover", "icon": "globe-svg", "label": "Discover"},
+          {"id": "spaces", "icon": "grid-svg", "label": "Spaces"},
+          {"id": "library", "icon": "book-svg", "label": "Library"}
+        ],
+        "footer": {
+          "signInButton": "#signInTriggerSidebar",
+          "tooltip": "Sign In"
+        }
+      },
+
+      "searchBox": {
+        "initialPosition": "center of viewport",
+        "activePosition": "top bar",
+        "height": "60px (desktop), 50px (mobile)",
+        "placeholder": "Ask anything about stocks...",
+        "actions": [
+          {"type": "attach", "icon": "paperclip", "tooltip": "Attach File"},
+          {"type": "voice", "icon": "microphone", "tooltip": "Voice Input"}
+        ]
+      },
+
+      "signinModal": {
+        "type": "floating panel",
+        "position": "right side of screen",
+        "backdrop": "rgba(0, 0, 0, 0.5)",
+        "animation": "slide-in from right",
+        "closeActions": ["backdrop click", "X button", "escape key"],
+        "content": {
+          "header": {
+            "logo": "StockArt icon",
+            "title": "Sign in or create an account",
+            "subtitle": "Unlock Pro Search and History"
+          },
+          "socialButtons": [
+            {"provider": "google", "color": "#4285F4"},
+            {"provider": "apple", "color": "currentColor"}
+          ],
+          "emailForm": {
+            "input": "email validation",
+            "button": "Continue with email"
+          }
+        }
+      },
+
+      "quickActions": {
+        "layout": "horizontal chips",
+        "items": [
+          {"icon": "trending-up", "text": "Market Analysis"},
+          {"icon": "bar-chart", "text": "Stock Research"},
+          {"icon": "lightbulb", "text": "Investment Ideas"},
+          {"icon": "shield", "text": "Risk Assessment"}
+        ],
+        "behavior": "clickable, triggers search with predefined query"
+      }
+    },
+
+    "responsiveBreakpoints": {
+      "mobile": {
+        "maxWidth": "768px",
+        "changes": [
+          "Sidebar becomes overlay",
+          "Search height reduces to 50px",
+          "Touch targets minimum 44px",
+          "Font sizes adjust",
+          "Horizontal scrolling prevention"
+        ]
+      },
+      "tablet": {
+        "maxWidth": "1024px",
+        "changes": [
+          "Sidebar behavior maintained",
+          "Adjusted spacing",
+          "Optimized touch interactions"
+        ]
+      },
+      "desktop": {
+        "minWidth": "1025px",
+        "changes": [
+          "Full sidebar functionality",
+          "Hover states active",
+          "Optimal spacing and typography"
+        ]
+      }
+    },
+
+    "accessibility": {
+      "keyboardNavigation": {
+        "tabOrder": "logical flow",
+        "focusIndicators": "2px solid accent color with glow",
+        "skipLinks": "implemented for main content"
+      },
+      "screenReader": {
+        "ariaLabels": "comprehensive labeling",
+        "landmarks": "proper semantic structure",
+        "announcements": "dynamic content changes"
+      },
+      "reducedMotion": {
+        "mediaQuery": "@media (prefers-reduced-motion: reduce)",
+        "fallback": "instant transitions, no animations"
+      }
+    },
+
+    "performance": {
+      "cssOptimizations": [
+        "CSS custom properties for theming",
+        "Efficient selectors",
+        "Minimal reflows/repaints",
+        "Hardware acceleration for transforms"
+      ],
+      "jsOptimizations": [
+        "Event delegation",
+        "Debounced resize handlers",
+        "Lazy loading considerations",
+        "Minimal DOM manipulation"
+      ],
+      "loadingStrategy": [
+        "Critical CSS inlined",
+        "Non-critical CSS deferred",
+        "Progressive enhancement",
+        "Graceful degradation"
+      ]
+    },
+
+    "browserSupport": {
+      "modern": "Chrome 90+, Firefox 88+, Safari 14+, Edge 90+",
+      "features": [
+        "CSS Grid and Flexbox",
+        "CSS Custom Properties",
+        "ES6+ JavaScript",
+        "Intersection Observer",
+        "CSS backdrop-filter (with fallbacks)"
+      ],
+      "fallbacks": [
+        "Solid backgrounds for backdrop-filter",
+        "Transform fallbacks for older browsers",
+        "Polyfills for critical features"
+      ]
+    },
+
+    "deployment": {
+      "buildProcess": "No build step required (vanilla implementation)",
+      "assets": [
+        "HTML file",
+        "CSS files (5 total)",
+        "JavaScript files (5 total)",
+        "SVG icons (inline)",
+        "Web fonts (Google Fonts)"
+      ],
+      "optimization": [
+        "Minification recommended for production",
+        "Gzip compression",
+        "CDN for font delivery",
+        "Cache headers for static assets"
+      ]
+    }
+  },
+
+  "implementationNotes": {
+    "designDecisions": [
+      "Chose vanilla implementation for maximum compatibility and performance",
+      "Used CSS Grid and Flexbox for modern, flexible layouts",
+      "Implemented component-based CSS architecture for maintainability",
+      "Added comprehensive accessibility features from the start",
+      "Used CSS custom properties for easy theming and maintenance"
+    ],
+    
+    "challenges": [
+      "Balancing Perplexity design with StockArt branding",
+      "Ensuring smooth animations across different devices",
+      "Managing state transitions between initial and search views",
+      "Implementing responsive sidebar behavior",
+      "Creating accessible modal interactions"
+    ],
+
+    "testingRecommendations": [
+      "Cross-browser testing on target browsers",
+      "Mobile device testing (iOS Safari, Android Chrome)",
+      "Keyboard navigation testing",
+      "Screen reader testing (NVDA, JAWS, VoiceOver)",
+      "Performance testing (Lighthouse, WebPageTest)",
+      "Accessibility audit (axe-core, WAVE)"
+    ]
+  }
+}

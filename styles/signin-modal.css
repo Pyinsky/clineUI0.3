@@ -1,445 +1,300 @@
-/* Sign-In Modal Styles for StockArt */
+/* styles/signin-modal.css - Adapted for static #signinModal and Perplexity style */
 
-/* Modal Overlay */
-.signin-modal-overlay {
+/* Main Modal Container (#signinModal from index.html) */
+#signinModal {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all var(--transition-base);
+    z-index: var(--z-modal); 
+    display: none; /* Initially hidden, JS controls this for visibility */
+    opacity: 0; /* Start fully transparent */
+    transition: opacity var(--transition-normal); /* Transition for the overlay fade */
 }
-
-.signin-modal-overlay.active {
+#signinModal.fade-in { /* Class added by JS when shown */
     opacity: 1;
-    visibility: visible;
+}
+#signinModal.fade-out { /* Class added by JS when hiding */
+    opacity: 0;
 }
 
-/* Modal Backdrop */
-.signin-modal-backdrop {
+/* Modal Backdrop (#signinBackdrop from index.html) */
+#signinBackdrop {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.6); /* Perplexity-like backdrop */
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
 }
 
-/* Modal Container */
-.signin-modal-container {
-    position: relative;
-    z-index: 1;
-    max-width: 400px;
-    width: 90%;
-    max-height: 90vh;
+/* Modal Content Box (.signin-content from index.html) */
+.signin-content { 
+    position: fixed; 
+    bottom: var(--spacing-xl);
+    left: var(--spacing-xl); 
+    transform: translateX(-100%); /* Initially off-screen to the left for slide-in */
+    width: 360px; /* Perplexity modal width */
+    max-width: calc(100vw - var(--spacing-xl) * 2);
+    max-height: calc(100vh - var(--spacing-xl) * 2);
     overflow-y: auto;
-    transform: scale(0.9) translateY(20px);
-    transition: all var(--transition-base);
+    background: var(--secondary-dark); /* Darker background like Perplexity */
+    border-radius: var(--radius-lg); 
+    padding: var(--spacing-xl); 
+    box-shadow: var(--shadow-xl); 
+    z-index: calc(var(--z-modal) + 1);
+    transition: transform var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.signin-modal-overlay.active .signin-modal-container {
-    transform: scale(1) translateY(0);
+/* Animation states for .signin-content (controlled by JS adding/removing classes) */
+#signinModal.fade-in .signin-content,
+#signinModal.slide-from-left-anim .signin-content { /* slide-from-left-anim for bottom-left positioning */
+    transform: translateX(0);
 }
 
-/* Modal Content */
-.signin-modal-content {
-    background: var(--bg-primary);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.2),
-        0 4px 16px rgba(0, 0, 0, 0.1);
-    position: relative;
-    border: 1px solid var(--border-light);
+#signinModal.fade-out .signin-content,
+#signinModal.slide-to-left-anim .signin-content { /* slide-to-left-anim for bottom-left positioning */
+    transform: translateX(-100%);
 }
 
-/* Dark theme adjustments */
-[data-theme="dark"] .signin-modal-content {
-    background: var(--bg-secondary);
-    border-color: var(--border-color);
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.4),
-        0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Close Button */
-.signin-modal-close {
+/* Close Button (#closeSigninBtn from index.html) */
+#closeSigninBtn { 
     position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
+    top: var(--spacing-md); 
+    right: var(--spacing-md);
+    width: 32px; 
+    height: 32px;
     border: none;
     background: transparent;
-    border-radius: 12px;
-    color: var(--text-secondary);
+    border-radius: var(--radius-full);
+    color: var(--text-muted); 
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all var(--transition-base);
-    z-index: 2;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
-
-.signin-modal-close:hover {
+#closeSigninBtn:hover {
     background: var(--hover-bg);
     color: var(--text-primary);
-    transform: scale(1.05);
+}
+#closeSigninBtn svg { /* Ensure SVG inside button is sized */
+    width: 18px;
+    height: 18px;
 }
 
-.signin-modal-close:focus {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: 2px;
-}
-
-/* Modal Header */
-.signin-modal-header {
+/* Modal Header (.signin-header from index.html) */
+.signin-content .signin-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: var(--spacing-lg); 
 }
-
-.signin-logo {
-    margin-bottom: 16px;
+.modal-logo-icon { 
+    color: var(--text-primary); 
+    margin-bottom: var(--spacing-md);
+    width: 28px; 
+    height: 28px; 
 }
-
-.signin-logo .logo {
-    width: 56px;
-    height: 56px;
-}
-
-.signin-title {
-    font-size: 28px;
-    font-weight: 700;
+.signin-content .signin-header h2 { 
+    font-size: var(--font-size-lg); 
+    font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 8px 0;
-    line-height: 1.2;
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.3;
 }
-
-.signin-subtitle {
-    font-size: 16px;
+.signin-content .signin-header p { 
+    font-size: var(--font-size-sm); 
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.4;
 }
 
-/* Sign-In Options */
-.signin-options {
+/* Sign-In Body & Options (.signin-body, .social-signin-btn, .email-form from index.html) */
+.signin-content .signin-body {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: var(--spacing-sm); 
+    margin-bottom: var(--spacing-lg);
 }
-
-.signin-option {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    height: 56px;
-    padding: 0 24px;
-    border-radius: 16px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-base);
-    border: 2px solid transparent;
-    position: relative;
-    overflow: hidden;
+.social-signin-btn, .email-btn { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: var(--spacing-sm); 
+    width: 100%; 
+    height: 48px; 
+    padding: 0 var(--spacing-md); 
+    border-radius: var(--radius-md); 
+    font-size: var(--font-size-sm); 
+    font-weight: 500; 
+    cursor: pointer; 
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    border: 1px solid var(--border-color); /* Default border */
 }
-
-.signin-option:focus {
+.social-signin-btn:focus-visible, .email-btn:focus-visible { 
     outline: none;
-    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.3);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(79, 156, 249, 0.3);
 }
-
-.signin-option:active {
+.social-signin-btn:active, .email-btn:active {
     transform: scale(0.98);
 }
 
-/* Apple Sign-In Button */
-.apple-signin {
-    background: #ffffff;
-    color: #000000;
-    border-color: #e5e5e7;
+.google-btn { /* ID from index.html */
+    background: var(--tertiary-dark); /* Darker buttons like Perplexity */
+    color: var(--text-primary); 
+}
+.google-btn:hover { background: var(--hover-bg); border-color: var(--border-hover); }
+
+.apple-btn { /* ID from index.html */
+    background: var(--tertiary-dark);
+    color: var(--text-primary);
+}
+.apple-btn:hover { background: var(--hover-bg); border-color: var(--border-hover); }
+
+.social-signin-btn svg { /* SVG inside social buttons */
+    margin-right: var(--spacing-sm); /* Already present in index.html, this is for consistency */
 }
 
-.apple-signin:hover {
-    background: #f5f5f7;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="dark"] .apple-signin {
-    background: #ffffff;
-    color: #000000;
-    border-color: #d2d2d7;
-}
-
-[data-theme="dark"] .apple-signin:hover {
-    background: #f5f5f7;
-}
-
-/* Google Sign-In Button */
-.google-signin {
-    background: #ffffff;
-    color: #1f1f1f;
-    border-color: #dadce0;
-}
-
-.google-signin:hover {
-    background: #f8f9fa;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="dark"] .google-signin {
-    background: #ffffff;
-    color: #1f1f1f;
-    border-color: #5f6368;
-}
-
-[data-theme="dark"] .google-signin:hover {
-    background: #f8f9fa;
-}
-
-/* Email Sign-In Button */
-.email-signin {
-    background: var(--text-primary);
-    color: var(--bg-primary);
-    border-color: transparent;
-}
-
-.email-signin:hover {
-    background: var(--text-secondary);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme="dark"] .email-signin {
-    background: #ffffff;
-    color: #000000;
-}
-
-[data-theme="dark"] .email-signin:hover {
-    background: #f0f0f0;
-}
-
-/* Sign-In Icon */
-.signin-icon {
-    flex-shrink: 0;
-}
-
-/* Footer */
-.signin-footer {
+.email-signin-divider {
+    display: flex;
+    align-items: center;
     text-align: center;
-    border-top: 1px solid var(--border-light);
-    padding-top: 24px;
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+    margin: var(--spacing-sm) 0;
+}
+.email-signin-divider::before,
+.email-signin-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+.email-signin-divider:not(:empty)::before { margin-right: .5em; }
+.email-signin-divider:not(:empty)::after { margin-left: .5em; }
+
+.signin-email-input { /* ID from index.html */
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--secondary-dark); /* Slightly lighter than modal bg */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+}
+.signin-email-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(79, 156, 249, 0.2);
+    outline: none;
 }
 
-.signin-terms {
-    font-size: 14px;
+.email-btn { /* For "Continue with email" button */
+    background: var(--tertiary-dark); /* Consistent with other buttons */
+    color: var(--text-primary);
+}
+.email-btn:hover { background: var(--hover-bg); border-color: var(--border-hover); }
+
+/* Footer (.signin-footer from index.html) */
+.signin-content .signin-footer {
+    text-align: center;
+    /* border-top: 1px solid var(--border-color); */ /* Perplexity doesn't have a top border here */
+    padding-top: var(--spacing-sm); /* Reduced padding */
+    margin-top: var(--spacing-lg);
+}
+.signin-content .signin-footer p { 
+    font-size: var(--font-size-xs);
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.5;
 }
-
-.signin-link {
-    color: var(--accent-blue);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color var(--transition-base);
-}
-
-.signin-link:hover {
-    color: var(--accent-blue-hover);
+.signin-content .signin-footer a { 
+    color: var(--text-secondary); 
     text-decoration: underline;
+    font-weight: normal; /* Perplexity links are not bold */
+}
+.signin-content .signin-footer a:hover {
+    color: var(--text-primary);
 }
 
-/* Notifications */
-.signin-notification {
-    position: absolute;
-    top: 80px;
-    left: 16px;
-    right: 16px;
-    border-radius: 12px;
-    padding: 16px;
-    z-index: 10;
-    animation: slideInFromTop 0.3s ease;
+/* Mobile Optimizations for the #signinModal structure */
+@media (max-width: 768px) {
+    .signin-content { 
+        right: 50%; /* Center on mobile */
+        transform: translate(50%, -50%) translateX(100vw); /* Start off-screen for mobile */
+        width: calc(100% - var(--spacing-lg) * 2); 
+        max-width: 380px; 
+    }
+
+    #signinModal.fade-in .signin-content,
+    #signinModal.slide-from-right-anim .signin-content {
+        transform: translate(50%, -50%) translateX(0); /* Slide in to center */
+    }
+
+    #signinModal.fade-out .signin-content,
+    #signinModal.slide-to-right-anim .signin-content {
+        transform: translate(50%, -50%) translateX(100vw); /* Slide out */
+    }
 }
 
-.signin-notification.info {
-    background: var(--accent-blue);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.signin-notification.error {
-    background: #ef4444;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.notification-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.notification-message {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.notification-close {
-    background: transparent;
-    border: none;
-    color: currentColor;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 6px;
-    transition: background-color var(--transition-base);
-}
-
-.notification-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* Mobile Optimizations */
 @media (max-width: 480px) {
-    .signin-modal-container {
-        width: 95%;
-        max-width: none;
+    .signin-content {
+        padding: var(--spacing-lg);
     }
-
-    .signin-modal-content {
-        padding: 24px;
-        border-radius: 20px;
-    }
-
-    .signin-title {
-        font-size: 24px;
-    }
-
-    .signin-subtitle {
-        font-size: 15px;
-    }
-
-    .signin-option {
-        height: 52px;
-        font-size: 15px;
-    }
-
-    .signin-logo .logo {
-        width: 48px;
-        height: 48px;
-    }
+    .signin-content .signin-header h2 { font-size: var(--font-size-lg); }
+    .signin-content .signin-header p { font-size: var(--font-size-xs); }
+    .social-signin-btn, .email-btn { height: 44px; font-size: var(--font-size-sm); }
+    .signin-email-input { padding: var(--spacing-sm); font-size: var(--font-size-sm); }
 }
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
-    .signin-modal-overlay,
-    .signin-modal-container,
-    .signin-option {
-        transition: none;
-    }
-
-    .signin-notification {
-        animation: none;
+    #signinModal, .signin-content, .social-signin-btn, .email-btn {
+        transition: none !important;
+        animation: none !important;
     }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .signin-modal-content {
-        border-width: 2px;
-    }
-
-    .signin-option {
-        border-width: 2px;
-    }
-
-    .apple-signin,
-    .google-signin {
-        border-color: #000000;
-    }
-
-    [data-theme="dark"] .apple-signin,
-    [data-theme="dark"] .google-signin {
-        border-color: #ffffff;
-    }
-}
-
-/* Animations */
-@keyframes slideInFromTop {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Focus styles for better accessibility */
-.signin-option:focus-visible {
-    outline: 3px solid var(--accent-blue);
-    outline-offset: 2px;
-}
-
-/* Loading states */
-.signin-option.loading {
+/* Loading states for buttons */
+.social-signin-btn.loading, .email-btn.loading {
     pointer-events: none;
     opacity: 0.7;
 }
-
-.signin-option.loading::after {
+.social-signin-btn.loading::after, .email-btn.loading::after {
     content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 2px solid transparent;
-    border-top: 2px solid currentColor;
+    border-top-color: currentColor; 
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    right: 20px;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    animation: spin 0.8s linear infinite; /* spin is in animations.css */
+    right: var(--spacing-md); 
+    top: 50%;
+    margin-top: -9px; 
 }
 
 /* Safe area support for mobile devices */
 @supports (padding: max(0px)) {
-    .signin-modal-content {
-        padding-left: max(32px, env(safe-area-inset-left));
-        padding-right: max(32px, env(safe-area-inset-right));
+    .signin-content {
+        padding-left: max(var(--spacing-xl), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-xl), env(safe-area-inset-right));
+        padding-bottom: max(var(--spacing-xl), env(safe-area-inset-bottom));
     }
-
     @media (max-width: 480px) {
-        .signin-modal-content {
-            padding-left: max(24px, env(safe-area-inset-left));
-            padding-right: max(24px, env(safe-area-inset-right));
+        .signin-content {
+            padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+            padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+            padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
         }
     }
 }
 
 /* Print styles */
 @media print {
-    .signin-modal-overlay {
+    #signinModal {
         display: none !important;
     }
 }

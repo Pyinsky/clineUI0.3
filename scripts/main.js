@@ -138,7 +138,9 @@ class StockArtApp {
             text: query // Ensure the payload structure matches what the webhook expects
         };
 
-        console.log('Sending to webhook:', webhookUrl, 'with payload:', payload);
+        console.log('[StockArtApp] Initiating fetchAIResponse for query:', query);
+        console.log('[StockArtApp] Webhook URL:', webhookUrl);
+        console.log('[StockArtApp] Payload:', JSON.stringify(payload, null, 2));
 
         const response = await fetch(webhookUrl, {
             method: 'POST',
@@ -149,15 +151,29 @@ class StockArtApp {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Webhook HTTP error! Status: ${response.status}, Message: ${errorText}`);
+            let errorText = 'Could not retrieve error details.';
+            try {
+                errorText = await response.text();
+            } catch (e) {
+                console.error('[StockArtApp] Failed to get error text from response:', e);
+            }
+            console.error(`[StockArtApp] Webhook HTTP error! Status: ${response.status}, Response Text: ${errorText}`);
             throw new Error(`API Error: ${response.status} - ${errorText}`);
         }
 
-        const responseData = await response.json();
-        console.log('Webhook response:', responseData);
+        let responseData = null;
+        try {
+            responseData = await response.json();
+            console.log('[StockArtApp] Webhook response JSON:', responseData);
+        } catch (e) {
+            console.error('[StockArtApp] Failed to parse webhook response as JSON:', e);
+            const rawResponseText = await response.text(); // Try to get raw text if JSON fails
+            console.log('[StockArtApp] Webhook raw response text:', rawResponseText);
+            throw new Error('Failed to parse AI response. Raw response: ' + rawResponseText);
+        }
+        
         // Adjust based on the actual structure of responseData
-        return responseData.reply || responseData.message || "AI response received."; 
+        return responseData.reply || responseData.message || "AI response received, but no 'reply' or 'message' field found."; 
     }
 
     addMessageToChat(text, type) {

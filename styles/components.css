@@ -17,8 +17,29 @@
 
 .sidebar.collapsed {
     width: var(--sidebar-width-collapsed);
-    padding: var(--spacing-md) 0; /* Centered icons */
+    padding-top: var(--spacing-md); 
+    padding-bottom: var(--spacing-md);
+    /* padding-left and padding-right are effectively 0 */
 }
+.sidebar.collapsed .sidebar-header,
+.sidebar.collapsed .nav-item,
+.sidebar.collapsed .sidebar-signin-btn {
+    padding: var(--spacing-sm) var(--spacing-sm); /* Add horizontal padding for proper alignment */
+    justify-content: flex-start; /* Align to left instead of center */
+    width: 100%; 
+}
+.sidebar.collapsed .sidebar-logo-link { 
+    display: flex; 
+    justify-content: flex-start; /* Align to left instead of center */
+    width: 100%;
+    padding: var(--spacing-sm); /* Consistent padding with horizontal spacing */
+}
+.sidebar.collapsed .nav-item svg,
+.sidebar.collapsed .sidebar-signin-btn svg,
+.sidebar.collapsed .sidebar-logo-link svg { 
+    margin: 0; /* Rely on flex alignment of parent */
+}
+
 
 .sidebar.expanded {
     width: var(--sidebar-width-expanded);
@@ -28,28 +49,35 @@
 .sidebar-header {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center logo when collapsed */
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md); /* Default padding for expanded */
     margin-bottom: var(--spacing-lg);
 }
-
+.sidebar.collapsed .sidebar-header {
+    justify-content: flex-start; /* Align with other items */
+    padding: var(--spacing-sm) var(--spacing-sm); /* Consistent with other collapsed items */
+}
 .sidebar.expanded .sidebar-header {
-    justify-content: flex-start; /* Align left when expanded */
+    justify-content: flex-start;
 }
 
 .sidebar-logo-link {
     display: inline-flex;
-    padding: var(--spacing-sm);
+    /* padding is handled by collapsed/expanded states */
     border-radius: var(--radius-md);
     transition: background-color var(--transition-fast);
+}
+.sidebar.expanded .sidebar-logo-link {
+    padding: var(--spacing-sm); /* Padding for the link area when expanded */
 }
 .sidebar-logo-link:hover {
     background-color: var(--hover-bg);
 }
 
-.logo-icon {
+.logo-icon { /* SVG for the main sidebar logo */
     color: var(--text-primary);
-    /* Styles for the SVG icon itself if needed */
+    width: 24px; /* Consistent icon size */
+    height: 24px;
+    flex-shrink: 0;
 }
 
 .sidebar-nav {
@@ -62,25 +90,30 @@
 .nav-item {
     display: flex;
     align-items: center;
-    padding: var(--spacing-md);
-    margin: 0 var(--spacing-sm);
+    margin: 0 var(--spacing-sm); /* Horizontal margin for expanded state */
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     text-decoration: none;
     transition: background-color var(--transition-fast), color var(--transition-fast);
-    white-space: nowrap; /* Prevent label wrapping */
-    overflow: hidden; /* Hide label when collapsed */
+    white-space: nowrap; 
+    overflow: hidden; 
 }
+.sidebar.expanded .nav-item {
+    padding: var(--spacing-md); 
+}
+/* .sidebar.collapsed .nav-item padding is handled above */
 
-.sidebar.collapsed .nav-item {
-    justify-content: center; /* Center icon */
-    margin: 0 auto; /* Center icon block */
-    width: calc(var(--sidebar-width-collapsed) - var(--spacing-sm) * 2);
-}
 
 .sidebar.expanded .nav-item svg {
     margin-right: var(--spacing-md);
 }
+
+.nav-item svg { 
+    flex-shrink: 0; 
+    width: 20px; 
+    height: 20px; 
+}
+
 
 .nav-item:hover,
 .nav-item.active {
@@ -109,27 +142,39 @@
 }
 
 .sidebar-footer {
-    padding: var(--spacing-md) var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-sm); /* Padding for expanded */
     border-top: 1px solid var(--border-color);
-    margin-top: auto; /* Pushes footer to bottom */
+    margin-top: auto; 
 }
+.sidebar.collapsed .sidebar-footer {
+    padding: var(--spacing-md) 0; /* No horizontal padding when collapsed */
+}
+
 
 .sidebar-signin-btn {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: var(--spacing-md);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     transition: background-color var(--transition-fast), color var(--transition-fast);
     white-space: nowrap;
     overflow: hidden;
 }
-.sidebar.collapsed .sidebar-signin-btn {
-    justify-content: center;
+.sidebar.expanded .sidebar-signin-btn {
+    padding: var(--spacing-md); 
 }
+/* .sidebar.collapsed .sidebar-signin-btn padding is handled above */
+
+
 .sidebar.expanded .sidebar-signin-btn svg {
     margin-right: var(--spacing-md);
+}
+
+.sidebar-signin-btn svg { 
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
 }
 
 .sidebar-signin-btn:hover {
@@ -174,7 +219,7 @@
 .sidebar.collapsed .sidebar-signin-btn:hover::after {
     opacity: 1;
     visibility: visible;
-    transition-delay: 300ms; /* Show tooltip after a slight delay */
+    transition-delay: 300ms; 
 }
 
 
@@ -187,13 +232,13 @@
     text-align: center;
     flex-grow: 1;
     padding: var(--spacing-xl);
-    animation: fadeIn var(--transition-normal);
+    animation: fadeIn var(--transition-normal); /* fadeIn is in animations.css */
 }
 
 .search-results-view {
     display: flex;
     flex-direction: column;
-    height: 100%; /* Take full height of main-content */
+    height: 100%; 
     animation: fadeIn var(--transition-normal);
 }
 .search-results-view.hidden {
@@ -220,9 +265,9 @@
 /* --- Search Box (Shared Styling) --- */
 .search-box-container {
     width: 100%;
-    max-width: 700px; /* Perplexity-like width */
+    max-width: 700px; 
     margin: 0 auto;
-    position: relative; /* For transitions */
+    position: relative; 
     transition: all var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
 }
 .search-box-container.initial-pos {
@@ -231,15 +276,23 @@
 .search-box-container.bottom-pos {
     position: fixed;
     bottom: var(--spacing-xl);
-    left: 50%;
-    transform: translateX(-50%);
-    padding-left: var(--sidebar-width-collapsed); /* Adjust for sidebar */
-    z-index: var(--z-topbar) - 1; /* Below top bar */
-    width: calc(100% - var(--sidebar-width-collapsed) - var(--spacing-xl) * 2); /* Full width minus sidebar and padding */
+    /* left and transform for centering are handled by its placeholder */
+    z-index: calc(var(--z-topbar) - 1); 
+    width: 100%; /* It will be inside a placeholder that controls its width */
 }
-.sidebar.expanded ~ .main-content .search-box-container.bottom-pos {
-    padding-left: var(--sidebar-width-expanded);
-    width: calc(100% - var(--sidebar-width-expanded) - var(--spacing-xl) * 2);
+/* Placeholder for bottom search box */
+.bottom-search-box-placeholder {
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-width-collapsed); /* Align with sidebar */
+    right: 0;
+    padding: var(--spacing-md) var(--spacing-xl); /* Padding around the search box */
+    background-color: var(--primary-dark); /* Match page background or slightly different for effect */
+    z-index: calc(var(--z-topbar) - 1);
+    transition: left var(--transition-normal);
+}
+.sidebar.expanded ~ .main-content .bottom-search-box-placeholder {
+    left: var(--sidebar-width-expanded);
 }
 
 
@@ -249,7 +302,7 @@
     align-items: center;
     background: var(--secondary-dark);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-full); /* More rounded like Perplexity */
+    border-radius: var(--radius-full); 
     padding: 0 var(--spacing-sm);
     box-shadow: var(--shadow-md);
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -340,9 +393,9 @@
     justify-content: space-between;
     height: var(--header-height);
     padding: 0 var(--spacing-lg);
-    background: var(--primary-dark); /* Slightly different from main bg for depth */
+    background: var(--primary-dark); 
     border-bottom: 1px solid var(--border-color);
-    position: sticky; /* Or fixed, depending on scroll behavior */
+    position: sticky; 
     top: 0;
     z-index: var(--z-topbar);
 }
@@ -350,18 +403,18 @@
     font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--text-primary);
-    margin-right: var(--spacing-md); /* Add some space */
+    margin-right: var(--spacing-md); 
 }
 .user-query-display {
-    color: var(--text-primary); /* Make it primary text color like Perplexity */
-    font-size: var(--font-size-base); /* Slightly larger for better readability */
-    font-weight: 500; /* Medium weight */
+    color: var(--text-primary); 
+    font-size: var(--font-size-base); 
+    font-weight: 500; 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex-grow: 1; /* Allow it to take available space */
-    text-align: left; /* Explicitly align left */
-    margin: 0 var(--spacing-md); /* Space around it */
+    flex-grow: 1; 
+    text-align: left; 
+    margin: 0 var(--spacing-md); 
 }
 .share-results-btn {
     display: inline-flex;
@@ -383,7 +436,8 @@
     flex-grow: 1;
     overflow-y: auto;
     padding: var(--spacing-lg);
-    padding-bottom: calc(var(--search-height) + var(--spacing-xl) * 2); /* Space for fixed search box */
+    /* Adjusted padding-bottom to account for the placeholder's padding and search box height */
+    padding-bottom: calc(var(--search-height) + var(--spacing-md) * 2 + var(--spacing-xl)); 
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
@@ -395,26 +449,23 @@
     line-height: 1.5;
 }
 .chat-message.user {
-    background-color: var(--tertiary-dark); /* More subtle background for user message */
+    background-color: var(--tertiary-dark); 
     color: var(--text-primary);
     align-self: flex-end;
-    border-bottom-right-radius: var(--radius-sm); /* Bubble tail */
-    /* Add a subtle border to distinguish from AI if needed */
-    /* border: 1px solid rgba(255, 255, 255, 0.05); */
+    border-bottom-right-radius: var(--radius-sm); 
 }
 .chat-message.ai {
     background-color: var(--tertiary-dark);
     color: var(--text-primary);
     align-self: flex-start;
-    border-bottom-left-radius: var(--radius-sm); /* Bubble tail */
+    border-bottom-left-radius: var(--radius-sm); 
 }
 .chat-message.ai.error {
-    background-color: rgba(239, 68, 68, 0.2); /* Reddish for error */
+    background-color: rgba(239, 68, 68, 0.2); 
     border: 1px solid rgba(239, 68, 68, 0.5);
 }
-.message-bubble { /* If needed for more complex content */
+.message-bubble { 
     word-wrap: break-word;
 }
 
 /* Sign-in Modal styles are in styles/signin-modal.css */
-/* This file focuses on layout and core components */
