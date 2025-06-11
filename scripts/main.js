@@ -425,16 +425,32 @@ function showAnalysisResults(data, query) {
     }
 
     resultsContainer.innerHTML = `
-        <div class="results-header">
-            <h2>AI Analysis for "${query}"</h2>
-            <p>Generated ${new Date().toLocaleString()}</p>
-            <button class="clear-results-btn" title="Clear results">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+<div class="results-header">
+    <h2>AI Analysis for "${query}"</h2>
+    <div class="header-controls">
+        <p>Generated ${new Date().toLocaleString()}</p>
+        <div class="model-menu">
+            <button class="menu-toggle-btn" title="Change Model">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
                 </svg>
             </button>
+            <div class="menu-dropdown">
+                <a href="#" class="menu-item active">System Default</a>
+                <a href="#" class="menu-item">GPT-4 Turbo</a>
+                <a href="#" class="menu-item">Claude 3 Opus</a>
+            </div>
         </div>
+        <button class="clear-results-btn" title="Clear results">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+</div>
         <div class="results-content">
             <div class="result-card main-result">
                 <div class="result-content">
@@ -532,23 +548,63 @@ function showErrorResults(error, query) {
 }
 
 function formatAnalysisContent(content) {
-    // Format the content for better display
-    if (typeof content !== 'string') {
-        content = String(content);
+    // Clean up the initial string, remove the "output:" wrapper if it exists
+    content = content.replace(/"output":\s*"/, '').replace(/\\n/g, '\n').replace(/"$/, '');
+
+    const mainSummaryMatch = content.match(/##\s*News Sentiment Summary for .*\n([\s\S]*?)\n\nKey Articles:/);
+    const mainSummary = mainSummaryMatch ? mainSummaryMatch[1].trim() : 'Summary not available.';
+
+    const articlesText = content.split('Key Articles:')[1];
+    if (!articlesText) {
+        return `<p>${mainSummary}</p><p>No articles found in the response.</p>`;
     }
 
-    // Convert line breaks to HTML
-    content = content.replace(/\n/g, '<br>');
+    const articles = articlesText.trim().split(/\n\s*\n/);
     
-    // Simple markdown-like formatting
-    content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    
-    // Format lists
-    content = content.replace(/^[-•]\s+(.*?)(<br>|$)/gm, '<li>$1</li>');
-    content = content.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    let articlesHtml = articles.map(article => {
+        const titleMatch = article.match(/^(.*?)\s-\s(.*?)\s\(/);
+        const sentimentMatch = article.match(/Sentiment: (Bullish|Bearish|Neutral)/i);
+        const reasoningMatch = article.match(/Reasoning: (.*?)(?=\nLink:|$)/);
+        const linkMatch = article.match(/Link: (https?:\/\/[^\s]+)/);
 
-    return content;
+        if (!titleMatch || !sentimentMatch || !reasoningMatch || !linkMatch) {
+            return ''; // Skip malformed article entries
+        }
+
+        const title = titleMatch[1].replace(/^\W+/, ''); // Remove leading characters like '*'
+        const source = titleMatch[2];
+        const sentiment = sentimentMatch[1].toLowerCase();
+        const reasoning = reasoningMatch[1];
+        const link = linkMatch[1];
+
+        // Placeholder for a logo - you could map source names to image URLs here
+        const logoPlaceholder = `<div class="source-logo">${source.charAt(0)}</div>`;
+
+        return `
+            <div class="news-article-card">
+                <div class="article-header">
+                    <div class="source-info">
+                        ${logoPlaceholder}
+                        <span class="source-name">${source}</span>
+                    </div>
+                    <span class="sentiment-tag ${sentiment}">${sentiment}</span>
+                </div>
+                <h3 class="article-title"><a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a></h3>
+                <p class="article-reasoning">${reasoning}</p>
+            </div>
+        `;
+    }).join('');
+
+    // Final combined output
+    return `
+        <div class="analysis-summary">
+             <h3>Summary</h3>
+             <p>${mainSummary}</p>
+        </div>
+        <div class="articles-container">
+            ${articlesHtml}
+        </div>
+    `;
 }
 
 function showSearchResults(query) {
@@ -1385,3 +1441,186 @@ window.StockArtUtils = StockArtUtils;
 document.addEventListener('DOMContentLoaded', () => {
     window.stockArtMain = new StockArtMain();
 });
+
+/* --- Add these new styles to your CSS block in main.js --- */
+
+.analysis-summary {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--primary-dark);
+    border-radius: var(--radius-md);
+}
+
+.articles-container {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.news-article-card {
+    background: var(--primary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-base);
+}
+
+.news-article-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.article-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.source-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.source-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--hover-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.sentiment-tag {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.sentiment-tag.bullish {
+    background-color: #28a745; /* Green */
+}
+
+.sentiment-tag.bearish {
+    background-color: #dc3545; /* Red */
+}
+
+.sentiment-tag.neutral {
+    background-color: #6c757d; /* Grey */
+    color: #fff;
+}
+
+.article-title {
+    font-size: 1.1rem;
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.article-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+.article-title a:hover {
+    color: var(--accent-blue);
+}
+
+.article-reasoning {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Add these menu styles to your CSS block in main.js --- */
+
+.results-header {
+    align-items: flex-start;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: right;
+}
+
+.header-controls p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.model-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-toggle-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+}
+
+.menu-toggle-btn:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.menu-dropdown {
+    display: none; /* Hidden by default */
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: var(--spacing-sm);
+    background-color: var(--primary-dark);
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+    z-index: 1;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) 0;
+    overflow: hidden;
+}
+
+/* Show the dropdown on hover */
+.model-menu:hover .menu-dropdown {
+    display: block;
+}
+
+.menu-item {
+    color: var(--text-primary);
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: var(--hover-bg);
+}
+
+.menu-item.active {
+    font-weight: bold;
+    color: var(--accent-blue);
+}
