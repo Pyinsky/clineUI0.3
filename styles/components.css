@@ -399,36 +399,55 @@
     top: 0;
     z-index: var(--z-topbar);
 }
-.top-bar-logo {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-right: var(--spacing-md); 
+
+.top-bar-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
 .user-query-display {
     color: var(--text-primary); 
-    font-size: var(--font-size-base); 
-    font-weight: 500; 
+    font-size: var(--font-size-xl); 
+    font-weight: 600; 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex-grow: 1; 
-    text-align: left; 
-    margin: 0 var(--spacing-md); 
+    margin: 0;
 }
-.share-results-btn {
+
+.top-bar-action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
     color: var(--text-muted);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-md);
     transition: background-color var(--transition-fast), color var(--transition-fast);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
 }
-.share-results-btn:hover {
+
+.top-bar-action-btn:hover {
     background-color: var(--hover-bg);
     color: var(--text-primary);
+}
+
+.top-bar-action-btn.share-btn {
+    background: var(--accent-primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.top-bar-action-btn.share-btn:hover {
+    background: var(--accent-hover);
 }
 
 /* --- Chat Messages Container (After Search View) --- */
@@ -443,29 +462,94 @@
     gap: var(--spacing-lg);
 }
 .chat-message {
-    max-width: 75%;
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    line-height: 1.5;
+    width: 100%;
+    padding: var(--spacing-lg) 0;
+    line-height: 1.6;
 }
+
 .chat-message.user {
-    background-color: var(--tertiary-dark); 
-    color: var(--text-primary);
-    align-self: flex-end;
-    border-bottom-right-radius: var(--radius-sm); 
+    display: none; /* User message is shown in top bar */
 }
+
 .chat-message.ai {
-    background-color: var(--tertiary-dark);
     color: var(--text-primary);
-    align-self: flex-start;
-    border-bottom-left-radius: var(--radius-sm); 
+    border-bottom: 1px solid var(--border-color);
 }
+
+.chat-message.ai:last-child {
+    border-bottom: none;
+}
+
 .chat-message.ai.error {
-    background-color: rgba(239, 68, 68, 0.2); 
-    border: 1px solid rgba(239, 68, 68, 0.5);
+    background-color: rgba(239, 68, 68, 0.1); 
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
 }
+
+.chat-message.thinking {
+    opacity: 0.7;
+    font-style: italic;
+}
+
 .message-bubble { 
     word-wrap: break-word;
+    font-size: var(--font-size-base);
+    max-width: none;
+}
+
+/* AI Response Header (like Perplexity) */
+.ai-response-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ai-response-header .ai-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-primary);
+}
+
+.ai-response-header .ai-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+}
+
+/* Response Actions (like Perplexity's bottom actions) */
+.response-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.response-action-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-muted);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.response-action-btn:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.response-action-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Sign-in Modal styles are in styles/signin-modal.css */

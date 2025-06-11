@@ -173,8 +173,24 @@ class StockArtApp {
                 throw new Error('Failed to parse AI response. Raw response: ' + rawResponseText);
             }
             
-            // Adjust based on the actual structure of responseData
-            return responseData.reply || responseData.message || "AI response received, but no 'reply' or 'message' field found."; 
+            // Handle different possible response structures
+            if (Array.isArray(responseData) && responseData.length > 0) {
+                // If response is an array, get the first item
+                const firstResponse = responseData[0];
+                return firstResponse.reply || firstResponse.message || firstResponse.text || firstResponse.content || JSON.stringify(firstResponse);
+            } else if (responseData.reply) {
+                return responseData.reply;
+            } else if (responseData.message) {
+                return responseData.message;
+            } else if (responseData.text) {
+                return responseData.text;
+            } else if (responseData.content) {
+                return responseData.content;
+            } else {
+                // If none of the expected fields exist, return the entire response as string
+                console.log('[StockArtApp] Unexpected response structure:', responseData);
+                return JSON.stringify(responseData, null, 2);
+            }
         } catch (error) {
             console.error('[StockArtApp] Webhook request failed:', error);
             throw error;
@@ -192,11 +208,57 @@ class StockArtApp {
             messageDiv.classList.add(additionalClass);
         }
         
+        // For AI messages, add Perplexity-style header and actions
+        if (type === 'ai' && additionalClass !== 'thinking') {
+            // AI Response Header
+            const headerDiv = document.createElement('div');
+            headerDiv.classList.add('ai-response-header');
+            headerDiv.innerHTML = `
+                <svg class="ai-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="ai-label">StockArt</span>
+            `;
+            messageDiv.appendChild(headerDiv);
+        }
+        
         const bubbleDiv = document.createElement('div');
         bubbleDiv.classList.add('message-bubble');
         bubbleDiv.textContent = text; // Basic text for now, can be enhanced for markdown/HTML
-        
         messageDiv.appendChild(bubbleDiv);
+        
+        // For AI messages, add response actions
+        if (type === 'ai' && additionalClass !== 'thinking' && additionalClass !== 'error') {
+            const actionsDiv = document.createElement('div');
+            actionsDiv.classList.add('response-actions');
+            actionsDiv.innerHTML = `
+                <button class="response-action-btn" data-action="share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16 6 12 2 8 6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                    </svg>
+                    Share
+                </button>
+                <button class="response-action-btn" data-action="export">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export
+                </button>
+                <button class="response-action-btn" data-action="rewrite">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Rewrite
+                </button>
+            `;
+            messageDiv.appendChild(actionsDiv);
+        }
+        
         this.elements.chatMessagesContainer.appendChild(messageDiv);
         this.elements.chatMessagesContainer.scrollTop = this.elements.chatMessagesContainer.scrollHeight;
     }
