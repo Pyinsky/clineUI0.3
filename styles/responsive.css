@@ -43,6 +43,19 @@
 
 /* Mobile specific adjustments (e.g., up to 768px) */
 @media (max-width: 768px) {
+    /* --- Add this to styles/responsive.css inside the @media (max-width: 768px) block --- */
+
+.sentiment-summary {
+    padding: var(--spacing-md); /* Reduce padding on mobile */
+}
+
+.sentiment-summary h2 {
+    font-size: var(--font-size-base); /* Slightly smaller heading on mobile */
+}
+
+.sentiment-summary p {
+    font-size: var(--font-size-sm); /* Adjust paragraph font size */
+}
     /* Sidebar becomes an overlay on mobile */
     .sidebar {
         transform: translateX(-100%);

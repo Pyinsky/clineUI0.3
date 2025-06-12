@@ -206,3 +206,52 @@ a:hover {
 /* Removed old component-specific styles like .sidebar, .search-container, .brand-title etc. */
 /* These will be in styles/components.css */
 /* Removed old responsive styles, they will be in styles/responsive.css */
+/* Styles for the AI response within the chat bubble */
+.chat-message.ai .message-bubble {
+    /* Your existing bubble styles here */
+    padding: 15px; /* Ensure good padding */
+    border-radius: 10px;
+    background-color: var(--secondary-dark); /* Use your theme variable */
+    color: var(--text-primary); /* Use your theme variable */
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+}
+
+.chat-message.ai .sentiment-summary {
+    /* Container for the summary within the bubble */
+    margin: 0; /* Remove any default margins */
+}
+
+.chat-message.ai .sentiment-summary h2 {
+    font-size: 1.1em; /* Adjust size to fit chat bubble */
+    font-weight: 600;
+    color: var(--accent-blue); /* Use your accent color for headings */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 0.5em; /* Space below heading */
+    line-height: 1.3;
+}
+
+.chat-message.ai .sentiment-summary p {
+    font-size: 0.95em; /* Slightly smaller text for readability */
+    color: var(--text-primary); /* Main text color */
+    line-height: 1.6;
+    margin-top: 0;
+    margin-bottom: 0; /* Remove default paragraph margins */
+}
+
+.chat-message.ai .sentiment-summary p strong {
+    font-weight: bold;
+    color: var(--accent-teal); /* Use accent color for bold text */
+}
+
+/* Optional: Styling for links if your AI output includes them */
+.chat-message.ai .sentiment-summary a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+}
+.chat-message.ai .sentiment-summary a:hover {
+    color: var(--text-primary);
+}
+
+/* Specific styling for the `br` tags might not be needed if line-height is good */
+/* .chat-message.ai .sentiment-summary p br { } */
