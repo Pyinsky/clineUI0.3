@@ -224,7 +224,16 @@ class StockArtApp {
         
         const bubbleDiv = document.createElement('div');
         bubbleDiv.classList.add('message-bubble');
-        bubbleDiv.textContent = text; // Basic text for now, can be enhanced for markdown/HTML
+        
+        // Check if the text contains HTML tags
+        if (text.includes('<') && text.includes('>')) {
+            // If it's HTML content, render it as HTML
+            bubbleDiv.innerHTML = text;
+        } else {
+            // If it's plain text, use textContent for security
+            bubbleDiv.textContent = text;
+        }
+        
         messageDiv.appendChild(bubbleDiv);
         
         // For AI messages, add response actions

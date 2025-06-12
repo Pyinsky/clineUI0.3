@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockArt - HTML Rendering Test</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="styles/signin-modal.css">
+</head>
+<body class="dark-theme">
+    <div id="app">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="sidebar collapsed">
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-logo-link" aria-label="StockArt Home">
+                    <svg class="logo-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-tooltip="Home">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <span class="label">Home</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="main-content">
+            <!-- Search Results View -->
+            <div id="search-results-view" class="search-results-view">
+                <div id="top-bar" class="top-bar">
+                    <div class="top-bar-left">
+                        <h1 id="user-query-display" class="user-query-display">Google stock info</h1>
+                    </div>
+                    <div class="top-bar-right">
+                        <button id="share-results-btn" class="top-bar-action-btn share-btn" aria-label="Share results">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                <polyline points="16 6 12 2 8 6"></polyline>
+                                <line x1="12" y1="2" x2="12" y2="15"></line>
+                            </svg>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="chat-messages-container" class="chat-messages-container">
+                    <!-- AI Response with HTML content -->
+                    <div class="chat-message ai">
+                        <div class="ai-response-header">
+                            <svg class="ai-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            <span class="ai-label">StockArt</span>
+                        </div>
+                        <div class="message-bubble">
+                            <div class="sentiment-summary">
+                                <h2>News Sentiment Summary for Alphabet Inc. (GOOGL)</h2>
+                                <p><strong>Neutral to Slightly Bullish:</strong> Alphabet's stock performance and outlook are primarily driven by its advancements in Artificial Intelligence (AI) and the significant growth of Google Cloud. The company's substantial investments and leadership in AI are a major bullish factor, with many analysts seeing current valuations as attractive due to perceived AI disruption concerns. However, potential regulatory challenges, particularly the antitrust litigation concerning Google Chrome, present a notable bearish risk that could significantly impact the stock. The market is also reacting to volatility in options trading and some investors are re-evaluating their positions in AI-related cybersecurity stocks. Overall, while AI and cloud growth provide strong tailwinds, the antitrust litigation introduces considerable uncertainty.</p>
+                                
+                                <h3>Key Articles:</h3>
+                                
+                                <div class="stock-info">
+                                    <h4>Why Alphabet Stock Just Popped 1.82%</h4>
+                                    <p>This article suggests that Alphabet's market cap increased due to ChatGPT, indicating positive sentiment around AI developments.</p>
+                                    <p><strong>Link:</strong> <a href="https://finance.yahoo.com/news/why-alphabet-stock-just-popped-182354715.html" target="_blank">https://finance.yahoo.com/news/why-alphabet-stock-just-popped-182354715.html</a></p>
+                                </div>
+                                
+                                <div class="stock-info">
+                                    <h4>Should Google Just Give Investors a Reason to Load Up on the Stock?</h4>
+                                    <p>This piece highlights Google's rapid pace in developing AI for its services, suggesting it could be a strong buy signal for investors.</p>
+                                    <p><strong>Link:</strong> <a href="https://finance.yahoo.com/news/did-google-just-investors-reason-074200105.html" target="_blank">https://finance.yahoo.com/news/did-google-just-investors-reason-074200105.html</a></p>
+                                </div>
+                                
+                                <div class="stock-info">
+                                    <h4>Implied Volatility Surging for Alphabet Stock Options</h4>
+                                    <p>This article indicates increased activity in Alphabet's options market, suggesting that investors are paying close attention to the stock, likely due to upcoming catalysts or events.</p>
+                                    <p><strong>Link:</strong> <a href="https://finance.yahoo.com/news/implied-volatility-surging-alphabet-stock-134800554.html" target="_blank">https://finance.yahoo.com/news/implied-volatility-surging-alphabet-stock-134800554.html</a></p>
+                                </div>
+                                
+                                <div class="stock-info">
+                                    <h4>Alphabet Stock: Still a No-Brainer in 2025?</h4>
+                                    <p>This article points to stellar revenue growth and expanding operating income from Google Cloud, coupled with Alphabet's leadership and financial resources in AI, as reasons for it to be a strong buy.</p>
+                                    <p><strong>Link:</strong> <a href="https://finance.yahoo.com/news/alphabet-stock-still-no-brainer-111500303.html" target="_blank">https://finance.yahoo.com/news/alphabet-stock-still-no-brainer-111500303.html</a></p>
+                                </div>
+                                
+                                <div class="stock-info">
+                                    <h4>Alphabet stock could fall as much as 25% in 'black swan event' if judge orders Google Chrome divestiture</h4>
+                                    <p>This article presents a significant bearish outlook, where a potential divestiture of Google Chrome due to an antitrust case could lead to a substantial drop in Alphabet's stock.</p>
+                                    <p><strong>Link:</strong> <a href="https://finance.yahoo.com/news/alphabet-stock-could-fall-as-much-as-25-in-b-ck-swan-event-if-judge-orders-google-chrome-divestiture-174438942.html" target="_blank">https://finance.yahoo.com/news/alphabet-stock-could-fall-as-much-as-25-in-b-ck-swan-event-if-judge-orders-google-chrome-divestiture-174438942.html</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="response-actions">
+                            <button class="response-action-btn" data-action="share">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                    <polyline points="16 6 12 2 8 6"></polyline>
+                                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                                </svg>
+                                Share
+                            </button>
+                            <button class="response-action-btn" data-action="export">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Export
+                            </button>
+                            <button class="response-action-btn" data-action="rewrite">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Rewrite
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple demo script to show the difference between old and new rendering
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('HTML Rendering Test Loaded');
+            
+            // Add a button to toggle between raw HTML and rendered HTML
+            const toggleButton = document.createElement('button');
+            toggleButton.textContent = 'Toggle Raw HTML View';
+            toggleButton.style.position = 'fixed';
+            toggleButton.style.top = '10px';
+            toggleButton.style.right = '10px';
+            toggleButton.style.zIndex = '9999';
+            toggleButton.style.padding = '10px';
+            toggleButton.style.backgroundColor = '#4f9cf9';
+            toggleButton.style.color = 'white';
+            toggleButton.style.border = 'none';
+            toggleButton.style.borderRadius = '5px';
+            toggleButton.style.cursor = 'pointer';
+            
+            let isRawView = false;
+            const messageBubble = document.querySelector('.message-bubble');
+            const originalHTML = messageBubble.innerHTML;
+            
+            toggleButton.addEventListener('click', () => {
+                if (isRawView) {
+                    messageBubble.innerHTML = originalHTML;
+                    toggleButton.textContent = 'Toggle Raw HTML View';
+                    isRawView = false;
+                } else {
+                    messageBubble.textContent = originalHTML;
+                    toggleButton.textContent = 'Toggle Rendered HTML View';
+                    isRawView = true;
+                }
+            });
+            
+            document.body.appendChild(toggleButton);
+        });
+    </script>
+</body>
+</html>
