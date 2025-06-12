@@ -498,6 +498,56 @@
     font-size: var(--font-size-base);
     max-width: none;
 }
+/* --- Add this to styles/components.css --- */
+
+/* Styling for the AI Sentiment Summary from n8n */
+.sentiment-summary {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    background-color: var(--secondary-dark); /* Match your component background */
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-md) 0; /* Add some vertical spacing */
+}
+
+.sentiment-summary h2 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sentiment-summary p {
+    margin-bottom: 1em;
+    color: var(--text-secondary);
+}
+
+.sentiment-summary strong {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.sentiment-summary a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sentiment-summary a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Add some space after the line breaks for better readability */
+.sentiment-summary br {
+    content: "";
+    display: block;
+    margin-bottom: 0.5em;
+}
 
 /* AI Response Header (like Perplexity) */
 .ai-response-header {
