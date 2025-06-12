@@ -93,7 +93,7 @@ app.post('/api/analyze', async (req, res) => {
     console.log('Sending to n8n webhook:', webhookPayload);
 
     // Call n8n webhook
-    const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook-test/stockartaipromptboxhandler';
+    const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook/1d353652-65f1-4784-b7ec-54379d8ab33c';
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
@@ -168,4 +168,3 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
-

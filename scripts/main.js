@@ -133,7 +133,7 @@ class StockArtApp {
     }
 
    async fetchAIResponse(query) {
-        const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook-test/stockartaipromptboxhandler';
+        const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook/1d353652-65f1-4784-b7ec-54379d8ab33c';
         const payload = {
             text: query
         };
