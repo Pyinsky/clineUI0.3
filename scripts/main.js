@@ -132,10 +132,10 @@ class StockArtApp {
         }
     }
 
-    async fetchAIResponse(query) {
+   async fetchAIResponse(query) {
         const webhookUrl = 'https://primary-production-b1c8.up.railway.app/webhook-test/stockartaipromptboxhandler';
         const payload = {
-            text: query // Ensure the payload structure matches what the webhook expects
+            text: query
         };
 
         console.log('[StockArtApp] Initiating fetchAIResponse for query:', query);
@@ -146,55 +146,103 @@ class StockArtApp {
             const response = await fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json', // Still sending JSON payload to n8n
+                    'Accept': 'text/html' // Inform n8n (though it might not change n8n's output)
                 },
                 body: JSON.stringify(payload)
             });
 
             if (!response.ok) {
-                let errorText = 'Could not retrieve error details.';
+                let errorDetails = `HTTP error! Status: ${response.status}`;
                 try {
-                    errorText = await response.text();
+                    // Attempt to get text even if response is not OK, but handle potential double-read
+                    errorDetails += ` - ${await response.text()}`;
                 } catch (e) {
-                    console.error('[StockArtApp] Failed to get error text from response:', e);
+                    console.error('[StockArtApp] Failed to get error text from non-OK response:', e);
                 }
-                console.error(`[StockArtApp] Webhook HTTP error! Status: ${response.status}, Response Text: ${errorText}`);
-                throw new Error(`API Error: ${response.status} - ${errorText}`);
+                console.error(`[StockArtApp] Webhook HTTP error! ${errorDetails}`);
+                throw new Error(`API Error: ${errorDetails}`);
             }
 
-            let responseData = null;
-            try {
-                responseData = await response.json();
-                console.log('[StockArtApp] Webhook response JSON:', responseData);
-            } catch (e) {
-                console.error('[StockArtApp] Failed to parse webhook response as JSON:', e);
-                const rawResponseText = await response.text(); // Try to get raw text if JSON fails
-                console.log('[StockArtApp] Webhook raw response text:', rawResponseText);
-                throw new Error('Failed to parse AI response. Raw response: ' + rawResponseText);
-            }
-            
-            // Handle different possible response structures
-            if (Array.isArray(responseData) && responseData.length > 0) {
-                // If response is an array, get the first item
-                const firstResponse = responseData[0];
-                return firstResponse.reply || firstResponse.message || firstResponse.text || firstResponse.content || JSON.stringify(firstResponse);
-            } else if (responseData.reply) {
-                return responseData.reply;
-            } else if (responseData.message) {
-                return responseData.message;
-            } else if (responseData.text) {
-                return responseData.text;
-            } else if (responseData.content) {
-                return responseData.content;
-            } else {
-                // If none of the expected fields exist, return the entire response as string
-                console.log('[StockArtApp] Unexpected response structure:', responseData);
-                return JSON.stringify(responseData, null, 2);
-            }
+            // *** CRUCIAL CHANGE HERE: Expect text (HTML) not JSON ***
+            const htmlContent = await response.text(); // Read the response body as text (HTML) ONCE
+            console.log('[StockArtApp] Webhook response HTML:', htmlContent);
+
+            // Directly return the HTML string
+            return htmlContent;
+
         } catch (error) {
             console.error('[StockArtApp] Webhook request failed:', error);
             throw error;
         }
+    }
+
+    // You will also need to modify addMessageToChat to accept HTML
+    addMessageToChat(content, type, additionalClass = null) {
+        if (!this.elements.chatMessagesContainer) return;
+
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', type);
+        
+        if (additionalClass) {
+            messageDiv.classList.add(additionalClass);
+        }
+        
+        if (type === 'ai' && additionalClass !== 'thinking') {
+            const headerDiv = document.createElement('div');
+            headerDiv.classList.add('ai-response-header');
+            headerDiv.innerHTML = `
+                <svg class="ai-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="ai-label">StockArt</span>
+            `;
+            messageDiv.appendChild(headerDiv);
+        }
+        
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.classList.add('message-bubble');
+        // *** CRUCIAL CHANGE HERE: Use innerHTML for HTML content ***
+        if (type === 'ai' && !additionalClass) { // Only for actual AI responses, not thinking/error
+             bubbleDiv.innerHTML = content; // Inject HTML directly
+        } else {
+             bubbleDiv.textContent = content; // Keep textContent for user input, thinking, error messages
+        }
+        messageDiv.appendChild(bubbleDiv);
+        
+        if (type === 'ai' && additionalClass !== 'thinking' && additionalClass !== 'error') {
+            const actionsDiv = document.createElement('div');
+            actionsDiv.classList.add('response-actions');
+            actionsDiv.innerHTML = `
+                <button class="response-action-btn" data-action="share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16 6 12 2 8 6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                    </svg>
+                    Share
+                </button>
+                <button class="response-action-btn" data-action="export">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export
+                </button>
+                <button class="response-action-btn" data-action="rewrite">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Rewrite
+                </button>
+            `;
+            messageDiv.appendChild(actionsDiv);
+        }
+        
+        this.elements.chatMessagesContainer.appendChild(messageDiv);
+        this.elements.chatMessagesContainer.scrollTop = this.elements.chatMessagesContainer.scrollHeight;
     }
 
     addMessageToChat(text, type, additionalClass = null) {
