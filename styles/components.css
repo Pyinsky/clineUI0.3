@@ -456,13 +456,15 @@
 .chat-messages-container {
     flex-grow: 1;
     overflow-y: auto;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
     /* Adjusted padding-bottom to account for the placeholder's padding and search box height */
     padding-bottom: calc(var(--search-height) + var(--spacing-md) * 2 + var(--spacing-xl)); 
     display: flex;
     flex-direction: column-reverse;
     gap: var(--spacing-lg);
     justify-content: flex-start;
+    max-width: 800px;
+    margin: 0 auto;
 }
 .chat-message {
     width: 100%;

@@ -56,25 +56,25 @@
 .sentiment-summary p {
     font-size: var(--font-size-sm); /* Adjust paragraph font size */
 }
-    /* Sidebar becomes an overlay on mobile */
+    /* Sidebar becomes push-to-right on mobile (not overlay) */
     .sidebar {
         transform: translateX(-100%);
-        position: fixed; /* Ensure it's fixed for overlay behavior */
+        position: fixed;
         height: 100vh;
-        z-index: var(--z-sidebar) + 10; /* Higher z-index for overlay */
+        z-index: var(--z-sidebar) + 10;
         box-shadow: var(--shadow-xl);
-        /* Always expanded width when open on mobile */
-        width: var(--sidebar-width-expanded); 
+        width: 280px;
         padding: var(--spacing-sm) var(--spacing-xs);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .sidebar.mobile-open {
         transform: translateX(0);
     }
-    .sidebar.collapsed { /* Collapsed state not used when overlayed, it's either open or closed */
+    .sidebar.collapsed {
         transform: translateX(-100%);
     }
-    .sidebar.expanded { /* Ensure expanded styles apply when mobile-open */
-         width: var(--sidebar-width-expanded);
+    .sidebar.expanded {
+         width: 280px;
          padding: var(--spacing-sm) var(--spacing-xs);
     }
     .sidebar.expanded .nav-item .label,
@@ -122,9 +122,11 @@
     .main-content {
         padding-left: 0; /* No fixed sidebar padding on mobile */
         padding-top: var(--spacing-lg); /* Space for potential mobile header */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .sidebar.expanded + .main-content { /* No change in padding-left when sidebar is overlay */
-        padding-left: 0;
+    /* Push main content to the right when sidebar is open on mobile */
+    .sidebar.mobile-open ~ .main-content {
+        transform: translateX(280px);
     }
 
 
