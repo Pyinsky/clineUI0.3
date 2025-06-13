@@ -82,6 +82,12 @@
         padding: max(var(--safe-area-top), 20px) max(var(--safe-area-right), 16px) max(var(--safe-area-bottom), 20px) max(var(--safe-area-left), 16px);
         min-height: 100vh;
         width: 100%;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Push main content to the right when sidebar is open */
+    .sidebar.mobile-open ~ .main-content {
+        transform: translateX(280px);
     }
     
     /* Mobile header with hamburger */

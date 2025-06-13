@@ -71,6 +71,20 @@
     100% { transform: scale(1); }
 }
 
+@keyframes thinkingDots { /* Dynamic thinking animation */
+    0% { content: 'Thinking'; }
+    25% { content: 'Thinking.'; }
+    50% { content: 'Thinking..'; }
+    75% { content: 'Thinking...'; }
+    100% { content: 'Thinking'; }
+}
+
+@keyframes thinkingPulse { /* Pulsing effect for thinking message */
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
 @keyframes shimmer { /* For loading placeholders */
     0% { background-position: -1000px 0; }
     100% { background-position: 1000px 0; }

@@ -242,83 +242,10 @@ class StockArtApp {
         }
         
         this.elements.chatMessagesContainer.appendChild(messageDiv);
-        this.elements.chatMessagesContainer.scrollTop = this.elements.chatMessagesContainer.scrollHeight;
+        // With column-reverse, we need to scroll to top to see new messages
+        this.elements.chatMessagesContainer.scrollTop = 0;
     }
 
-    addMessageToChat(text, type, additionalClass = null) {
-        if (!this.elements.chatMessagesContainer) return;
-
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('chat-message', type);
-        
-        // Add additional class if provided
-        if (additionalClass) {
-            messageDiv.classList.add(additionalClass);
-        }
-        
-        // For AI messages, add Perplexity-style header and actions
-        if (type === 'ai' && additionalClass !== 'thinking') {
-            // AI Response Header
-            const headerDiv = document.createElement('div');
-            headerDiv.classList.add('ai-response-header');
-            headerDiv.innerHTML = `
-                <svg class="ai-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                </svg>
-                <span class="ai-label">StockArt</span>
-            `;
-            messageDiv.appendChild(headerDiv);
-        }
-        
-        const bubbleDiv = document.createElement('div');
-        bubbleDiv.classList.add('message-bubble');
-        
-        // Check if the text contains HTML tags
-        if (text.includes('<') && text.includes('>')) {
-            // If it's HTML content, render it as HTML
-            bubbleDiv.innerHTML = text;
-        } else {
-            // If it's plain text, use textContent for security
-            bubbleDiv.textContent = text;
-        }
-        
-        messageDiv.appendChild(bubbleDiv);
-        
-        // For AI messages, add response actions
-        if (type === 'ai' && additionalClass !== 'thinking' && additionalClass !== 'error') {
-            const actionsDiv = document.createElement('div');
-            actionsDiv.classList.add('response-actions');
-            actionsDiv.innerHTML = `
-                <button class="response-action-btn" data-action="share">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                        <polyline points="16 6 12 2 8 6"></polyline>
-                        <line x1="12" y1="2" x2="12" y2="15"></line>
-                    </svg>
-                    Share
-                </button>
-                <button class="response-action-btn" data-action="export">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Export
-                </button>
-                <button class="response-action-btn" data-action="rewrite">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                    Rewrite
-                </button>
-            `;
-            messageDiv.appendChild(actionsDiv);
-        }
-        
-        this.elements.chatMessagesContainer.appendChild(messageDiv);
-        this.elements.chatMessagesContainer.scrollTop = this.elements.chatMessagesContainer.scrollHeight;
-    }
     
     removeThinkingMessage() {
         const thinkingMessage = this.elements.chatMessagesContainer.querySelector('.chat-message.thinking');

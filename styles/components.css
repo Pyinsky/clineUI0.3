@@ -276,23 +276,25 @@
 .search-box-container.bottom-pos {
     position: fixed;
     bottom: var(--spacing-xl);
-    /* left and transform for centering are handled by its placeholder */
+    left: 50%;
+    transform: translateX(-50%);
     z-index: calc(var(--z-topbar) - 1); 
-    width: 100%; /* It will be inside a placeholder that controls its width */
+    width: 100%;
+    max-width: 700px;
+    padding: 0 var(--spacing-xl);
 }
 /* Placeholder for bottom search box */
 .bottom-search-box-placeholder {
     position: fixed;
     bottom: 0;
-    left: var(--sidebar-width-collapsed); /* Align with sidebar */
+    left: 0;
     right: 0;
-    padding: var(--spacing-md) var(--spacing-xl); /* Padding around the search box */
-    background-color: var(--primary-dark); /* Match page background or slightly different for effect */
+    padding: var(--spacing-md) 0;
+    background-color: var(--primary-dark);
     z-index: calc(var(--z-topbar) - 1);
-    transition: left var(--transition-normal);
-}
-.sidebar.expanded ~ .main-content .bottom-search-box-placeholder {
-    left: var(--sidebar-width-expanded);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -458,8 +460,9 @@
     /* Adjusted padding-bottom to account for the placeholder's padding and search box height */
     padding-bottom: calc(var(--search-height) + var(--spacing-md) * 2 + var(--spacing-xl)); 
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: var(--spacing-lg);
+    justify-content: flex-start;
 }
 .chat-message {
     width: 100%;
@@ -491,6 +494,12 @@
 .chat-message.thinking {
     opacity: 0.7;
     font-style: italic;
+    animation: thinkingPulse 1.5s ease-in-out infinite;
+}
+
+.chat-message.thinking .message-bubble::after {
+    content: 'Thinking...';
+    animation: thinkingDots 1.5s ease-in-out infinite;
 }
 
 .message-bubble { 
