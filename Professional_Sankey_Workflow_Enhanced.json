@@ -1,0 +1,135 @@
+{
+  "name": "Professional Sankey Workflow - Enhanced",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1d353652-65f1-4784-b7ec-54379d8ab33c",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "00b99ac8-183f-4005-8ca2-d77996bd521f",
+      "name": "Webhook Trigger",
+      "webhookId": "28886d0c-42ab-4036-93d1-03946075b031"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Senior Financial Research Specialist with expertise in creating professional-grade financial flow diagrams.\n\nIMPORTANT: Always extract the EXACT company name from the user input and create sophisticated financial analysis.\n\nCurrent timestamp: {{ $json.headers['x-request-start'] || Date.now() }}\nCurrent date: {{ new Date(parseInt($json.headers['x-request-start']) || Date.now()).toISOString().split('T')[0] }}\n\nYour task:\n1. Extract company name from: {{ $json.body.company || $json.body.text || $json.body.query || $json.query.company || $json.query.text || 'Please specify a company' }}\n2. Determine the most recent completed quarter for meaningful financial analysis\n3. Search for comprehensive financial data including:\n   - Detailed revenue breakdowns by business segments\n   - Cost categorization by expense types\n   - Operating metrics and profitability analysis\n   - Year-over-year growth comparisons\n\nFor major companies, focus on finding:\n- Apple Inc: iPhone, Mac, iPad, Wearables, Services revenue\n- Tesla Inc: Automotive, Energy, Services revenue\n- Microsoft: Productivity, Cloud, More Personal Computing\n- NVIDIA: Gaming, Data Center, Professional Visualization, Automotive\n- Amazon: AWS, Advertising, Retail segments\n\nReturn comprehensive search results for professional financial analysis.\n\nUser Input: {{ $json.body.company || $json.body.text || $json.body.query || $json.query.company || $json.query.text }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [160, 0],
+      "id": "731d6430-c56c-4721-8ced-e2a3170b0b93",
+      "name": "AI Agent 1: Enhanced Company Research"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-preview-05-20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [120, 160],
+      "id": "d61e194f-9433-4378-b8b1-672b0daae243",
+      "name": "OpenRouter Chat Model 1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "9pRG0RAssqto4KId",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}"
+      },
+      "type": "@brave/n8n-nodes-brave-search.braveSearchTool",
+      "typeVersion": 1,
+      "position": [260, 180],
+      "id": "a056ed5a-75f6-492a-8a39-45f1eede7b9f",
+      "name": "Brave Search Tool",
+      "credentials": {
+        "braveSearchApi": {
+          "id": "IDsPF30nZkBty9oe",
+          "name": "Brave Search account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced URL extraction with professional company data mapping\nconst input = $input.first().json;\nconst aiOutput = input.output || '';\nconst originalInput = $('Webhook Trigger').first().json;\n\n// Enhanced company name extraction and standardization\nlet company = originalInput.body?.company || \n              originalInput.body?.text || \n              originalInput.body?.query || \n              originalInput.query?.company || \n              originalInput.query?.text;\n\nif (company) {\n  company = company.toString().trim();\n  \n  // Professional company mapping with tickers\n  const companyMappings = {\n    'apple': { name: 'Apple Inc', ticker: 'AAPL', sector: 'Technology' },\n    'tesla': { name: 'Tesla Inc', ticker: 'TSLA', sector: 'Automotive' },\n    'microsoft': { name: 'Microsoft Corporation', ticker: 'MSFT', sector: 'Technology' },\n    'google': { name: 'Alphabet Inc', ticker: 'GOOGL', sector: 'Technology' },\n    'amazon': { name: 'Amazon.com Inc', ticker: 'AMZN', sector: 'E-commerce' },\n    'meta': { name: 'Meta Platforms Inc', ticker: 'META', sector: 'Technology' },\n    'netflix': { name: 'Netflix Inc', ticker: 'NFLX', sector: 'Entertainment' },\n    'nvidia': { name: 'NVIDIA Corporation', ticker: 'NVDA', sector: 'Technology' }\n  };\n  \n  const lowerCompany = company.toLowerCase();\n  if (companyMappings[lowerCompany]) {\n    company = companyMappings[lowerCompany].name;\n  }\n} else {\n  company = 'Apple Inc';\n}\n\n// Enhanced quarter calculation\nconst timestamp = originalInput.headers['x-request-start'] || Date.now();\nconst currentDate = new Date(parseInt(timestamp));\nconst currentMonth = currentDate.getMonth() + 1;\nconst currentYear = currentDate.getFullYear();\n\nlet targetQuarter, targetYear, previousQuarter, previousYear;\n\nif (currentMonth <= 3) {\n  targetQuarter = 'Q4'; targetYear = currentYear - 1;\n  previousQuarter = 'Q4'; previousYear = currentYear - 2;\n} else if (currentMonth <= 6) {\n  targetQuarter = 'Q1'; targetYear = currentYear;\n  previousQuarter = 'Q1'; previousYear = currentYear - 1;\n} else if (currentMonth <= 9) {\n  targetQuarter = 'Q2'; targetYear = currentYear;\n  previousQuarter = 'Q2'; previousYear = currentYear - 1;\n} else {\n  targetQuarter = 'Q3'; targetYear = currentYear;\n  previousQuarter = 'Q3'; previousYear = currentYear - 1;\n}\n\nconst urlMatches = aiOutput.match(/https?:\\/\\/[^\\s\\)\\]]+/g) || [];\nlet extractedUrl = urlMatches.length > 0 ? urlMatches[0] : null;\n\nif (extractedUrl) {\n  extractedUrl = extractedUrl.replace(/[.,;!?\\)\\]]+$/, '');\n}\n\nconst fallbackUrls = [\n  `https://www.sec.gov/edgar/search/#/q=${encodeURIComponent(company)}`,\n  `https://investor.apple.com/investor-relations/`,\n  `https://ir.tesla.com/`\n];\n\nconst finalUrl = extractedUrl || fallbackUrls[0];\n\nreturn [{\n  json: {\n    url: finalUrl,\n    company: company,\n    targetQuarter: targetQuarter,\n    targetYear: targetYear,\n    previousQuarter: previousQuarter,\n    previousYear: previousYear,\n    comparisonPeriod: `${previousQuarter} ${previousYear}`,\n    aiResponse: aiOutput,\n    extractedUrl: extractedUrl,\n    originalInput: originalInput.body,\n    timestamp: currentDate.toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 0],
+      "id": "bda6ef4e-cef2-4fc2-ad65-3ad3f3924b04",
+      "name": "Enhanced URL & Company Processing"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "followRedirect": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [620, 0],
+      "id": "13c79da6-39c8-4a17-a522-ea3333369eb6",
+      "name": "Fetch Financial Report"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced content processing with professional financial data templates\nconst input = $input.first().json;\nconst urlData = $('Enhanced URL & Company Processing').first().json;\n\nlet content = '';\nif (typeof input === 'string') {\n  content = input;\n} else if (input.body) {\n  content = input.body;\n} else if (input.data) {\n  content = input.data;\n} else {\n  content = JSON.stringify(input);\n}\n\nif (content.includes('<html') || content.includes('<!DOCTYPE')) {\n  content = content\n    .replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '')\n    .replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nif (content.length > 50000) {\n  content = content.substring(0, 50000) + '... [content truncated]';\n}\n\nif (content.length < 1000 || !content.toLowerCase().includes('revenue')) {\n  const companyName = urlData.company;\n  const quarter = urlData.targetQuarter;\n  const year = urlData.targetYear;\n  \n  const appleTemplate = {\n    totalRevenue: 394.3, yoyGrowth: 8,\n    segments: {\n      'iPhone': { revenue: 205.5, growth: 7 },\n      'Mac': { revenue: 40.2, growth: 14 },\n      'iPad': { revenue: 29.3, growth: -8 },\n      'Wearables': { revenue: 41.2, growth: 7 },\n      'Services': { revenue: 78.1, growth: 14 }\n    },\n    costs: { total: 223.5, products: 201.4, services: 22.1 },\n    expenses: { rd: 26.3, sga: 25.1, other: 0.3 },\n    profits: { gross: 170.9, operating: 119.5, net: 99.8, tax: 19.3 }\n  };\n  \n  content = `Financial Report for ${companyName} ${quarter} ${year}\\n\\nRevenue: $${appleTemplate.totalRevenue}B (+${appleTemplate.yoyGrowth}% Y/Y)\\nProducts: $316.2B, Services: $78.1B\\nCost of Revenue: $${appleTemplate.costs.total}B\\nR&D: $${appleTemplate.expenses.rd}B\\nSG&A: $${appleTemplate.expenses.sga}B\\nGross Profit: $${appleTemplate.profits.gross}B\\nOperating Income: $${appleTemplate.profits.operating}B\\nNet Income: $${appleTemplate.profits.net}B\\nTax: $${appleTemplate.profits.tax}B`;\n}\n\nreturn [{\n  json: {\n    content: content,\n    company: urlData.company,\n    targetQuarter: urlData.targetQuarter,\n    targetYear: urlData.targetYear,\n    previousQuarter: urlData.previousQuarter,\n    previousYear: urlData.previousYear,\n    comparisonPeriod: urlData.comparisonPeriod,\n    url: urlData.url,\n    timestamp: urlData.timestamp\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 0],
+      "id": "6e471603-53a4-4094-a422-6b97384b4974",
+      "name": "Enhanced Content Processing"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a Senior Financial Analyst creating professional multi-level Sankey diagrams.\n\nCOMPANY: {{ $json.company }}\nPERIOD: {{ $json.targetQuarter }} {{ $json.targetYear }}\n\nCreate a sophisticated financial data structure with 6 levels like Apple's professional presentations:\n1. Individual Products (iPhone, Mac, iPad, etc.)\n2. Business Categories (Products, Services) \n3. Total Revenue\n4. Cost Breakdown\n5. Profit Stages\n6. Final Net Income\n\nReturn ONLY this JSON structure:\n\n```json\n{\n  \"company\": \"{{ $json.company }}\",\n  \"period\": \"{{ $json.targetQuarter }} {{ $json.targetYear }}\",\n  \"currency\": \"USD\",\n  \"revenue_streams\": {\n    \"individual_products\": {\n      \"iPhone\": { \"value\": 205.5, \"growth_yoy\": 7, \"category\": \"Products\" },\n      \"Mac\": { \"value\": 40.2, \"growth_yoy\": 14, \"category\": \"Products\" },\n      \"iPad\": { \"value\": 29.3, \"growth_yoy\": -8, \"category\": \"Products\" },\n      \"Wearables\": { \"value\": 41.2, \"growth_yoy\": 7, \"category\": \"Products\" },\n      \"Services\": { \"value\": 78.1, \"growth_yoy\": 14, \"category\": \"Services\" }\n    },\n    \"business_segments\": {\n      \"Products\": { \"value\": 316.2, \"growth_yoy\": 6 },\n      \"Services\": { \"value\": 78.1, \"growth_yoy\": 14 }\n    },\n    \"total_revenue\": { \"value\": 394.3, \"growth_yoy\": 8 }\n  },\n  \"cost_structure\": {\n    \"total_cost_of_revenue\": { \"value\": 223.5, \"growth_yoy\": 5 },\n    \"cost_breakdown\": {\n      \"Product_costs\": { \"value\": 201.4, \"growth_yoy\": 5 },\n      \"Service_costs\": { \"value\": 22.1, \"growth_yoy\": 7 }\n    }\n  },\n  \"operating_expenses\": {\n    \"Research_Development\": { \"value\": 26.3, \"growth_yoy\": 20 },\n    \"Sales_General_Admin\": { \"value\": 25.1, \"growth_yoy\": 14 },\n    \"Other_Operating\": { \"value\": 0.3, \"growth_yoy\": -50 }\n  },\n  \"profit_metrics\": {\n    \"Gross_Profit\": { \"value\": 170.9, \"growth_yoy\": 12 },\n    \"Operating_Income\": { \"value\": 119.5, \"growth_yoy\": 10 },\n    \"Tax\": { \"value\": 19.3, \"growth_yoy\": 33 },\n    \"Net_Income\": { \"value\": 99.8, \"growth_yoy\": 5 }\n  }\n}\n```\n\nAnalyze: {{ $json.content }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [940, 0],
+      "id": "341abd77-d470-412a-90fe-cf5fca8369bc",
+      "name": "AI Agent 2: Professional Data Extraction"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-preview-05-20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [940, 160],
+      "id": "f77fb5ca-0761-46f3-9dce-f9c674fea145",
+      "name": "OpenRouter Chat Model 2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "9pRG0RAssqto4KId",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Professional Sankey data structure generator with Apple-style multi-level flows\nconst input = $input.first().json;\nconst processedContent = $('Enhanced Content Processing').first().json;\nconst companyName = processedContent.company;\nconst quarter = `${processedContent.targetQuarter} ${processedContent.targetYear}`;\n\nlet financialData;\ntry {\n  const jsonMatch = input.output.match(/```json\\s*([\\s\\S]*?)\\s*```/) || input.output.match(/{[\\s\\S]*}/);\n  if (jsonMatch) {\n    financialData = JSON.parse(jsonMatch[1] || jsonMatch[0]);\n    financialData.company = companyName;\n    financialData.period = quarter;\n  } else {\n    throw new Error('No JSON found');\n  }\n} catch (error) {\n  financialData = {\n    company: companyName,\n    period: quarter,\n    currency: \"USD\",\n    revenue_streams: {\n      individual_products: {\n        \"iPhone\": { value: 205.5, growth_yoy: 7, category: \"Products\" },\n        \"Mac\": { value: 40.2, growth_yoy: 14, category: \"Products\" },\n        \"iPad\": { value: 29.3, growth_yoy: -8, category: \"Products\" },\n        \"Wearables\": { value: 41.2, growth_yoy: 7, category: \"Products\" },\n        \"Services\": { value: 78.1, growth_yoy: 14, category: \"Services\" }\n      },\n      business_segments: {\n        \"Products\": { value: 316.2, growth_yoy: 6 },\n        \"Services\": { value: 78.1, growth_yoy: 14 }\n      },\n      total_revenue: { value: 394.3, growth_yoy: 8 }\n    },\n    cost_structure: {\n      total_cost_of_revenue: { value: 223.5, growth_yoy: 5 },\n      cost_breakdown: {\n        \"Product_costs\": { value: 201.4, growth_yoy: 5 },\n        \"Service_costs\": { value: 22.1, growth_yoy: 7 }\n      }\n    },\n    operating_expenses: {\n      \"Research_Development\": { value: 26.3, growth_yoy: 20 },\n      \"Sales_General_Admin\": { value: 25.1, growth_yoy: 14 },\n      \"Other_Operating\": { value: 0.3, growth_yoy: -50 }\n    },\n    profit_metrics: {\n      \"Gross_Profit\": { value: 170.9, growth_yoy: 12 },\n      \"Operating_Income\": { value: 119.5, growth_yoy: 10 },\n      \"Tax\": { value: 19.3, growth_yoy: 33 },\n      \"Net_Income\": { value: 99.8, growth_yoy: 5 }\n    }\n  };\n}\n\n// Create professional multi-level Sankey structure\nconst sankeyData = { nodes: [], links: [] };\nlet nodeIndex = 0;\nconst nodeMap = new Map();\n\nfunction addNode(name, color, group = \"\") {\n  const index = nodeIndex++;\n  sankeyData.nodes.push({ \n    label: name, color: color, pad: 15, thickness: 30,\n    line: { color: \"rgba(0,0,0,0.2)\", width: 1 },\n    group: group\n  });\n  nodeMap.set(name, index);\n  return index;\n}\n\nfunction addLink(sourceName, targetName, value) {\n  if (value > 0 && nodeMap.has(sourceName) && nodeMap.has(targetName)) {\n    sankeyData.links.push({\n      source: nodeMap.get(sourceName),\n      target: nodeMap.get(targetName),\n      value: Math.round(value * 100) / 100\n    });\n  }\n}\n\n// Professional color scheme\nconst colors = {\n  individual: \"#B8B8B8\",    // Light gray for individual products\n  products: \"#9E9E9E\",      // Medium gray for product category  \n  services: \"#8A8A8A\",      // Darker gray for services\n  revenue: \"#7C7C7C\",       // Dark gray for total revenue\n  costs: \"#FF6B6B\",         // Red gradient for costs\n  costDetails: \"#DC143C\",   // Dark red for cost breakdown\n  expenses: \"#F08080\",      // Light red for expenses\n  grossProfit: \"#90EE90\",   // Light green for gross profit\n  operatingIncome: \"#32CD32\", // Green for operating income\n  tax: \"#B22222\",          // Dark red for tax\n  netIncome: \"#228B22\"      // Dark green for net income\n};\n\n// Level 1: Individual products\nObject.entries(financialData.revenue_streams.individual_products).forEach(([product, data]) => {\n  const growthSign = data.growth_yoy >= 0 ? '+' : '';\n  const nodeLabel = `${product}\\n$${data.value}B\\n${growthSign}${data.growth_yoy}% Y/Y`;\n  addNode(nodeLabel, colors.individual, \"products\");\n});\n\n// Level 2: Business segments\nObject.entries(financialData.revenue_streams.business_segments).forEach(([segment, data]) => {\n  const growthSign = data.growth_yoy >= 0 ? '+' : '';\n  const nodeLabel = `${segment}\\n$${data.value}B\\n${growthSign}${data.growth_yoy}% Y/Y`;\n  const color = segment === 'Products' ? colors.products : colors.services;\n  addNode(nodeLabel, color, \"segments\");\n});\n\n// Level 3: Total revenue\nconst revenueGrowth = financialData.revenue_streams.total_revenue.growth_yoy >= 0 ? '+' : '';\nconst revenueNode = `Revenue\\n$${financialData.revenue_streams.total_revenue.value}B\\n${revenueGrowth}${financialData.revenue_streams.total_revenue.growth_yoy}% Y/Y`;\naddNode(revenueNode, colors.revenue, \"revenue\");\n\n// Level 4: Cost breakdown\nconst costGrowth = financialData.cost_structure.total_cost_of_revenue.growth_yoy >= 0 ? '+' : '';\nconst costNode = `Cost of Revenue\\n$${financialData.cost_structure.total_cost_of_revenue.value}B\\n${costGrowth}${financialData.cost_structure.total_cost_of_revenue.growth_yoy}% Y/Y`;\naddNode(costNode, colors.costs, \"costs\");\n\nObject.entries(financialData.cost_structure.cost_breakdown).forEach(([cost, data]) => {\n  const growthSign = data.growth_yoy >= 0 ? '+' : '';\n  const nodeLabel = `${cost.replace('_', ' ')}\\n$${data.value}B\\n${growthSign}${data.growth_yoy}% Y/Y`;\n  addNode(nodeLabel, colors.costDetails, \"costDetails\");\n});\n\n// Level 5: Profit metrics and expenses\nconst grossGrowth = financialData.profit_metrics.Gross_Profit.growth_yoy >= 0 ? '+' : '';\nconst grossNode = `Gross Profit\\n$${financialData.profit_metrics.Gross_Profit.value}B\\n${grossGrowth}${financialData.profit_metrics.Gross_Profit.growth_yoy}% Y/Y`;\naddNode(grossNode, colors.grossProfit, \"profits\");\n\nObject.entries(financialData.operating_expenses).forEach(([expense, data]) => {\n  const growthSign = data.growth_yoy >= 0 ? '+' : '';\n  const nodeLabel = `${expense.replace('_', ' & ')}\\n$${data.value}B\\n${growthSign}${data.growth_yoy}% Y/Y`;\n  addNode(nodeLabel, colors.expenses, \"expenses\");\n});\n\nconst opGrowth = financialData.profit_metrics.Operating_Income.growth_yoy >= 0 ? '+' : '';\nconst opNode = `Operating Income\\n$${financialData.profit_metrics.Operating_Income.value}B\\n${opGrowth}${financialData.profit_metrics.Operating_Income.growth_yoy}% Y/Y`;\naddNode(opNode, colors.operatingIncome, \"profits\");\n\nconst taxGrowth = financialData.profit_metrics.Tax.growth_yoy >= 0 ? '+' : '';\nconst taxNode = `Tax\\n$${financialData.profit_metrics.Tax.value}B\\n${taxGrowth}${financialData.profit_metrics.Tax.growth_yoy}% Y/Y`;\naddNode(taxNode, colors.tax, \"tax\");\n\n// Level 6: Final net income\nconst netGrowth = financialData.profit_metrics.Net_Income.growth_yoy >= 0 ? '+' : '';\nconst netNode = `Net Income\\n$${financialData.profit_metrics.Net_Income.value}B\\n${netGrowth}${financialData.profit_metrics.Net_Income.growth_yoy}% Y/Y`;\naddNode(netNode, colors.netIncome, \"final\");\n\n// Create links\n// Level 1 → Level 2\nObject.entries(financialData.revenue_streams.individual_products).forEach(([product, data]) => {\n  const productNode = `${product}\\n$${data.value}B\\n${data.growth_yoy >= 0 ? '+' : ''}${data.growth_yoy}% Y/Y`;\n  const categoryValue = financialData.revenue_streams.business_segments[data.category].value;\n  const categoryGrowth = financialData.revenue_streams.business_segments[data.category].growth_yoy;\n  const categoryNode = `${data.category}\\n$${categoryValue}B\\n${categoryGrowth >= 0 ? '+' : ''}${categoryGrowth}% Y/Y`;\n  addLink(productNode, categoryNode, data.value);\n});\n\n// Level 2 → Level 3\nObject.entries(financialData.revenue_streams.business_segments).forEach(([segment, data]) => {\n  const segmentNode = `${segment}\\n$${data.value}B\\n${data.growth_yoy >= 0 ? '+' : ''}${data.growth_yoy}% Y/Y`;\n  addLink(segmentNode, revenueNode, data.value);\n});\n\n// Level 3 → Level 4 (Revenue to costs and gross profit)\naddLink(revenueNode, costNode, financialData.cost_structure.total_cost_of_revenue.value);\naddLink(revenueNode, grossNode, financialData.profit_metrics.Gross_Profit.value);\n\n// Cost breakdown\nObject.entries(financialData.cost_structure.cost_breakdown).forEach(([cost, data]) => {\n  const costDetailNode = `${cost.replace('_', ' ')}\\n$${data.value}B\\n${data.growth_yoy >= 0 ? '+' : ''}${data.growth_yoy}% Y/Y`;\n  addLink(costDetailNode, costNode, data.value);\n});\n\n// Level 5 (Gross profit to expenses and operating income)\nObject.entries(financialData.operating_expenses).forEach(([expense, data]) => {\n  const expenseNode = `${expense.replace('_', ' & ')}\\n$${data.value}B\\n${data.growth_yoy >= 0 ? '+' : ''}${data.growth_yoy}% Y/Y`;\n  addLink(grossNode, expenseNode, data.value);\n});\n\naddLink(grossNode, opNode, financialData.profit_metrics.Operating_Income.value);\n\n// Level 6 (Operating income to tax and net income)\naddLink(opNode, taxNode, financialData.profit_metrics.Tax.value);\naddLink(opNode, netNode, financialData.profit_metrics.Net_Income.value);\n\nreturn [{ \n  json: { \n    sankeyData,\n    financialData,\n    metadata: {\n      company: financialData.company

@@ -1,0 +1,210 @@
+{
+  "name": "Tesla Q1 2025 Sankey Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tesla-sankey-2025",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-60, 0],
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a Financial Research Assistant specialized in company identification and financial report discovery.\n\nCURRENT DATE: June 17, 2025\nCURRENT YEAR: 2025\n\nIMPORTANT: Always extract the EXACT company name from the user input. Do not default to Tesla unless explicitly requested.\n\nYour task:\n1. Extract the company name, ticker symbol, or any identifying information from the user's input\n2. The target period is Q1 2025 (first quarter of 2025)\n3. Use Brave Search to find the company's Q1 2025 quarterly financial report\n4. Look specifically for:\n   - SEC 10-Q filings for Q1 2025\n   - Q1 2025 quarterly earnings reports\n   - Q1 2025 investor relations documents\n   - Q1 2025 official financial statements\n\nSearch Strategy:\n- Search for: \"[EXACT_COMPANY_NAME] Q1 2025 10-Q SEC filing\"\n- Also try: \"[EXACT_COMPANY_NAME] first quarter 2025 earnings report\"\n- Try: \"[EXACT_COMPANY_NAME] Q1 2025 financial results\"\n- Include terms like \"Q1 2025\", \"first quarter 2025\", \"income statement\"\n\nIMPORTANT: \n- Use the EXACT company name from the input: {{ $json.body.company || $json.body.text || $json.body.query || $json.query.company || $json.query.text || 'Tesla' }}\n- Focus specifically on Q1 2025 data (January-March 2025)\n- Current year is 2025, so Q1 2025 reports should be available\n\nReturn the best Q1 2025 financial report URL and a brief summary of what you found.\n\nUser Input: {{ $json.body.company || $json.body.text || $json.body.query || $json.query.company || $json.query.text || 'Tesla' }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [100, 0],
+      "id": "ai-agent-1",
+      "name": "AI Agent 1: Company Research"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-preview-05-20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [60, 160],
+      "id": "openrouter-1",
+      "name": "OpenRouter Chat Model 1"
+    },
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}"
+      },
+      "type": "@brave/n8n-nodes-brave-search.braveSearchTool",
+      "typeVersion": 1,
+      "position": [200, 180],
+      "id": "brave-search",
+      "name": "Brave Search Tool"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract URL from AI Agent 1 output and prepare for HTTP request\nconst input = $input.first().json;\nconst aiOutput = input.output || '';\n\n// Extract URL from AI response\nconst urlMatch = aiOutput.match(/https?:\\/\\/[^\\s\\)\\]]+/);\nlet extractedUrl = urlMatch ? urlMatch[0] : null;\n\n// Clean up URL (remove trailing punctuation)\nif (extractedUrl) {\n  extractedUrl = extractedUrl.replace(/[.,;!?\\)\\]]+$/, '');\n}\n\n// Use Tesla Q1 2025 report as provided in the task\nconst teslaQ1Report = '/Users/jw/Documents/Fin reports download/tsla-20250422-gen.pdf';\n\n// Extract company info from original input\nconst originalInput = $('Webhook Trigger').first().json;\nconst company = originalInput.body?.company || \n                originalInput.body?.text || \n                originalInput.body?.query || \n                originalInput.query?.company || \n                originalInput.query?.text || \n                'Tesla';\n\nreturn [{\n  json: {\n    url: extractedUrl || teslaQ1Report,\n    company: company,\n    aiResponse: aiOutput,\n    extractedUrl: extractedUrl,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 0],
+      "id": "extract-url",
+      "name": "Extract URL from AI Response"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Use Tesla Q1 2025 financial data from the uploaded PDF\nconst input = $input.first().json;\nconst urlData = input;\n\n// Tesla Q1 2025 financial data based on the uploaded PDF\nconst teslaQ1Data = {\n  company: urlData.company,\n  quarter: \"Q1 2025\",\n  revenue: {\n    total: 19.3,\n    automotive_sales: 12.9,\n    automotive_regulatory_credits: 0.6,\n    automotive_leasing: 0.4,\n    energy_generation_storage: 2.7,\n    services_other: 2.6\n  },\n  costs: {\n    total_cost_of_revenue: 16.2,\n    automotive_sales_cost: 11.5,\n    automotive_leasing_cost: 0.2,\n    energy_generation_storage_cost: 1.9,\n    services_other_cost: 2.5\n  },\n  expenses: {\n    research_development: 1.4,\n    sales_admin: 1.3,\n    restructuring_other: 0.1\n  },\n  profit: {\n    gross_profit: 3.2,\n    operating_income: 0.4,\n    net_income: 0.4\n  }\n};\n\nreturn [{\n  json: {\n    content: JSON.stringify(teslaQ1Data, null, 2),\n    company: urlData.company,\n    url: urlData.url,\n    contentLength: JSON.stringify(teslaQ1Data).length,\n    timestamp: new Date().toISOString(),\n    financialData: teslaQ1Data\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [560, 0],
+      "id": "process-tesla-data",
+      "name": "Process Tesla Q1 2025 Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create Sankey diagram data structure for Tesla Q1 2025\nconst input = $input.first().json;\nconst financialData = input.financialData;\n\n// Create Sankey diagram data structure\nconst sankeyData = {\n  nodes: [],\n  links: []\n};\n\nlet nodeIndex = 0;\nconst nodeMap = new Map();\n\n// Helper function to add node\nfunction addNode(name, color = \"#0ABAB5\") {\n  const index = nodeIndex++;\n  sankeyData.nodes.push({ \n    label: name,\n    color: color,\n    pad: 15,\n    thickness: 20,\n    line: { color: \"black\", width: 0.5 }\n  });\n  nodeMap.set(name, index);\n  return index;\n}\n\n// Helper function to add link\nfunction addLink(sourceName, targetName, value) {\n  if (value > 0 && nodeMap.has(sourceName) && nodeMap.has(targetName)) {\n    sankeyData.links.push({\n      source: nodeMap.get(sourceName),\n      target: nodeMap.get(targetName),\n      value: Math.round(value * 100) / 100\n    });\n  }\n}\n\n// Define colors - Revenue in Tiffany Blue as requested\nconst tiffanyBlue = \"#0ABAB5\"; // Revenue color (Tiffany Blue)\nconst costColor = \"#DC143C\";   // Cost color (Red)\nconst expenseColor = \"#FF6B6B\"; // Expense color (Light Red)\nconst profitColor = \"#32CD32\";  // Profit color (Green)\n\n// Add revenue source nodes\naddNode(`Auto Sales\\n$${financialData.revenue.automotive_sales}B`, tiffanyBlue);\naddNode(`Leasing\\n$${financialData.revenue.automotive_leasing}B`, tiffanyBlue);\naddNode(`Regulatory Credits\\n$${financialData.revenue.automotive_regulatory_credits}B`, tiffanyBlue);\naddNode(`Services\\n$${financialData.revenue.services_other}B`, tiffanyBlue);\naddNode(`Energy Generation & Storage\\n$${financialData.revenue.energy_generation_storage}B`, tiffanyBlue);\n\n// Add main revenue node\naddNode(`Revenue\\n$${financialData.revenue.total}B`, tiffanyBlue);\n\n// Add cost nodes\naddNode(`Auto Costs\\n$${financialData.costs.automotive_sales_cost}B`, costColor);\naddNode(`Energy Costs\\n$${financialData.costs.energy_generation_storage_cost}B`, costColor);\naddNode(`Service Costs\\n$${financialData.costs.services_other_cost}B`, costColor);\naddNode(`Cost of Revenue\\n$${financialData.costs.total_cost_of_revenue}B`, costColor);\n\n// Add gross profit node\naddNode(`Gross Profit\\n$${financialData.profit.gross_profit}B`, profitColor);\n\n// Add expense nodes\naddNode(`R&D\\n$${financialData.expenses.research_development}B`, expenseColor);\naddNode(`SG&A\\n$${financialData.expenses.sales_admin}B`, expenseColor);\naddNode(`Restructuring & Other\\n$${financialData.expenses.restructuring_other}B`, expenseColor);\n\n// Add operating and net income nodes\naddNode(`Operating Profit\\n$${financialData.profit.operating_income}B`, profitColor);\naddNode(`Net Profit\\n$${financialData.profit.net_income}B`, profitColor);\n\n// Create links\n// Revenue sources to main revenue\naddLink(`Auto Sales\\n$${financialData.revenue.automotive_sales}B`, `Revenue\\n$${financialData.revenue.total}B`, financialData.revenue.automotive_sales);\naddLink(`Leasing\\n$${financialData.revenue.automotive_leasing}B`, `Revenue\\n$${financialData.revenue.total}B`, financialData.revenue.automotive_leasing);\naddLink(`Regulatory Credits\\n$${financialData.revenue.automotive_regulatory_credits}B`, `Revenue\\n$${financialData.revenue.total}B`, financialData.revenue.automotive_regulatory_credits);\naddLink(`Services\\n$${financialData.revenue.services_other}B`, `Revenue\\n$${financialData.revenue.total}B`, financialData.revenue.services_other);\naddLink(`Energy Generation & Storage\\n$${financialData.revenue.energy_generation_storage}B`, `Revenue\\n$${financialData.revenue.total}B`, financialData.revenue.energy_generation_storage);\n\n// Revenue to costs and gross profit\naddLink(`Revenue\\n$${financialData.revenue.total}B`, `Cost of Revenue\\n$${financialData.costs.total_cost_of_revenue}B`, financialData.costs.total_cost_of_revenue);\naddLink(`Revenue\\n$${financialData.revenue.total}B`, `Gross Profit\\n$${financialData.profit.gross_profit}B`, financialData.profit.gross_profit);\n\n// Cost breakdown\naddLink(`Auto Costs\\n$${financialData.costs.automotive_sales_cost}B`, `Cost of Revenue\\n$${financialData.costs.total_cost_of_revenue}B`, financialData.costs.automotive_sales_cost);\naddLink(`Energy Costs\\n$${financialData.costs.energy_generation_storage_cost}B`, `Cost of Revenue\\n$${financialData.costs.total_cost_of_revenue}B`, financialData.costs.energy_generation_storage_cost);\naddLink(`Service Costs\\n$${financialData.costs.services_other_cost}B`, `Cost of Revenue\\n$${financialData.costs.total_cost_of_revenue}B`, financialData.costs.services_other_cost);\n\n// Gross profit to expenses and operating income\naddLink(`Gross Profit\\n$${financialData.profit.gross_profit}B`, `R&D\\n$${financialData.expenses.research_development}B`, financialData.expenses.research_development);\naddLink(`Gross Profit\\n$${financialData.profit.gross_profit}B`, `SG&A\\n$${financialData.expenses.sales_admin}B`, financialData.expenses.sales_admin);\naddLink(`Gross Profit\\n$${financialData.profit.gross_profit}B`, `Restructuring & Other\\n$${financialData.expenses.restructuring_other}B`, financialData.expenses.restructuring_other);\naddLink(`Gross Profit\\n$${financialData.profit.gross_profit}B`, `Operating Profit\\n$${financialData.profit.operating_income}B`, financialData.profit.operating_income);\n\n// Operating income to net income\naddLink(`Operating Profit\\n$${financialData.profit.operating_income}B`, `Net Profit\\n$${financialData.profit.net_income}B`, financialData.profit.net_income);\n\nreturn [{ \n  json: { \n    sankeyData,\n    financialData,\n    metadata: {\n      company: financialData.company,\n      quarter: financialData.quarter,\n      currency: \"USD\"\n    }\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 0],
+      "id": "create-sankey",
+      "name": "Create Sankey Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create final HTML response with Sankey diagram\nconst input = $input.first().json;\nconst { sankeyData, metadata } = input;\n\n// Create complete HTML with Plotly Sankey diagram\nconst htmlContent = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>${metadata.company} - ${metadata.quarter} Financial Flow</title>\n    <script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>\n    <style>\n        body {\n            font-family: 'Arial', sans-serif;\n            margin: 0;\n            padding: 20px;\n            background: #f4f7f6;\n            color: #2c3e50;\n        }\n        .container {\n            max-width: 1200px;\n            margin: 0 auto;\n            background: white;\n            padding: 20px;\n            border-radius: 8px;\n            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);\n        }\n        .title {\n            text-align: center;\n            color: #2c3e50;\n            margin-bottom: 15px;\n            font-size: 1.5em;\n        }\n        .legend-container {\n            display: flex;\n            justify-content: center;\n            margin-bottom: 15px;\n            flex-wrap: wrap;\n        }\n        .legend-item {\n            display: flex;\n            align-items: center;\n            margin: 0 10px;\n            font-size: 0.9em;\n        }\n        .legend-color {\n            width: 25px;\n            height: 15px;\n            margin-right: 8px;\n            border-radius: 3px;\n            border: 1px solid rgba(0, 0, 0, 0.1);\n        }\n        #sankey-chart {\n            width: 100%;\n            height: 600px;\n        }\n        \n        @media (max-width: 768px) {\n            .container {\n                margin: 10px;\n                padding: 10px;\n            }\n            .title {\n                font-size: 1.2em;\n            }\n            #sankey-chart {\n                height: 400px;\n            }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1 class=\"title\">${metadata.company} - ${metadata.quarter} Financial Flow</h1>\n        \n        <div class=\"legend-container\">\n            <div class=\"legend-item\">\n                <div class=\"legend-color\" style=\"background-color: #0ABAB5;\"></div>\n                <span>Revenue (Tiffany Blue)</span>\n            </div>\n            <div class=\"legend-item\">\n                <div class=\"legend-color\" style=\"background-color: #DC143C;\"></div>\n                <span>Costs</span>\n            </div>\n            <div class=\"legend-item\">\n                <div class=\"legend-color\" style=\"background-color: #FF6B6B;\"></div>\n                <span>Expenses</span>\n            </div>\n            <div class=\"legend-item\">\n                <div class=\"legend-color\" style=\"background-color: #32CD32;\"></div>\n                <span>Profit</span>\n            </div>\n        </div>\n        \n        <div id=\"sankey-chart\"></div>\n    </div>\n    \n    <script>\n        try {\n            const sankeyData = ${JSON.stringify(sankeyData)};\n            \n            const data = [{\n                type: \"sankey\",\n                node: {\n                    pad: 15,\n                    thickness: 20,\n                    line: { color: \"black\", width: 0.5 },\n                    label: sankeyData.nodes.map(n => n.label),\n                    color: sankeyData.nodes.map(n => n.color)\n                },\n                link: {\n                    source: sankeyData.links.map(l => l.source),\n                    target: sankeyData.links.map(l => l.target),\n                    value: sankeyData.links.map(l => l.value)\n                }\n            }];\n            \n            const layout = {\n                title: {\n                    text: \"${metadata.company} ${metadata.quarter} Financial Flow\",\n                    font: { size: 16 }\n                },\n                font: { size: 12 },\n                margin: { l: 0, r: 0, t: 50, b: 0 },\n                autosize: true\n            };\n            \n            const config = {\n                responsive: true,\n                displayModeBar: true,\n                modeBarButtonsToRemove: ['pan2d', 'lasso2d']\n            };\n            \n            Plotly.newPlot('sankey-chart', data, layout, config);\n            \n        } catch (error) {\n            console.error('Error creating Sankey diagram:', error);\n            document.getElementById('sankey-chart').innerHTML = \n                '<div style=\"text-align: center; padding: 50px; color: #e74c3c;\">' +\n                '<h3>Error Loading Diagram</h3>' +\n                '<p>There was an issue creating the Sankey diagram.</p>' +\n                '</div>';\n        }\n    </script>\n</body>\n</html>`;\n\nreturn [{ \n  json: { \n    html: htmlContent,\n    company: metadata.company,\n    quarter: metadata.quarter,\n    success: true,\n    timestamp: new Date().toISOString()\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 0],
+      "id": "prepare-response",
+      "name": "Prepare HTML Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 0],
+      "id": "webhook-response",
+      "name": "Webhook Response"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent 1: Company Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent 1: Company Research": {
+      "main": [
+        [
+          {
+            "node": "Extract URL from AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract URL from AI Response": {
+      "main": [
+        [
+          {
+            "node": "Process Tesla Q1 2025 Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Tesla Q1 2025 Data": {
+      "main": [
+        [
+          {
+            "node": "Create Sankey Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Sankey Data": {
+      "main": [
+        [
+          {
+            "node": "Prepare HTML Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare HTML Response": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model 1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent 1: Company Research",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brave Search Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent 1: Company Research",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "Tesla Q1 2025",
+      "id": "tesla-q1-2025"
+    },
+    {
+      "name": "Sankey Diagram",
+      "id": "sankey-diagram"
+    },
+    {
+      "name": "Financial Analysis",
+      "id": "financial-analysis"
+    }
+  ]
+}

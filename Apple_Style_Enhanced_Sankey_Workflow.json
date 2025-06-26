@@ -1,0 +1,196 @@
+{
+  "name": "Apple-Style Enhanced Sankey Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "apple-style-sankey",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "webhook-trigger",
+      "name": "Enhanced Webhook Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an Advanced Financial Data Architect specializing in Apple-style multi-dimensional financial flow analysis.\n\nYour task is to create sophisticated financial data structures that match Apple's professional financial reporting methodology.\n\nCOMPANY INPUT: {{ $json.body.company || $json.body.text || $json.query.company || 'Apple Inc' }}\nTIMESTAMP: {{ $json.headers['x-request-start'] || Date.now() }}\n\nCreate a comprehensive financial breakdown with:\n\n**MULTI-LEVEL PRODUCT ANALYSIS:**\n- Individual product line revenues with growth rates\n- Business segment categorization (Products vs Services)\n- Market performance indicators\n\n**SOPHISTICATED COST STRUCTURE:**\n- Detailed cost breakdowns by category\n- Cost allocation across product lines\n- Operating expense classifications\n\n**APPLE-STYLE PROFIT PROGRESSION:**\n- Gross profit calculations\n- Operating profit with expense deductions\n- Tax implications and net profit\n\n**GROWTH & PERFORMANCE METRICS:**\n- Year-over-year growth percentages\n- Trend indicators (↗ ↘)\n- Market share insights\n\nGenerate realistic financial data based on the company's business model and scale. For Apple Inc, use premium product pricing. For Tesla, focus on automotive/energy. For Microsoft, emphasize software/cloud services.\n\nReturn comprehensive financial intelligence for sophisticated Sankey visualization.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [200, 0],
+      "id": "financial-architect",
+      "name": "Financial Data Architect"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-preview-05-20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [200, 160],
+      "id": "enhanced-llm",
+      "name": "Enhanced Financial LLM"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Apple-Style Financial Data Generator\n// Creates sophisticated multi-dimensional financial structures\n\nconst input = $input.first().json;\nconst webhookData = $('Enhanced Webhook Trigger').first().json;\n\n// Extract company information\nlet company = webhookData.body?.company || \n              webhookData.body?.text || \n              webhookData.query?.company || \n              'Apple Inc';\n\n// Clean and standardize company name\ncompany = company.toString().trim();\nconst companyMappings = {\n  'apple': 'Apple Inc',\n  'tesla': 'Tesla Inc', \n  'microsoft': 'Microsoft Corporation',\n  'google': 'Alphabet Inc',\n  'amazon': 'Amazon.com Inc',\n  'meta': 'Meta Platforms Inc',\n  'nvidia': 'NVIDIA Corporation'\n};\n\nconst lowerCompany = company.toLowerCase();\nif (companyMappings[lowerCompany]) {\n  company = companyMappings[lowerCompany];\n}\n\n// Advanced financial templates with Apple-style sophistication\nconst advancedFinancialTemplates = {\n  'Apple Inc': {\n    companyProfile: {\n      sector: 'Technology Hardware',\n      marketCap: 3000000, // $3T\n      employees: 161000,\n      headquarters: 'Cupertino, CA'\n    },\n    productLines: [\n      { \n        name: 'iPhone', \n        revenue: 205.5, \n        growth: 7, \n        margin: 0.42, \n        category: 'Mobile Devices',\n        marketShare: 0.18 \n      },\n      { \n        name: 'MacBook', \n        revenue: 40.2, \n        growth: 14, \n        margin: 0.35, \n        category: 'Computing',\n        marketShare: 0.08 \n      },\n      { \n        name: 'iPad', \n        revenue: 29.3, \n        growth: -8, \n        margin: 0.38, \n        category: 'Tablets',\n        marketShare: 0.31 \n      },\n      { \n        name: 'Watch and AirPods', \n        revenue: 41.2, \n        growth: 7, \n        margin: 0.45, \n        category: 'Wearables',\n        marketShare: 0.28 \n      }\n    ],\n    services: {\n      revenue: 78.2,\n      growth: 14,\n      margin: 0.68,\n      breakdown: {\n        'App Store': 25.2,\n        'iCloud': 18.5,\n        'Apple Care': 12.8,\n        'Apple Music': 8.9,\n        'Other Services': 12.8\n      }\n    },\n    financialMetrics: {\n      totalRevenue: 394.3,\n      grossMargin: 0.432,\n      operatingMargin: 0.303,\n      netMargin: 0.253,\n      taxRate: 0.195\n    },\n    costStructure: {\n      productCosts: {\n        manufacturing: 145.8,\n        logistics: 18.2,\n        warranty: 12.5,\n        licensing: 24.9\n      },\n      serviceCosts: {\n        infrastructure: 15.2,\n        content: 4.8,\n        support: 2.1\n      }\n    },\n    operatingExpenses: {\n      researchDevelopment: 26.3,\n      salesMarketing: 18.8,\n      generalAdmin: 6.3,\n      other: 0.3\n    }\n  },\n  'Tesla Inc': {\n    companyProfile: {\n      sector: 'Electric Vehicles',\n      marketCap: 800000, // $800B\n      employees: 127855,\n      headquarters: 'Austin, TX'\n    },\n    productLines: [\n      { \n        name: 'Model S/X', \n        revenue: 8.2, \n        growth: -20, \n        margin: 0.18, \n        category: 'Premium Vehicles',\n        marketShare: 0.02 \n      },\n      { \n        name: 'Model 3/Y', \n        revenue: 45.6, \n        growth: 15, \n        margin: 0.22, \n        category: 'Mass Market Vehicles',\n        marketShare: 0.065 \n      },\n      { \n        name: 'Energy Storage', \n        revenue: 2.8, \n        growth: 40, \n        margin: 0.15, \n        category: 'Energy Solutions',\n        marketShare: 0.08 \n      },\n      { \n        name: 'Solar', \n        revenue: 1.1, \n        growth: -10, \n        margin: 0.12, \n        category: 'Renewable Energy',\n        marketShare: 0.04 \n      }\n    ],\n    services: {\n      revenue: 3.2,\n      growth: 25,\n      margin: 0.45,\n      breakdown: {\n        'Supercharging': 1.5,\n        'Service & Parts': 1.2,\n        'Insurance': 0.3,\n        'Software': 0.2\n      }\n    },\n    financialMetrics: {\n      totalRevenue: 60.9,\n      grossMargin: 0.265,\n      operatingMargin: 0.079,\n      netMargin: 0.064,\n      taxRate: 0.15\n    },\n    costStructure: {\n      productCosts: {\n        manufacturing: 35.2,\n        materials: 5.8,\n        logistics: 1.8\n      },\n      serviceCosts: {\n        infrastructure: 1.2,\n        maintenance: 0.7\n      }\n    },\n    operatingExpenses: {\n      researchDevelopment: 4.8,\n      salesMarketing: 2.5,\n      generalAdmin: 0.9,\n      other: 0.8\n    }\n  },\n  'Microsoft Corporation': {\n    companyProfile: {\n      sector: 'Software & Cloud',\n      marketCap: 2800000, // $2.8T\n      employees: 221000,\n      headquarters: 'Redmond, WA'\n    },\n    productLines: [\n      { \n        name: 'Windows', \n        revenue: 22.3, \n        growth: 4, \n        margin: 0.65, \n        category: 'Operating Systems',\n        marketShare: 0.73 \n      },\n      { \n        name: 'Office 365', \n        revenue: 18.5, \n        growth: 12, \n        margin: 0.72, \n        category: 'Productivity Software',\n        marketShare: 0.45 \n      },\n      { \n        name: 'Xbox Gaming', \n        revenue: 16.2, \n        growth: 8, \n        margin: 0.28, \n        category: 'Gaming & Entertainment',\n        marketShare: 0.22 \n      },\n      { \n        name: 'Surface Hardware', \n        revenue: 4.8, \n        growth: -15, \n        margin: 0.18, \n        category: 'Computing Hardware',\n        marketShare: 0.04 \n      }\n    ],\n    services: {\n      revenue: 45.2,\n      growth: 18,\n      margin: 0.58,\n      breakdown: {\n        'Azure Cloud': 28.5,\n        'LinkedIn': 8.2,\n        'Dynamics 365': 5.1,\n        'GitHub': 2.1,\n        'Other Services': 1.3\n      }\n    },\n    financialMetrics: {\n      totalRevenue: 107.0,\n      grossMargin: 0.586,\n      operatingMargin: 0.425,\n      netMargin: 0.362,\n      taxRate: 0.21\n    },\n    costStructure: {\n      productCosts: {\n        development: 18.2,\n        infrastructure: 8.5,\n        licensing: 1.8\n      },\n      serviceCosts: {\n        datacenters: 12.8,\n        bandwidth: 2.5,\n        support: 0.5\n      }\n    },\n    operatingExpenses: {\n      researchDevelopment: 15.2,\n      salesMarketing: 12.8,\n      generalAdmin: 5.5,\n      other: 1.1\n    }\n  }\n};\n\n// Get template or use Apple as default\nconst template = advancedFinancialTemplates[company] || advancedFinancialTemplates['Apple Inc'];\n\n// Calculate sophisticated financial metrics\nconst productsRevenue = template.productLines.reduce((sum, product) => sum + product.revenue, 0);\nconst totalRevenue = productsRevenue + template.services.revenue;\nconst grossProfit = totalRevenue * template.financialMetrics.grossMargin;\nconst totalCosts = totalRevenue - grossProfit;\nconst operatingExpensesTotal = Object.values(template.operatingExpenses).reduce((sum, expense) => sum + expense, 0);\nconst operatingProfit = grossProfit - operatingExpensesTotal;\nconst tax = operatingProfit * template.financialMetrics.taxRate;\nconst netProfit = operatingProfit - tax;\n\n// Generate Apple-style sophisticated Sankey data structure\nconst appleSankeyData = {\n  metadata: {\n    company: company,\n    quarter: 'Q4 2024',\n    timestamp: new Date().toISOString(),\n    reportType: 'Apple-Style Financial Flow Analysis',\n    currency: 'USD (Billions)',\n    companyProfile: template.companyProfile\n  },\n  nodes: [],\n  links: [],\n  performance: {\n    totalRevenue: Math.round(totalRevenue * 10) / 10,\n    grossProfit: Math.round(grossProfit * 10) / 10,\n    operatingProfit: Math.round(operatingProfit * 10) / 10,\n    netProfit: Math.round(netProfit * 10) / 10,\n    margins: {\n      gross: Math.round(template.financialMetrics.grossMargin * 1000) / 10,\n      operating: Math.round((operatingProfit / totalRevenue) * 1000) / 10,\n      net: Math.round((netProfit / totalRevenue) * 1000) / 10\n    }\n  }\n};\n\n// Build sophisticated node and link structure\nlet nodeIndex = 0;\nconst nodeMap = new Map();\n\n// Helper functions\nconst addNode = (label, color, group, customdata = {}) => {\n  const index = nodeIndex++;\n  appleSankeyData.nodes.push({ \n    label, \n    color, \n    group,\n    customdata: { group, ...customdata },\n    pad: 20,\n    thickness: 25,\n    line: { color: \"rgba(0,0,0,0.2)\", width: 1.5 }\n  });\n  nodeMap.set(label, index);\n  return index;\n};\n\nconst addLink = (sourceLabel, targetLabel, value, color = null) => {\n  if (nodeMap.has(sourceLabel) && nodeMap.has(targetLabel) && value > 0) {\n    appleSankeyData.links.push({\n      source: nodeMap.get(sourceLabel),\n      target: nodeMap.get(targetLabel),\n      value: Math.round(value * 10) / 10,\n      color: color || 'rgba(0,171,181,0.4)'\n    });\n  }\n};\n\n// Apple-style color palette\nconst colors = {\n  products: '#B8B8B8',      // Gray - Individual products\n  segments: '#9E9E9E',      // Darker gray - Business segments  \n  revenue: '#0ABAB5',       // Teal - Revenue flows\n  costs: '#DC143C',         // Red - Primary costs\n  costDetails: '#F08080',   // Light red - Cost breakdowns\n  expenses: '#FF6B6B',      // Pink-red - Operating expenses\n  grossProfit: '#90EE90',   // Light green - Gross profit\n  operatingProfit: '#32CD32', // Green - Operating profit\n  netProfit: '#228B22',     // Dark green - Net profit\n  tax: '#B22222'            // Dark red - Tax\n};\n\n// 1. BUILD INDIVIDUAL PRODUCT NODES (Left side)\ntemplate.productLines.forEach(product => {\n  const growthIndicator = product.growth >= 0 ? '↗' : '↘';\n  const label = `${product.name}\\n$${product.revenue}B\\n${product.growth}% Y/Y ${growthIndicator}`;\n  addNode(label, colors.products, 'Product Lines', {\n    revenue: product.revenue,\n    growth: product.growth,\n    margin: product.margin,\n    category: product.category\n  });\n});\n\n// 2. BUILD BUSINESS SEGMENT NODES\naddNode(\n  `Products\\n$${productsRevenue.toFixed(1)}B\\n${Math.round((productsRevenue/totalRevenue)*100)}% of total`,\n  colors.segments, \n  'Business Segments',\n  { revenue: productsRevenue, type: 'products' }\n);\n\naddNode(\n  `Services\\n$${template.services.revenue}B\\n${template.services.growth}% Y/Y`,\n  colors.segments,\n  'Business Segments', \n  { revenue: template.services.revenue, type: 'services' }\n);\n\n// 3. MAIN REVENUE NODE\naddNode(\n  `Revenue\\n$${totalRevenue.toFixed(1)}B\\n8% Y/Y`,\n  colors.revenue,\n  'Revenue',\n  { total: totalRevenue, type: 'consolidated' }\n);\n\n// 4. COST STRUCTURE NODES\naddNode(\n  `Cost of revenue\\n$${totalCosts.toFixed(1)}B\\n5% Y/Y`,\n  colors.costs,\n  'Costs',\n  { total: totalCosts, type: 'primary' }\n);\n\n// Product cost breakdowns\nObject.entries(template.costStructure.productCosts).forEach(([costType, amount]) => {\n  const formattedType = costType.charAt(0).toUpperCase() + costType.slice(1);\n  addNode(\n    `${formattedType}\\n$${amount}B\\n5% Y/Y`,\n    colors.costDetails,\n    'Cost Details',\n    { amount, type: costType }\n  );\n});\n\n// Service cost breakdowns\nObject.entries(template.costStructure.serviceCosts).forEach(([costType, amount]) => {\n  const formattedType = costType.charAt(0).toUpperCase() + costType.slice(1);\n  addNode(\n    `Service ${formattedType}\\n$${amount}B\\n7% Y/Y`,\n    colors.costDetails,\n    'Cost Details',\n    { amount, type: `service_${costType}` }\n  );\n});\n\n// 5. PROFIT PROGRESSION NODES\naddNode(\n  `Gross profit\\n$${grossProfit.toFixed(1)}B\\n12% Y/Y`,\n  colors.grossProfit,\n  'Profit',\n  { amount: grossProfit, type: 'gross' }\n);\n\n// Operating expenses\naddNode(\n  `Operating expenses\\n$${operatingExpensesTotal.toFixed(1)}B\\n17% Y/Y`,\n  colors.expenses,\n  'Expenses',\n  { total: operatingExpensesTotal, type: 'operating' }\n);\n\n// Individual expense breakdowns\nObject.entries(template.operatingExpenses).forEach(([expenseType, amount]) => {\n  let formattedType = expenseType.replace(/([A-Z])/g, ' $1').trim();\n  formattedType = formattedType.charAt(0).toUpperCase() + formattedType.slice(1);\n  \n  if (expenseType === 'researchDevelopment') formattedType = 'R&D';\n  if (expenseType === 'salesMarketing') formattedType = 'Sales & Marketing';\n  if (expenseType === 'generalAdmin') formattedType = 'General & Admin';\n  \n  const growthRate = expenseType === 'researchDevelopment' ? 20 : \n                    expenseType === 'salesMarketing' ? 14 : \n                    expenseType === 'generalAdmin' ? 8 : 5;\n  \n  addNode(\n    `${formattedType}\\n$${amount}B\\n${growthRate}% Y/Y`,\n    colors.expenses,\n    'Expense Details',\n    { amount, type: expenseType, growth: growthRate }\n  );\n});\n\n// Final profit nodes\naddNode(\n  `Operating profit\\n$${operatingProfit.toFixed(1)}B\\n10% Y/Y`,\n  colors.operatingProfit,\n  'Profit',\n  { amount: operatingProfit, type: 'operating' }\n);\n\naddNode(\n  `Tax\\n$${tax.toFixed(1)}B\\n${Math.round((tax/operatingProfit)*100)}% rate`,\n  colors.tax,\n  'Tax',\n  { amount: tax, rate: template.financialMetrics.taxRate }\n);\n\naddNode(\n  `Net profit\\n$${netProfit.toFixed(1)}B\\n5% Y/Y`,\n  colors.netProfit,\n  'Profit',\n  { amount: netProfit, type: 'net' }\n);\n\n// 6. BUILD SOPHISTICATED LINK STRUCTURE\n\n// Products to business segments\ntemplate.productLines.forEach(product => {\n  const growthIndicator = product.growth >= 0 ? '↗' : '↘';\n  const productLabel = `${product.name}\\n$${product.revenue}B\\n${product.growth}% Y/Y ${growthIndicator}`;\n  const segmentLabel = `Products\\n$${productsRevenue.toFixed(1)}B\\n${Math.round((productsRevenue/totalRevenue)*100)}% of total`;\n  addLink(productLabel, segmentLabel, product.revenue, 'rgba(184,184,184,0.6)');\n});\n\n// Business segments to revenue\naddLink(\n  `Products\\n$${productsRevenue.toFixed(1)}B\\n${Math.round((productsRevenue/totalRevenue)*100)}% of total`,\n  `Revenue\\n$${totalRevenue.toFixed(1)}B\\n8% Y/Y`,\n  productsRevenue,\n  'rgba(158,158,158,0.6)'\n);\n\naddLink(\n  `Services\\n$${template.services.revenue}B\\n${template.services.growth}% Y/Y`,\n  `Revenue\\n$${totalRevenue.toFixed(1)}B\\n8% Y/Y`,\n  template.services.revenue,\n  'rgba(158,158,158,0.6)'\n);\n\n// Revenue to costs and gross profit\naddLink(\n  `Revenue\\n$${totalRevenue.toFixed(1)}B\\n8% Y/Y`,\n  `Cost of revenue\\n$${totalCosts.toFixed(1)}B\\n5% Y/Y`,\n  totalCosts,\n  'rgba(220,20,60,0.6)'\n);\n\naddLink(\n  `Revenue\\n$${totalRevenue.toFixed(1)}B\\n8% Y/Y`,\n  `Gross profit\\n$${grossProfit.toFixed(1)}B\\n12% Y/Y`,\n  grossProfit,\n  'rgba(144,238,144,0.6)'\n);\n\n// Cost breakdowns\nObject.entries(template.costStructure.productCosts).forEach(([costType, amount]) => {\n  const formattedType = costType.charAt(0).toUpperCase() + costType.slice(1);\n  addLink(\n    `${formattedType}\\n$${amount}B\\n5% Y/Y`,\n    `Cost of revenue\\n$${totalCosts.toFixed(1)}B\\n5% Y/Y`,\n    amount,\n    'rgba(240,128,128,0.6)'\n  );\n});\n\nObject.entries(template.costStructure.serviceCosts).forEach(([costType, amount]) => {\n  const formattedType = costType.charAt(0).toUpperCase() + costType.slice(1);\n  addLink(\n    `Service ${formattedType}\\n$${amount}B\\n7% Y/Y`,\n    `Cost of revenue\\n$${totalCosts.toFixed(1)}B\\n5% Y/Y`,\n    amount,\n    'rgba(240,128,128,0.6)'\n  );\n});\n\n// Gross profit to operating expenses and operating profit\naddLink(\n  `Gross profit\\n$${grossProfit.toFixed(1)}B\\n12% Y/Y`,\n  `Operating expenses\\n$${operatingExpensesTotal.toFixed(1)}B\\n17% Y/Y`,\n  operatingExpensesTotal,\n  'rgba(255,107,107,0.6)'\n);\n\naddLink(\n  `Gross profit\\n$${grossProfit.toFixed(1)}B\\n12% Y/Y`,\n  `Operating profit\\n$${operatingProfit.toFixed(1)}B\\n10% Y/Y`,\n  operatingProfit,\n  'rgba(50,205,50,0.6)'\n);\n\n// Operating expense breakdowns\nObject.entries(template.operatingExpenses).forEach(([expenseType, amount]) => {\n  let formattedType = expenseType.replace(/([A-Z])/g, ' $1').trim();\n  formattedType = formattedType.charAt(0).toUpperCase() + formattedType.slice(1);\n  \n  if (expenseType === 'researchDevelopment') formattedType = 'R&D';\n  if (expenseType === 'salesMarketing') formattedType = 'Sales & Marketing';\n  if (expenseType === 'generalAdmin') formattedType = 'General & Admin';\n  \n  const growthRate = expenseType === 'researchDevelopment' ? 20 : \n                    expenseType === 'salesMarketing' ? 14 : \n                    expenseType === 'generalAdmin' ? 8 : 5;\n  \n  addLink(\n    `${formattedType}\\n$${amount}B\\n${growthRate}% Y/Y`,\n    `Operating expenses\\n$${operatingExpensesTotal.toFixed(1)}B\\n17% Y/Y`,\n    amount,\n    'rgba(255,107,107,0.5)'\n  );\n});\n\n// Operating profit to tax and net profit\naddLink(\n  `Operating profit\\n$${operatingProfit.toFixed(1)}B\\n10% Y/Y`,\n  `Tax\\n$${tax.toFixed(1)}B\\n${Math.round((tax/operatingProfit)*100)}% rate`,\n  tax,\n  'rgba(178,34,34,0.6)'\n);\n\naddLink(\n  `Operating profit\\n$${operatingProfit.toFixed(1)}B\\n10% Y/Y`,\n  `Net profit\\n$${netProfit.toFixed(1)}B\\n5% Y/Y`,\n  netProfit,\n  'rgba(34,139,34,0.6)'\n);\n\nconsole.log(`Generated Apple-style Sankey data for ${company}:`);\nconsole.log(`- ${appleSankeyData.nodes.length} nodes`);\nconsole.log(`- ${appleSankeyData.links.length} links`);\nconsole.log(`- Revenue: $${totalRevenue.toFixed(1)}B`);\nconsole.log(`- Net Profit: $${netProfit.toFixed(1)}B`);\n\nreturn [{ json: appleSankeyData }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 0],
+      "id": "apple-data-generator",
+      "name": "Apple-Style Data Generator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a Professional Data Visualization Specialist creating Apple-style interactive Sankey diagrams.\n\nCREATE A COMPLETE HTML PAGE with:\n1. **Professional Apple-style design** matching their financial reports\n2. **Interactive Plotly.js Sankey diagram** with the provided data\n3. **Sophisticated styling** with gradients, shadows, and premium aesthetics\n4. **Responsive layout** that works on all devices\n5. **Enhanced interactivity** with hover effects and smooth animations\n\n**DATA TO VISUALIZE:**\n{{ JSON.stringify($json, null, 2) }}\n\n**STYLING REQUIREMENTS:**\n- Use Apple's SF Pro font family\n- Implement glass morphism effects\n- Professional color gradients\n- Subtle animations and transitions\n- Clean, minimalist design principles\n- Premium visual hierarchy\n\n**FUNCTIONALITY:**\n- Interactive hover tooltips\n- Responsive chart resizing\n- Export capabilities\n- Professional toolbar\n- Smooth loading animations\n\nGenerate a complete, production-ready HTML page that showcases the financial data with Apple's signature design sophistication.\n\nReturn ONLY the complete HTML code.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [600, 0],
+      "id": "visualization-specialist",
+      "name": "Visualization Specialist"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-preview-05-20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [600, 160],
+      "id": "visualization-llm",
+      "name": "Visualization LLM"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Final HTML processor and response preparation\nconst input = $input.first().json;\nconst sankeyData = $('Apple-Style Data Generator').first().json;\n\n// Extract and clean HTML from AI response\nlet htmlContent = input.output || '';\n\n// Remove markdown code blocks if present\nhtmlContent = htmlContent.replace(/```html\\s*/, '').replace(/\\s*```$/, '');\n\n// Ensure it starts with DOCTYPE\nif (!htmlContent.includes('<!DOCTYPE')) {\n  htmlContent = '<!DOCTYPE html>\\n' + htmlContent;\n}\n\n// Validate and enhance the HTML with Apple-style improvements\nif (!htmlContent.includes('Plotly.newPlot') && sankeyData) {\n  // If AI didn't generate proper Plotly code, create enhanced template\n  htmlContent = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>${sankeyData.metadata.company} - ${sankeyData.metadata.quarter} Financial Flow</title>\n    <script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>\n    <link href=\"https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=SF+Pro+Text:wght@400;500;600&display=swap\" rel=\"stylesheet\">\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n        \n        body {\n            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n            min-height: 100vh;\n            padding: 20px;\n            color: #1a202c;\n        }\n        \n        .container {\n            max-width: 1400px;\n            margin: 0 auto;\n            background: rgba(255, 255, 255, 0.95);\n            backdrop-filter: blur(20px);\n            border-radius: 20px;\n            padding: 40px;\n            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);\n        }\n        \n        .header {\n            text-align: center;\n            margin-bottom: 40px;\n        }\n        \n        .title {\n            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;\n            font-size: 32px;\n            font-weight: 700;\n            color: #1a202c;\n            margin-bottom: 8px;\n            letter-spacing: -0.5px;\n        }\n        \n        .subtitle {\n            font-size: 16px;\n            color: #718096;\n            font-weight: 500;\n        }\n        \n        .metrics {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n            gap: 20px;\n            margin-bottom: 40px;\n        }\n        \n        .metric-card {\n            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));\n            padding: 20px;\n            border-radius: 16px;\n            text-align: center;\n            backdrop-filter: blur(10px);\n            border: 1px solid rgba(255,255,255,0.3);\n        }\n        \n        .metric-value {\n            font-size: 24px;\n            font-weight: 700;\n            color: #2d3748;\n        }\n        \n        .metric-label {\n            font-size: 14px;\n            color: #718096;\n            margin-top: 4px;\n        }\n        \n        #sankey-chart {\n            width: 100%;\n            height: 700px;\n            border-radius: 16px;\n            background: rgba(255,255,255,0.7);\n            backdrop-filter: blur(10px);\n        }\n        \n        @media (max-width: 768px) {\n            .container { padding: 20px; }\n            .title { font-size: 24px; }\n            #sankey-chart { height: 500px; }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1 class=\"title\">${sankeyData.metadata.company} Financial Flow</h1>\n            <p class=\"subtitle\">${sankeyData.metadata.quarter} • ${sankeyData.metadata.reportType}</p>\n        </div>\n        \n        <div class=\"metrics\">\n            <div class=\"metric-card\">\n                <div class=\"metric-value\">$${sankeyData.performance.totalRevenue}B</div>\n                <div class=\"metric-label\">Total Revenue</div>\n            </div>\n            <div class=\"metric-card\">\n                <div class=\"metric-value\">$${sankeyData.performance.grossProfit}B</div>\n                <div class=\"metric-label\">Gross Profit</div>\n            </div>\n            <div class=\"metric-card\">\n                <div class=\"metric-value\">$${sankeyData.performance.operatingProfit}B</div>\n                <div class=\"metric-label\">Operating Profit</div>\n            </div>\n            <div class=\"metric-card\">\n                <div class=\"metric-value\">$${sankeyData.performance.netProfit}B</div>\n                <div class=\"metric-label\">Net Profit</div>\n            </div>\n        </div>\n        \n        <div id=\"sankey-chart\"></div>\n    </div>\n    \n    <script>\n        const sankeyData = ${JSON.stringify(sankeyData)};\n        \n        const data = [{\n            type: \"sankey\",\n            orientation: \"h\",\n            node: {\n                pad: 20,\n                thickness: 25,\n                line: { color: \"rgba(0,0,0,0.2)\", width: 1.5 },\n                label: sankeyData.nodes.map(n => n.label),\n                color: sankeyData.nodes.map(n => n.color),\n                customdata: sankeyData.nodes.map(n => n.customdata?.group || ''),\n                hovertemplate: '<b>%{label}</b><br>Category: %{customdata}<extra></extra>'\n            },\n            link: {\n                source: sankeyData.links.map(l => l.source),\n                target: sankeyData.links.map(l => l.target),\n                value: sankeyData.links.map(l => l.value),\n                color: sankeyData.links.map(l => l.color || 'rgba(0,171,181,0.4)'),\n                hovertemplate: '<b>%{source.label}</b> → <b>%{target.label}</b><br>$%{value}B<extra></extra>'\n            }\n        }];\n        \n        const layout = {\n            title: {\n                text: '',\n                font: { family: \"SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif\" }\n            },\n            font: { \n                size: 12,\n                family: \"SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif\",\n                color: \"#2d3748\"\n            },\n            paper_bgcolor: 'transparent',\n            plot_bgcolor: 'transparent',\n            margin: { l: 10, r: 10, t: 10, b: 10 }\n        };\n        \n        const config = {\n            responsive: true,\n            displayModeBar: true,\n            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d'],\n            toImageButtonOptions: {\n                format: 'png',\n                filename: '${sankeyData.metadata.company.replace(/\\s+/g, '_')}_financial_flow',\n                height: 700,\n                width: 1200,\n                scale: 2\n            },\n            displaylogo: false\n        };\n        \n        Plotly.newPlot('sankey-chart', data, layout, config);\n    </script>\n</body>\n</html>`;\n}\n\nreturn [{ \n  json: { \n    html: htmlContent,\n    company: sankeyData.metadata.company,\n    quarter: sankeyData.metadata.quarter,\n    success: true,\n    timestamp: new Date().toISOString(),\n    performance: sankeyData.performance,\n    nodeCount: sankeyData.nodes.length,\n    linkCount: sankeyData.links.length\n  } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 0],
+      "id": "html-processor",
+      "name": "HTML Processor"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1000, 0],
+      "id": "enhanced-response",
+      "name": "Enhanced Webhook Response"
+    }
+  ],
+  "connections": {
+    "Enhanced Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Financial Data Architect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial Data Architect": {
+      "main": [
+        [
+          {
+            "node": "Apple-Style Data Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhanced Financial LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Financial Data Architect",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apple-Style Data Generator": {
+      "main": [
+        [
+          {
+            "node": "Visualization Specialist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Visualization Specialist": {
+      "main": [
+        [
+          {
+            "node": "HTML Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Visualization LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Visualization Specialist",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Processor": {
+      "main": [
+        [
+          {
+            "node": "Enhanced Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": "apple-style-enhanced-sankey-workflow"
+  },
+  "id": "AppleStyleEnhancedSankey",
+  "tags": [
+    {
+      "name": "Apple Style",
+      "id": "apple-style"
+    },
+    {
+      "name": "Financial Analysis",
+      "id": "financial-analysis"
+    },
+    {
+      "name": "Enhanced Visualization",
+      "id": "enhanced-viz"
+    }
+  ]
+}
